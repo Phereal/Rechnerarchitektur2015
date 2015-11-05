@@ -1,1 +1,0 @@
--intstyle "ise" -incremental -lib "secureip" -o "/home/stefan/Rechnerarchitektur2015/einBitMulti/multi_tb_isim_beh.exe" -prj "/home/stefan/Rechnerarchitektur2015/einBitMulti/multi_tb_beh.prj" "work.multi_tb" 
