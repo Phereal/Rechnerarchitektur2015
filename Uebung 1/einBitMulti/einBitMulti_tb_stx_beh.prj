@@ -1,0 +1,2 @@
+vhdl isim_temp "einBitMulti.vhd"
+vhdl isim_temp "einBitMulti_tb.vhd"

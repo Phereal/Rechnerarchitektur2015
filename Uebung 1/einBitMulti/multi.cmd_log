@@ -1,0 +1,3 @@
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/einBitMulti/multi.xst" -ofn "/home/stefan/Rechnerarchitektur2015/einBitMulti/multi.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/einBitMulti/multi.xst" -ofn "/home/stefan/Rechnerarchitektur2015/einBitMulti/multi.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/einBitMulti/multi.xst" -ofn "/home/stefan/Rechnerarchitektur2015/einBitMulti/multi.syr" 

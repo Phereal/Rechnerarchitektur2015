@@ -1,0 +1,4 @@
+vhdl isim_temp "full_adder.vhd"
+vhdl isim_temp "eight_bit_adder.vhd"
+vhdl isim_temp "four_b_multi.vhd"
+vhdl isim_temp "four_b_multi_tb.vhd"
