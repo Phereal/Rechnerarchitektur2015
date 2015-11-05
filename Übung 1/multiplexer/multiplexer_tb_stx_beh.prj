@@ -1,0 +1,2 @@
+vhdl isim_temp "multiplexer.vhd"
+vhdl isim_temp "multiplexer_tb.vhd"

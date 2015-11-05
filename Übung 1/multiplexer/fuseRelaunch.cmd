@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "secureip" -o "/home/stefan/Rechnerarchitektur2015/multiplexer/multiplexer_tb_isim_beh.exe" -prj "/home/stefan/Rechnerarchitektur2015/multiplexer/multiplexer_tb_beh.prj" "work.multiplexer_tb" 

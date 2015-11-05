@@ -1,0 +1,36 @@
+Command line:
+   ghost_tb_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  56638
+
+Wed Nov  4 23:21:21 2015
+
+
+ Elaboration Time: 0.03 sec
+
+ Current Memory Usage: 195.908 Meg
+
+ Total Signals          : 12
+ Total Nets             : 8
+ Total Signal Drivers   : 8
+ Total Blocks           : 3
+ Total Primitive Blocks : 2
+ Total Processes        : 4
+ Total Traceable Variables  : 9
+ Total Scalar Nets and Variables : 369
+Total Line Count : 62
+Total Line Count : 62
+
+** Failure:Testbench Beendet
+User(VHDL) Code Called Simulation Stop
+In process ghost_tb.vhd:stim_proc 
+ 
+
+
+ Total Simulation Time: 0.05 sec
+
+ Current Memory Usage: 271.409 Meg
+
+Wed Nov  4 23:22:20 2015
+

@@ -1,0 +1,17 @@
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc7a100t-csg324-3 multiplexer.ngc multiplexer.ngd  
+map -intstyle ise -p xc7a100t-csg324-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -mt off -ir off -pr off -lc off -power off -o multiplexer_map.ncd multiplexer.ngd multiplexer.pcf 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur2015/multiplexer/multiplexer.syr" 
+xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/multiplexer/multiplexer.xst" -ofn "/home/stefan/Rechnerarchitektur2015/multiplexer/multiplexer.syr" 
