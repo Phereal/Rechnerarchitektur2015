@@ -1,0 +1,35 @@
+Command line:
+   memoryTB_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  53827
+
+Sun Nov  8 18:14:13 2015
+
+
+ Elaboration Time: 0.03 sec
+
+ Current Memory Usage: 196.895 Meg
+
+ Total Signals          : 106
+ Total Nets             : 1354
+ Total Signal Drivers   : 25
+ Total Blocks           : 15
+ Total Primitive Blocks : 12
+ Total Processes        : 24
+ Total Traceable Variables  : 16
+ Total Scalar Nets and Variables : 1856
+Total Line Count : 400
+
+** Failure:Testfall 2.2:Adresse  = 0Erwartet = 80Output   = 0
+User(VHDL) Code Called Simulation Stop
+In process memoryTB.vhd:stim_proc 
+ 
+
+
+ Total Simulation Time: 0.05 sec
+
+ Current Memory Usage: 272.396 Meg
+
+Sun Nov  8 18:14:24 2015
+

@@ -8,3 +8,10 @@ xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memo
 xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memory.xst" -ofn "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memory.syr" 
 xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memory.xst" -ofn "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memory.syr" 
 xst -intstyle ise -ifn "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memory.xst" -ofn "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memory.syr" 
+xst -intstyle ise -ifn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.xst" -ofn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.syr" 
+xst -intstyle ise -ifn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.xst" -ofn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.syr" 
+xst -intstyle ise -ifn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.xst" -ofn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.syr" 
+xst -intstyle ise -ifn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.xst" -ofn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.syr" 
+xst -intstyle ise -ifn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.xst" -ofn "/home/steffen/Dokumente/Rechnerarchitektur2015-master/Uebung 2/memory/memory.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc7a100t-csg324-3 "memory.ngc" memory.ngd  
+map -intstyle ise -p xc7a100t-csg324-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -mt off -ir off -pr off -lc off -power off -o memory_map.ncd memory.ngd memory.pcf 
