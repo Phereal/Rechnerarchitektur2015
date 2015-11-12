@@ -1,4 +1,20 @@
 
+-- Okay in dieser Aufgabe ist es Ziel, ein Register [oder Arbeitsspeicher] in VHDL zu schreiben.
+-- Das Register wird intern mit einem Array aus 80 x 8 Bit Vektoren dargestellt. Die
+-- Adressierung wird über die Position des Arrayeleemntes vorgenommen. Da Arrayelemente allerdings
+-- mit einem Integer addressiert werden und wir hier einen 'addr' Eingang haben der aus einem 8 Bit
+-- Vektor besteht, müssen wir diesen Vektor in einen Integer konvertieren. Später müssen wir die
+-- Arraypositon in eine Datei schreiben,hier müssen wir den Integer wieder zurück in einen Bitvektor
+-- konvertieren.
+
+-- Für diese Typkonvertierungen laden wir die Bibliotheken IEEE.numeric_std.ALL und IEEE.STD_LOGIC_UNSIGNED.ALL,
+-- da diese über entsprechende Methoden verfügen um diese Konvertierungen durchzuführen.
+
+-- Die Libraries use IEEE.STD_LOGIC_TEXTIO.ALL; und use STD.TEXTIO.ALL benötigen wir um aus Dateien zu lesen
+-- und auch um in Dateien zu schreiben. sie bieten uns also Methoden um Dateioperationen auszuführen.
+-- Diese benötigen wir, weil wir aus der Datei 'memory.dat' in das Register schreiben wollen und 
+-- aus dem Register in die Datei dum.dat
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.ALL;
@@ -7,6 +23,8 @@ use IEEE.STD_LOGIC_TEXTIO.ALL;
 
 library STD;
 use STD.TEXTIO.ALL;
+
+-- Die schnittstellen waren vorgegeben und müssen daher hier nicht explizit kommentiert werden!
 
 entity Memory is
 port(
@@ -33,17 +51,19 @@ architecture memory_impl of memory is
 type storage is array (0 to 79) of std_logic_vector(7 downto 0);
 
 -- Signale
--- Wir erstellen unser 'Register' vom Type storage.
+-- Wir erstellen unser 'Register' vom Type storage. Initial werden alle Registerelemente mit einem
+-- leeren Bitvektor gefüllt.
 signal reg : storage := (others => "00000000");
--- Wir erstellen das lokale Signal 'iaddr', in den wir den 8 Bit Eingangsvektor addr als Integer abspeichern.
+-- Wir erstellen das lokale Signal 'iaddr', in den wir den 8 Bit Eingangsvektor addr als Integer
+-- abspeichern wollen.
 signal iaddr : integer := 0;
 
 begin
 
+-- Routine, die den Bitvektor addr in einen Integer wandelt,
+-- damit er für die Adressierung anhand der Array Position genutzt werden kann
 castBVtoInt: process(addr)
 begin
-	-- Routine, die den Bitvektor addr in einen Integer wandelt,
-	-- damit er für die Adressierung anhand der Array Position genutzt werden kann
 	iaddr <= to_integer(unsigned(addr));
 end process;
 
@@ -53,8 +73,16 @@ end process;
 -- Zusätzich reagiert er auf die Eingänge init und dump und liest entweder
 -- aus der Datei memory.dat in den Array oder gibt den Inhalt des
 -- Arrays in der Datei dump.dat aus
--- Ein synchroner rest, der auf den Eingang 'reset' reagiert ist ebenfalls in diesem
+-- Ein synchroner Reset, der auf den Eingang 'reset' reagiert ist ebenfalls in diesem
 -- Prozess umgesetzt.
+-- Wir haben anhand der IF-Klauseln eine Fallunterscheidung eingeführt, sodass nur gültige
+-- Eingabgen an den Eingängen auch zu einem Ergebnis am Ausgang führen können,
+-- in allen Fällen die wir nicht anhand der fallunterscheidung betrachten geben wir
+-- am Ausgang 'output' einen Bitvektor aus, der mit 'X' gefüllt ist, um einen
+-- Fehler zu signalisieren
+-- Hinweis: Auch in den Lese- und Schreibphasen in und aus memory.dat und dump.dat
+-- liegt, wie in der Aufgabenstellung gefordert ein Bitvektor aus 'X' an
+-- output an.
 execute: process (clk)
 -- Deklaration der Hilfsvariablen zum einlesen und schreiben der Dateien
 -- memory.dat und dump.dat
@@ -65,10 +93,17 @@ variable iodata : std_logic_vector(7 downto 0);
 variable iotmp : std_logic_vector(7 downto 0);
 
 begin
+	-- Wie in der Aufgabenstellung gefordert reagieren wir nur auf die Steigende Taktflanke von clk
+	-- wir bauen also eine synchrone Schaltung!
 	if rising_edge(clk) then
 		-- Wenn am Eingang 'init' eine '1' anliegt, soll der Inhalt der Datei memory.dat in das register
-		-- geladen werden.
-		if (init = '1') then
+		-- geladen werden. Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
+		if (init = '1' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
+			-- Wir öffnen die Datei 'memory.dat' im reademode und lesen Sie Zeilenweise ein,
+			-- die ersten 8 Bits jeder Zeile konvertieren wir on the fly in einen Integerwert,
+			-- der und die Speicherposition im Array angibt und die zweiten 8 Bits
+			-- sind dann die Daten, die wir in die betreffende Speicherzelle schreiben.
+			-- Diesen Vorgang wiederholen wir so lange, bis wir das Ende der Datei erreicht haben.
 			file_open(iofile,"memory.dat",read_mode);
 				while not endfile(iofile) loop
 					readline(iofile,ioline);
@@ -78,13 +113,25 @@ begin
 					iodata := iotmp;
 					reg(ioaddr) <= iodata;
 				end loop;
+			-- Wenn wir alles eingelesen haben müssen wir die Datei wieder schließen.
 			file_close(iofile);
-			output <= "UUUUUUUU";
-		end if;
-		
+			-- Nach Abschluss des Einlesevorgangsgeben legen wir einen Bitvektor auf den Ausgang. Dies müssen wir tun,
+			-- da wir in Xilinx normalerweise keine Dateieingaben und Ausgaben schreiben können, da wir ja Hardware bauen.
+			-- Da die Dateieingabe und Ausgabe also nicht als Signale gelten würden wir die Eingänge init und dump nicht
+			-- benutzen und sie würden bei der Synthese wegoptimiert. Daher ein 8 Bit Vektor bestehend aus 'X' am Ausgang.
+			output <= "XXXXXXXX";
 		-- Wenn am Eingang 'dump' eine '1' anliegt, soll der Inhalt des Registers in die Datei dump.dat geschrieben
-		-- werden.
-		if(dump = '1') then
+		-- werden. Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
+		elsif(dump = '1' AND init = '0' AND reset = '0' AND re = '0' AND we = '0') then
+			-- Wir öffnen die Datei 'dump.dat' im writemode und schreiben den Inhalt unseres Registers
+			-- Zeilenweise in die Datei. Dazu verwenden wir eine for-Schleife die bei null beginnt zu
+			-- zählen und verwenden diesen counter als Adresse, da wir das Array sequentiell durchlaufen.
+			-- Dabei geben wir durch die Typkonvertierung immer einen vollen 8 Bit Vektor als Adresse
+			-- in die datei ein.
+			-- Den Inhalt der betreffenden Speicherzelle an der Counter-Position des Arrays
+			-- schreiben wir dann in die selbe Zeile. Wir schreiben immer den gesamten
+			-- Inhalt des Arrays in die Datei.
+			-- Diesen Vorgang wiederholen wir so lange, bis wir das Ende des Arrays erreicht haben.
 			file_open(iofile,"dump.dat",write_mode);
 				for i in 0 to reg'length-1 loop
 					iotmp := std_logic_vector(to_unsigned(i, iotmp'length));
@@ -93,25 +140,33 @@ begin
 					write(ioline,iotmp);
 					writeline(iofile,ioline);
 				end loop;
+			-- Wenn wir alles geschrieben haben müssen wir die Datei wieder schließen.
 			file_close(iofile);
-			output <= "UUUUUUUU";
-		end if;
-		
+			-- Nach Abschluss des Schreibevorgangs legen wir einen Bitvektor auf den Ausgang. Dies müssen wir tun,
+			-- da wir in Xilinx normalerweise keine Dateieingaben und Ausgaben schreiben können, da wir ja Hardware bauen.
+			-- Da die Dateieingabe und Ausgabe also nicht als Signale gelten würden wir die Eingänge init und dump nicht
+			-- benutzen und sie würden bei der Synthese wegoptimiert. Daher ein 8 Bit Vektor bestehend aus 'X' am Ausgang.
+			output <= "XXXXXXXX";
 		-- Wenn am Eingang re eine '1' anliegt, sollen die Daten, die in der Speicherzelle
 		-- "addr" am Ausgang "output" angelegt werden! 
-		if(re = '1') then
+		-- Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
+		elsif(re = '1' AND dump = '0' AND init = '0' AND reset = '0' AND we = '0') then
 			output <= reg(iaddr);
-		end if;
 		-- Wenn am Eingang "we" eine '1' anliegt, sollen die Daten, die am Eingang "data_in"
 		-- anliegen in die Speicherzelle geschrieben werden, die durch "addr" definiert ist.
-		if(we = '1') then
+		-- Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
+		elsif(we = '1' AND re = '0' AND dump = '0' AND init = '0' AND reset = '0') then
 			reg(iaddr) <= data_in;
-		end if;
-		
-		if (reset = '1') then
 		-- Wenn der Reseteingang aktiviert ist, werden alle Einträge des Registers auf 0 zurückgesetzt.
 		-- Dabei wird das Array sequentiell durchlaufen.
+		-- Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
+		elsif(reset = '1' AND we = '0' AND re = '0' AND dump = '0' AND init = '0') then
 			reg <= (others => "00000000");
+		-- Wenn keiner der oben genannten Fälle abgefangen wurde, muss es sich um eine fehlerhafte Belegung der
+		-- Eingänge handeln. In diesem Fall verändern wir den Inhalt des Registers nicht und geben nur einen
+		--	Bitvektor gefüllt mit 'X' an den Ausgang.
+		else
+			output <= "XXXXXXXX";
 		end if;
 	end if;
 end process;
