@@ -24,6 +24,7 @@ ARCHITECTURE behavior OF memoryTB IS
   PORT(
        clk : IN  std_logic;
        init : IN  std_logic;
+       dump : IN  std_logic;
        reset : IN  std_logic;
        re : IN  std_logic;
        we : IN  std_logic;
@@ -36,7 +37,8 @@ ARCHITECTURE behavior OF memoryTB IS
 
   --Inputs
   signal clk : std_logic := '0';
-  signal init : std_logic := '1';
+  signal init : std_logic := '0';
+  signal dump : std_logic := '0';
   signal reset : std_logic := '0';
   signal re : std_logic := '0';
   signal we : std_logic := '0';
@@ -57,6 +59,7 @@ BEGIN
   uut: memory PORT MAP (
         clk => clk,
         init => init,
+        dump => dump,
         reset => reset,
         re => re,
         we => we,
@@ -118,10 +121,11 @@ BEGIN
     data_in <= "00000000";
     re <= '0';
     we <= '0';
-    init <= '1';
+    init <= '0';
+    dump <= '0';
     reset <= '1';
     wait for clk_period*10;
-    init <= '0';
+    --init <= '0';
     reset <= '0';
     wait for clk_period*10;
     

@@ -25,7 +25,7 @@
 
 
 
-extern void work_a_4049104989_3212880686_init()
+extern void std_textio_init()
 {
-	xsi_register_didat("work_a_4049104989_3212880686", "isim/memoryTB_isim_beh.exe.sim/work/a_4049104989_3212880686.didat");
+	xsi_register_didat("std_textio", "isim/precompiled.exe.sim/std/textio.didat");
 }
