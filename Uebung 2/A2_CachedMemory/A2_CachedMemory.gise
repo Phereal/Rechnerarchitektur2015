@@ -30,6 +30,7 @@
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_STX" xil_pn:name="CachedMemory.stx"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_REPORT" xil_pn:name="CachedMemory.syr"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST" xil_pn:name="CachedMemory.xst"/>
+    <file xil_pn:fileType="FILE_HTML" xil_pn:name="CachedMemory_envsettings.html"/>
     <file xil_pn:fileType="FILE_HTML" xil_pn:name="CachedMemory_summary.html"/>
     <file xil_pn:fileType="FILE_XRPT" xil_pn:name="CachedMemory_xst.xrpt"/>
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/xst.xmsgs"/>
@@ -40,12 +41,13 @@
   <transforms xmlns="http://www.xilinx.com/XMLSchema">
     <transform xil_pn:end_ts="1447434800" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1447434800">
       <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447434800" xil_pn:name="TRAN_schematicsToHdl" xil_pn:prop_ck="-3931700589576882628" xil_pn:start_ts="1447434800">
+    <transform xil_pn:end_ts="1447439409" xil_pn:name="TRAN_schematicsToHdl" xil_pn:prop_ck="-3931700589576882628" xil_pn:start_ts="1447439409">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447434800" xil_pn:name="TRAN_regenerateCores" xil_pn:prop_ck="1376142277793714948" xil_pn:start_ts="1447434800">
+    <transform xil_pn:end_ts="1447439409" xil_pn:name="TRAN_regenerateCores" xil_pn:prop_ck="1376142277793714948" xil_pn:start_ts="1447439409">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
@@ -53,7 +55,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447434800" xil_pn:name="TRAN_xawsTohdl" xil_pn:prop_ck="4107512622516170142" xil_pn:start_ts="1447434800">
+    <transform xil_pn:end_ts="1447439409" xil_pn:name="TRAN_xawsTohdl" xil_pn:prop_ck="4107512622516170142" xil_pn:start_ts="1447439409">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
@@ -61,11 +63,11 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447434800" xil_pn:name="TRAN_platgen" xil_pn:prop_ck="-6029586482080686130" xil_pn:start_ts="1447434800">
+    <transform xil_pn:end_ts="1447439409" xil_pn:name="TRAN_platgen" xil_pn:prop_ck="-6029586482080686130" xil_pn:start_ts="1447439409">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447434814" xil_pn:in_ck="-1395926172154893311" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="5155045001136514625" xil_pn:start_ts="1447434800">
+    <transform xil_pn:end_ts="1447446704" xil_pn:in_ck="-6389981142869448950" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="5155045001136514625" xil_pn:start_ts="1447446690">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>

@@ -19,6 +19,8 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+USE ieee.std_logic_unsigned.all;
+USE ieee.numeric_std.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -43,10 +45,93 @@ entity CachedMemory is
     ack     : out  STD_LOGIC);
 end CachedMemory;
 
+
+-- Direct Mapped Cache
+-- Nettogroesse:            
+--  16 Byte
+-- Schreibstrategien:
+--  - Write Back
+--  - Fetch on Write
+
 architecture Behavioral of CachedMemory is
+
+  type cacheLine is record
+    v : STD_LOGIC;
+    d : STD_LOGIC;
+    tag : STD_LOGIC_VECTOR (3 downto 0);
+    date : STD_LOGIC_VECTOR (7 downto 0);
+  end record;
+  type cacheStruct is array (0 to 15) of cacheLine;
+  
+  signal cache : cacheStruct;
+  
+
+
+
 
 begin
 
+  execute: process (clk)
+    variable tmpTag : STD_LOGIC_VECTOR (3 downto 0);
+    variable tmpIndex : integer;
+  begin
+    if rising_edge(clk) then
+      -- *** Init ***
+      if(init = '1' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
+        -- TODO:
+        
+      -- *** Dump ***
+      elsif(init = '0' AND dump = '1' AND reset = '0' AND re = '0' AND we = '0') then
+        -- TODO:
+        
+      -- *** Reset ***
+      elsif(init = '0' AND dump = '0' AND reset = '1' AND re = '0' AND we = '0') then
+        for i in 0 to cache'length-1 loop
+          cache(i).v <= '0';
+        end loop;
+        -- TODO: Reset memory
+        
+      -- *** Read ***
+      elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '1' AND we = '0') then
+        tmpTag := addr(7 downto 4);
+        tmpIndex := to_integer(unsigned(addr(3 downto 0)));
+
+        -- TODO: noch keine Absicherung falls lesen aus Speicher fehlschlaegt
+        if(cache(tmpIndex).v = '1') then
+          if(tmpTag /= cache(tmpIndex).tag) then
+            if(cache(tmpIndex).d = '1') then
+              -- Miss: Andere Daten im Cache und dirty.
+              --  Schreibe zurueck in Speicher. Setze d = 0
+              --  Lesen aus Speicher wird spaeter durchgefuehrt
+              -- TODO: Write Back
+            end if;
+            -- Miss: Andere Daten im Cache und sauber.
+            --  Hole Daten aus dem Speicher. Setze data = read
+            -- TODO: Read
+          end if;
+          -- Hit: Daten im Cache. Dirty egal da write back Strategie.
+          --  Lesen aus Speicher wird nicht benoetigt.
+        else
+          -- Miss: Daten nicht im Cache. Dirty und Tag egal da invalid.
+          --  Hole Daten aus dem Speicher. Setze v = 1, d = 0, data = read
+        end if;
+        
+        -- Daten sind jetzt im Cache und koennen zurueck gegeben werden
+        -- TODO
+        
+        
+        
+        
+      -- *** Write ***
+      elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '1') then
+        -- TODO
+      
+      -- *** Fehlerhafte Eingabe ***
+      else
+        -- TODO
+      end if;
+    end if;
+  end process;
 
 end Behavioral;
 
