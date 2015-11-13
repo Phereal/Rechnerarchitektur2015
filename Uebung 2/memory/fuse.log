@@ -1,26 +1,14 @@
-Running: /opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64/unwrapped/fuse -intstyle ise -incremental -lib secureip -o /home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_isim_beh.exe -prj /home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_beh.prj work.memoryTB 
+Running: /opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64/unwrapped/fuse -intstyle ise -incremental -lib secureip -o /home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_isim_beh.exe -prj /home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_beh.prj work.memoryTB 
 ISim P.20131013 (signature 0xfbc00daa)
 Number of CPUs detected in this system: 1
 Turning on mult-threading, number of parallel sub-compilation jobs: 0 
 Determining compilation order of HDL files
-Parsing VHDL file "/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/memory.vhd" into library work
-Parsing VHDL file "/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/memoryTB.vhd" into library work
+Parsing VHDL file "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memory.vhd" into library work
+Parsing VHDL file "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memoryTB.vhd" into library work
 Starting static elaboration
 Completed static elaboration
-Fuse Memory Usage: 98488 KB
-Fuse CPU Usage: 1040 ms
+Fuse Memory Usage: 98484 KB
+Fuse CPU Usage: 870 ms
 Compiling package standard
 Compiling package std_logic_1164
-Compiling package std_logic_arith
-Compiling package std_logic_unsigned
-Compiling package numeric_std
-Compiling package textio
-Compiling package std_logic_textio
-Compiling architecture memory_impl of entity Memory [memory_default]
-Compiling architecture behavior of entity memorytb
-Time Resolution for simulation is 1ps.
-Compiled 10 VHDL Units
-Built simulation executable /home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_isim_beh.exe
-Fuse Memory Usage: 122056 KB
-Fuse CPU Usage: 1220 ms
-GCC CPU Usage: 1030 ms
+FATAL_ERROR:Simulator:Fuse.cpp:500:1.133 - Failed to compile generated C file isim/precompiled.exe.sim/ieee/p_2592010699.c   For technical support on this issue, please visit http://www.xilinx.com/support.

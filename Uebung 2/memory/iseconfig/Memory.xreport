@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2015-11-12T12:37:07</DateModified>
+  <DateModified>2015-11-13T15:33:08</DateModified>
   <ModuleName>Memory</ModuleName>
-  <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/iseconfig/Memory.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/</ImplementationReportsDirectory>
+  <SummaryTimeStamp>2015-11-13T15:31:41</SummaryTimeStamp>
+  <SavedFilePath>/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/iseconfig/Memory.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/</ImplementationReportsDirectory>
   <DateInitialized>2015-11-12T11:05:12</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

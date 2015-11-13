@@ -5,5 +5,8 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
+<msg type="fatal" file="Simulator" num="0" delta="unknown" srcfile="../src/Fuse.cpp" srcline="500" srcrcs="1.133" >Failed to compile generated C file <arg fmt="%s" index="1">isim/precompiled.exe.sim/ieee/p_2592010699.c</arg>
+</msg>
+
 </messages>
 

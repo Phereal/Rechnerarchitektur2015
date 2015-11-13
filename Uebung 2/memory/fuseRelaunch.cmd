@@ -1,1 +1,1 @@
--intstyle "ise" -incremental -lib "secureip" -o "/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_isim_beh.exe" -prj "/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_beh.prj" "work.memoryTB" 
+-intstyle "ise" -incremental -lib "secureip" -o "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_isim_beh.exe" -prj "/home/stefan/Rechnerarchitektur2015/Uebung 2/memory/memoryTB_beh.prj" "work.memoryTB" 
