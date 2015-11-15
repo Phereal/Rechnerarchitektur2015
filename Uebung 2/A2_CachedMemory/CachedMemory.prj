@@ -1,1 +1,2 @@
+vhdl work "memory.vhd"
 vhdl work "CachedMemory.vhd"

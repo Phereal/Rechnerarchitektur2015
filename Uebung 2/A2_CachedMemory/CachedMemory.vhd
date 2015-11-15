@@ -54,6 +54,24 @@ end CachedMemory;
 --  - Fetch on Write
 
 architecture Behavioral of CachedMemory is
+  component Memory
+    Port (
+    	clk: in std_logic;
+      init: in std_logic;
+      dump: in std_logic;
+      reset: in std_logic;
+      re: in std_logic;
+      we: in std_logic;
+      addr: in std_logic_vector(7 downto 0);
+      data_in: in std_logic_vector(7 downto 0);
+      output: out std_logic_vector(7 downto 0)
+      );
+  end component;
+  
+  signal mem_clk : std_logic := '0';
+  
+
+
 
   type cacheLine is record
     v : STD_LOGIC;
@@ -70,6 +88,33 @@ architecture Behavioral of CachedMemory is
 
 
 begin
+
+  -- Clock process definitions
+  mem_clk_process :process (clk)
+    variable clkCnt : integer := 0;
+    constant clkDiv : integer := 8; -- muss groeßer 1 und durch 2 teilbar sein.
+  begin
+  
+  if rising_edge(clk) then
+    if clkCnt = (clkDiv / 2 - 1) then
+      clkCnt := 0;
+      mem_clk <= not(mem_clk);
+    else
+      clkCnt := clkCnt + 1;
+    end if;
+    end if;
+  end process;
+
+  mem: Memory PORT MAP (
+    clk     => mem_clk,
+    init    => init,
+    dump    => dump,
+    reset   => reset, 
+    re      => re,
+    we      => we,
+    addr    => addr,
+    data_in => data_in, 
+    output  => output);
 
   execute: process (clk)
     variable tmpTag : STD_LOGIC_VECTOR (3 downto 0);
