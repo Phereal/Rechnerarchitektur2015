@@ -47,8 +47,17 @@ architecture Behavioral of Sorter is
    --Indiziert, ob auf die Antwort des Caches gewartet werden soll.
    variable waitOneCycle   : STD_LOGIC_VECTOR (7 downto 0); 
    
+   --Gibt an, ob pointerSortData aus dem Speicher gelesen werden muss.
+   variable pointerSortDataValid : STD_LOGIC_VECTOR;
+   
+   --Gibt an, ob der naechste Vergleichswert aus dem Speicher gelesen werden muss.
+   variable pointerSortDataNextValid : STD_LOGIC_VECTOR;
+   
+   --Gibt an, ob der output des Speichers auszulesen ist.
+   variable memoryOutputReady : STD_LOGIC_VECTOR;
+   
       
-   --Zwischenspeicher, da der Cache-Output nicht immer kosistent bleibten kann:
+   --Zwischenspeicher fuer Cache-Outputs
    
    --Daten, auf die der Pointer zeigt.
    variable pointerSortData : STD_LOGIC_VECTOR (7 downto 0); 
@@ -69,27 +78,57 @@ begin
    then
       done <= '0';               --Sortierung läuft.
       pointerSort <= addr_start; --Fange an Anfangsadresse an.
+      pointerSortDataValid <= '0';   --Noch kein Wert geladen. Muss gelesen werden.
+      pointerSortDataNextValid <= '0';
       sortAgain <= 0;            --Noch kein Anlass für 2. Durchlauf.
       waitOneCycle <= 1;         --Read zu Beginn der Suche, daher warten.
+      
        --+1 ist das hier: std_logic_vector(unsigned(addr_start)+1);
    end if;
    
-   --Wenn done '0' ist, muss die Sortierung laufen.
+      --Wenn done '0' ist, muss die Sortierung laufen.
    if (done = '0')
    then
       --Wir stellen sicher, dass wir genau 1 Clock Cycle auf den Output
       --des Cache-Speichers warten.
       if (waitOneCycle = '1')
       then
-         waitOneCycle = '0';
-      --Muss aktueller Wert mit nächstem getauscht werden?
-      else if (unsigned(pointerSort) > unsigned(pointerSort)+1)
+         waitOneCycle <= '0';
+         memoryOutputReady <= '1';
+      
+      --Lade, wenn noetig, pointer-Daten aus dem Speicher.
+      else if (pointerSortDataValid = '0')
       then
-         sortAgain <= '1';
-         
-      --Ende des Sortierbereiches erreicht?
-      else if(unsigned(pointerSort)+1 < unsigned(addr_end))
+        if (memoryOutputReady = '0')
+        then
+            waitOneCylye <= '1';
+            re <= '1';
+            addr <= pointerSort;
+        else
+            pointerSortData <= output;
+            pointerSortDataValid <= '1';
+        end if;
+      
+      --Dasselbe Spiel mit naechstem pointer-Wert.
+      else if (pointerSortDataNextValid = '0')
       then
+        if (memoryOutputReady = '0')
+        then
+            waitOneCylye <= '1';
+            re <= '1';
+            addr <= std_logic_vector(unsigned(pointerSort)+1); --Adresse nach pointer.
+        else
+            pointerSortDataNext <= output;
+            pointerSortDataNextValid <= '1';
+        end if;
+      end if;
+      
+      --Wenn Daten korrekt geladen wurden: 
+      --todo... vllt eine queue um die schreibvorgaenge einzureihen?
+      
+       
+            
+        
          
          
       
