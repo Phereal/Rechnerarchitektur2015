@@ -5,14 +5,14 @@ Parameter TMPDIR set to xst/projnav.tmp
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.06 secs
+Total CPU time to Xst completion: 0.04 secs
  
 --> 
 Parameter xsthdpdir set to xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.06 secs
+Total CPU time to Xst completion: 0.04 secs
  
 --> 
 Reading design: CachedMemory.prj
@@ -129,10 +129,16 @@ Elaborating entity <Memory> (architecture <memory_impl>) from library <work>.
 
 Synthesizing Unit <CachedMemory>.
     Related source file is "/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd".
-WARNING:Xst:647 - Input <data_in> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
     Found 1-bit register for signal <mem_clk>.
     Found 1-bit register for signal <execute.waitedOneMemClk>.
     Found 1-bit register for signal <dataReady>.
+    Found 1-bit register for signal <mem_init>.
+    Found 1-bit register for signal <mem_dump>.
+    Found 1-bit register for signal <mem_reset>.
+    Found 1-bit register for signal <mem_re>.
+    Found 1-bit register for signal <mem_we>.
+    Found 8-bit register for signal <mem_addr>.
+    Found 8-bit register for signal <mem_data_in>.
     Found 1-bit register for signal <cache[0]_v>.
     Found 1-bit register for signal <cache[0]_d>.
     Found 4-bit register for signal <cache[0]_tag>.
@@ -197,28 +203,25 @@ WARNING:Xst:647 - Input <data_in> is never used. This port will be preserved and
     Found 1-bit register for signal <cache[15]_d>.
     Found 4-bit register for signal <cache[15]_tag>.
     Found 8-bit register for signal <cache[15]_data>.
-    Found 1-bit register for signal <mem_init>.
-    Found 1-bit register for signal <mem_dump>.
-    Found 1-bit register for signal <mem_reset>.
-    Found 1-bit register for signal <mem_re>.
-    Found 1-bit register for signal <mem_we>.
-    Found 8-bit register for signal <mem_addr>.
-    Found 8-bit register for signal <mem_data_in>.
+    Found 32-bit register for signal <execute.tmpIndex>.
     Found 32-bit register for signal <mem_clk_process.clkCnt>.
+    Found 1-bit register for signal <state<3>>.
     Found 1-bit register for signal <state<2>>.
     Found 1-bit register for signal <state<1>>.
     Found 1-bit register for signal <state<0>>.
     Found 32-bit adder for signal <mem_clk_process.clkCnt[31]_GND_6_o_add_1_OUT> created at line 114.
-    Found 1-bit 16-to-1 multiplexer for signal <_n3783> created at line 186.
-    Found 4-bit 16-to-1 multiplexer for signal <addr[3]_cache[15]_tag[3]_wide_mux_20_OUT> created at line 187.
-    Found 8-bit 16-to-1 multiplexer for signal <output> created at line 290.
-    Found 3-bit 4-to-1 multiplexer for signal <_n1334> created at line 138.
-    Found 4-bit comparator equal for signal <n0034> created at line 187
+    Found 4-bit 16-to-1 multiplexer for signal <PWR_6_o_cache[15]_tag[3]_wide_mux_45_OUT> created at line 231.
+    Found 8-bit 16-to-1 multiplexer for signal <PWR_6_o_cache[15]_data[7]_wide_mux_50_OUT> created at line 232.
+    Found 1-bit 16-to-1 multiplexer for signal <addr[3]_cache[15]_v_Mux_67_o> created at line 370.
+    Found 1-bit 16-to-1 multiplexer for signal <addr[3]_cache[15]_d_Mux_351_o> created at line 371.
+    Found 4-bit 16-to-1 multiplexer for signal <addr[3]_cache[15]_tag[3]_wide_mux_356_OUT> created at line 372.
+    Found 8-bit 16-to-1 multiplexer for signal <output> created at line 449.
+    Found 4-bit comparator equal for signal <n0655> created at line 372
     Summary:
 	inferred   1 Adder/Subtractor(s).
-	inferred 267 D-type flip-flop(s).
+	inferred 316 D-type flip-flop(s).
 	inferred   1 Comparator(s).
-	inferred  14 Multiplexer(s).
+	inferred 146 Multiplexer(s).
 Unit <CachedMemory> synthesized.
 
 Synthesizing Unit <Memory>.
@@ -321,21 +324,24 @@ HDL Synthesis Report
 Macro Statistics
 # Adders/Subtractors                                   : 1
  32-bit adder                                          : 1
-# Registers                                            : 145
- 1-bit register                                        : 27
- 32-bit register                                       : 1
+# Registers                                            : 163
+ 1-bit register                                        : 44
+ 32-bit register                                       : 2
  4-bit register                                        : 16
  8-bit register                                        : 101
 # Comparators                                          : 2
  4-bit comparator equal                                : 1
  8-bit comparator greater                              : 1
-# Multiplexers                                         : 15
- 1-bit 16-to-1 multiplexer                             : 1
- 1-bit 2-to-1 multiplexer                              : 8
+# Multiplexers                                         : 147
+ 1-bit 16-to-1 multiplexer                             : 2
+ 1-bit 2-to-1 multiplexer                              : 82
+ 2-bit 2-to-1 multiplexer                              : 1
  3-bit 2-to-1 multiplexer                              : 2
- 3-bit 4-to-1 multiplexer                              : 1
- 4-bit 16-to-1 multiplexer                             : 1
- 8-bit 16-to-1 multiplexer                             : 1
+ 4-bit 16-to-1 multiplexer                             : 2
+ 4-bit 2-to-1 multiplexer                              : 20
+ 5-bit 2-to-1 multiplexer                              : 8
+ 8-bit 16-to-1 multiplexer                             : 2
+ 8-bit 2-to-1 multiplexer                              : 27
  8-bit 81-to-1 multiplexer                             : 1
 
 =========================================================================
@@ -344,13 +350,66 @@ Macro Statistics
 *                       Advanced HDL Synthesis                          *
 =========================================================================
 
-WARNING:Xst:1293 - FF/Latch <mem_reset> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem_init> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem_dump> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:2677 - Node <execute.tmpIndex_4> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_5> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_6> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_7> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_8> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_9> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_10> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_11> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_12> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_13> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_14> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_15> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_16> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_17> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_18> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_19> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_20> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_21> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_22> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_23> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_24> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_25> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_26> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_27> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_28> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_29> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_30> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_31> of sequential type is unconnected in block <CachedMemory>.
 
 Synthesizing (advanced) Unit <CachedMemory>.
 The following registers are absorbed into counter <mem_clk_process.clkCnt>: 1 register on signal <mem_clk_process.clkCnt>.
 Unit <CachedMemory> synthesized (advanced).
+WARNING:Xst:2677 - Node <execute.tmpIndex_4> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_5> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_6> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_7> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_8> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_9> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_10> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_11> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_12> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_13> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_14> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_15> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_16> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_17> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_18> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_19> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_20> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_21> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_22> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_23> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_24> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_25> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_26> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_27> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_28> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_29> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_30> of sequential type is unconnected in block <CachedMemory>.
+WARNING:Xst:2677 - Node <execute.tmpIndex_31> of sequential type is unconnected in block <CachedMemory>.
 
 =========================================================================
 Advanced HDL Synthesis Report
@@ -358,18 +417,19 @@ Advanced HDL Synthesis Report
 Macro Statistics
 # Counters                                             : 1
  32-bit up counter                                     : 1
-# Registers                                            : 899
- Flip-Flops                                            : 899
+# Registers                                            : 920
+ Flip-Flops                                            : 920
 # Comparators                                          : 2
  4-bit comparator equal                                : 1
  8-bit comparator greater                              : 1
-# Multiplexers                                         : 15
- 1-bit 16-to-1 multiplexer                             : 1
- 1-bit 2-to-1 multiplexer                              : 8
+# Multiplexers                                         : 167
+ 1-bit 16-to-1 multiplexer                             : 26
+ 1-bit 2-to-1 multiplexer                              : 82
+ 2-bit 2-to-1 multiplexer                              : 1
  3-bit 2-to-1 multiplexer                              : 2
- 3-bit 4-to-1 multiplexer                              : 1
- 4-bit 16-to-1 multiplexer                             : 1
- 8-bit 16-to-1 multiplexer                             : 1
+ 4-bit 2-to-1 multiplexer                              : 20
+ 5-bit 2-to-1 multiplexer                              : 8
+ 8-bit 2-to-1 multiplexer                              : 27
  8-bit 81-to-1 multiplexer                             : 1
 
 =========================================================================
@@ -377,823 +437,32 @@ Macro Statistics
 =========================================================================
 *                         Low Level Synthesis                           *
 =========================================================================
-WARNING:Xst:1293 - FF/Latch <mem_init> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem_dump> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem_reset> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem_we> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:3001 - This design contains one or more registers or latches with an active
+   asynchronous set and asynchronous reset. While this circuit can be built,
+   it creates a sub-optimal implementation in terms of area, power and
+   performance. For a more optimal implementation Xilinx highly recommends
+   one of the following:
+
+          1) Remove either the set or reset from all registers and latches if
+             not needed for required functionality
+          2) Modify the code in order to produce a synchronous set
+             and/or reset (both is preferred)
+          3) Use the -async_to_sync option to transform the asynchronous
+             set/reset to synchronous operation
+             (timing simulation highly recommended when using this option)
+
+  Please refer to http://www.xilinx.com search string "Artix7 asynchronous set/reset" for more details.
+
+  List of register instances with asynchronous set and reset:
+    state_3 in unit <CachedMemory>
+    state_0 in unit <CachedMemory>
+    state_1 in unit <CachedMemory>
+    state_2 in unit <CachedMemory>
+
 
 Optimizing unit <CachedMemory> ...
 
 Optimizing unit <Memory> ...
-WARNING:Xst:1293 - FF/Latch <mem/reg_32_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_32_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_32_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_32_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_32_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_34_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_34_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_34_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_34_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_34_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_34_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_34_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_34_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_31_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_31_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_31_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_31_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_31_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_31_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_31_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_31_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_30_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_30_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_30_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_36_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_36_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_36_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_36_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_36_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_36_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_35_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_35_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_35_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_35_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_35_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_35_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_35_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_35_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_33_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_33_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_33_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_33_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_33_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_33_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_33_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_33_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_32_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_32_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_32_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_29_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_29_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_29_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_29_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_25_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_25_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_25_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_25_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_25_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_25_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_25_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_25_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_24_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_24_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_24_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_24_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_24_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_24_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_24_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_24_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_26_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_26_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_26_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_26_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_30_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_30_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_30_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_30_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_30_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_28_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_28_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_28_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_28_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_28_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_28_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_28_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_28_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_27_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_27_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_27_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_27_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_27_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_27_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_27_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_27_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_29_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_29_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_29_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_29_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_47_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_47_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_47_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_47_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_47_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_47_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_47_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_43_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_43_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_43_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_43_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_43_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_43_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_43_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_43_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_42_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_42_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_42_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_42_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_42_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_42_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_42_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_42_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_44_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_50_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_50_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_50_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_50_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_50_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_50_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_50_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_50_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_46_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_46_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_46_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_46_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_46_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_46_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_46_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_46_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_45_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_45_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_45_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_45_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_45_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_45_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_45_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_45_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_47_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_38_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_38_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_38_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_38_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_38_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_38_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_37_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_37_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_37_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_37_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_37_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_37_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_37_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_37_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_39_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_39_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_39_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_39_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_39_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_39_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_39_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_39_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_36_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_36_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_44_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_44_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_44_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_44_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_44_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_44_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_44_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_41_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_41_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_41_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_41_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_41_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_41_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_41_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_41_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_40_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_40_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_40_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_40_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_40_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_40_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_40_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_40_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_38_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_38_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_9_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_8_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_8_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_8_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_8_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_8_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_8_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_8_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_8_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_6_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_6_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_6_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_6_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_6_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_6_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_6_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_6_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_5_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_5_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_5_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_5_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_5_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_5_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_5_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_11_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_11_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_10_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_10_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_10_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_10_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_10_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_10_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_10_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_10_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_12_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_12_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_12_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_12_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_12_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_12_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_12_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_12_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_9_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_9_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_9_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_9_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_9_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_9_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_9_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_4_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_4_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_4_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_4_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_4_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_4_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_4_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_4_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_0_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_0_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_0_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_0_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_0_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_0_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_0_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_0_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_1_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_1_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_1_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_1_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_1_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_1_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_1_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_1_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_5_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_7_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_7_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_7_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_7_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_7_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_7_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_7_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_7_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_3_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_3_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_3_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_3_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_3_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_3_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_3_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_3_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_2_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_2_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_2_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_2_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_2_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_2_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_2_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_2_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_23_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_23_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_23_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_20_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_20_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_20_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_20_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_20_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_20_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_20_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_20_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_19_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_19_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_19_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_19_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_19_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_19_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_19_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_19_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_17_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_17_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_17_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_17_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_17_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_26_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_26_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_26_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_26_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_22_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_22_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_22_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_22_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_22_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_22_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_22_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_22_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_21_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_21_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_21_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_21_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_21_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_21_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_21_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_21_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_23_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_23_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_23_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_23_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_23_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_14_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_14_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_13_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_13_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_13_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_13_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_13_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_13_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_13_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_13_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_15_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_15_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_15_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_15_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_15_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_15_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_15_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_15_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_11_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_11_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_11_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_11_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_11_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_11_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_17_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_17_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_17_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_16_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_16_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_16_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_16_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_16_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_16_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_16_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_16_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_18_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_18_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_18_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_18_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_18_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_18_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_18_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_18_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_14_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_14_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_14_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_14_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_14_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_14_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_71_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_71_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_71_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_71_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_71_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_71_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_71_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_71_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_69_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_69_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_69_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_69_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_69_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_69_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_69_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_69_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_70_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_70_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_70_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_70_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_70_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_70_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_70_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_70_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_72_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_72_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_72_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_72_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_72_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_72_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_72_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_72_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_64_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_64_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_64_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_64_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_64_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_64_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_64_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_64_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_68_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_68_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_68_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_68_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_68_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_68_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_68_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_68_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_66_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_66_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_66_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_66_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_66_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_66_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_66_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_66_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_67_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_67_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_67_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_67_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_67_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_67_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_67_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_67_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_77_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_77_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_77_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_77_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_77_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_77_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_77_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_77_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_78_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_78_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_78_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_78_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_78_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_78_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_78_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_78_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_79_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_79_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_79_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_79_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_79_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_79_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_79_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_79_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <mem/reg_80_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <mem/reg_80_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <mem/reg_80_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <mem/reg_80_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <mem/reg_80_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <mem/reg_80_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <mem/reg_80_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <mem/reg_80_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_73_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_73_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_73_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_73_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_73_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_73_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_73_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_73_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_76_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_76_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_76_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_76_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_76_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_76_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_76_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_76_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_74_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_74_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_74_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_74_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_74_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_74_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_74_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_74_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_75_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_75_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_75_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_75_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_75_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_75_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_75_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_75_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_55_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_55_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_55_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_55_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_55_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_55_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_55_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_55_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_53_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_53_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_53_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_53_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_53_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_53_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_53_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_53_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_54_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_54_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_54_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_54_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_54_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_54_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_54_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_54_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_56_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_56_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_56_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_56_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_56_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_56_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_56_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_56_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_48_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_48_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_48_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_48_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_48_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_48_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_48_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_48_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_49_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_49_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_49_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_49_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_49_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_49_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_49_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_49_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_51_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_51_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_51_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_51_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_51_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_51_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_51_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_51_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_52_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_52_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_52_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_52_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_52_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_52_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_52_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_52_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_61_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_61_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_61_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_61_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_61_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_61_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_61_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_61_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_62_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_62_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_62_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_62_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_62_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_62_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_62_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_62_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_65_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_65_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_65_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_65_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_65_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_65_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_65_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_65_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_63_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_63_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_63_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_63_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_63_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_63_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_63_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_63_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_57_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_57_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_57_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_57_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_57_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_57_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_57_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_57_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_60_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_60_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_60_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_60_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_60_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_60_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_60_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_60_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_59_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_59_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_59_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_59_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_59_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_59_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_59_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_59_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_58_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_58_6> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_58_5> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_58_4> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_58_3> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_58_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_58_1> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1293 - FF/Latch <mem/reg_58_0> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem/output_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem/output_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem/output_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem/output_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem/output_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem/output_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem/output_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem/output_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[7]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[7]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[7]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[7]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[7]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[7]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[7]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[7]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[5]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[5]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[5]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[5]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[5]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[5]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[5]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[5]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[6]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[6]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[6]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[6]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[6]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[6]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[6]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[6]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[8]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[8]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[8]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[8]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[8]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[8]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[8]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[8]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[2]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[2]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[2]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[2]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[2]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[2]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[2]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[2]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[1]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[1]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[1]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[1]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[1]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[1]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[1]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[1]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[3]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[3]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[3]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[3]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[3]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[3]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[3]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[3]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[4]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[4]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[4]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[4]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[4]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[4]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[4]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[4]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[13]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[13]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[13]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[13]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[13]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[13]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[13]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[13]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[14]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[14]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[14]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[14]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[14]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[14]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[14]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[14]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[15]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[15]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[15]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[15]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[15]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[15]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[15]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[15]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[0]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[0]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[0]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[0]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[0]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[0]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[0]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[0]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[9]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[9]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[9]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[9]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[9]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[9]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[9]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[9]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[10]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[10]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[10]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[10]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[10]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[10]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[10]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[10]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[12]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[12]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[12]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[12]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[12]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[12]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[12]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[12]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[11]_data_0> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[11]_data_1> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[11]_data_2> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[11]_data_3> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[11]_data_4> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[11]_data_5> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[11]_data_6> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <cache[11]_data_7> (without init value) has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_addr_2> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem/iaddr_2> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_addr_3> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem/iaddr_3> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_re> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_data_in_0> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_data_in_1> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_data_in_2> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_data_in_3> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_data_in_4> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_data_in_5> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_data_in_6> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_addr_1> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem/iaddr_1> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_addr_0> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem/iaddr_0> is unconnected in block <CachedMemory>.
-WARNING:Xst:1898 - Due to constant pushing, FF/Latch <mem_data_in_7> is unconnected in block <CachedMemory>.
-WARNING:Xst:2677 - Node <mem_addr_4> of sequential type is unconnected in block <CachedMemory>.
-WARNING:Xst:2677 - Node <mem_addr_5> of sequential type is unconnected in block <CachedMemory>.
-WARNING:Xst:2677 - Node <mem_addr_6> of sequential type is unconnected in block <CachedMemory>.
-WARNING:Xst:2677 - Node <mem_addr_7> of sequential type is unconnected in block <CachedMemory>.
-WARNING:Xst:2677 - Node <mem/iaddr_7> of sequential type is unconnected in block <CachedMemory>.
-WARNING:Xst:2677 - Node <mem/iaddr_6> of sequential type is unconnected in block <CachedMemory>.
-WARNING:Xst:2677 - Node <mem/iaddr_5> of sequential type is unconnected in block <CachedMemory>.
-WARNING:Xst:2677 - Node <mem/iaddr_4> of sequential type is unconnected in block <CachedMemory>.
 WARNING:Xst:1293 - FF/Latch <mem_clk_process.clkCnt_31> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem_clk_process.clkCnt_30> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem_clk_process.clkCnt_29> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
@@ -1227,7 +496,7 @@ WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem_clk_process.clk
 
 Mapping all equations...
 Building and optimizing final netlist ...
-Found area constraint ratio of 100 (+ 5) on block CachedMemory, actual ratio is 0.
+Found area constraint ratio of 100 (+ 5) on block CachedMemory, actual ratio is 2.
 
 Final Macro Processing ...
 
@@ -1235,8 +504,8 @@ Final Macro Processing ...
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 88
- Flip-Flops                                            : 88
+# Registers                                            : 923
+ Flip-Flops                                            : 923
 
 =========================================================================
 
@@ -1259,30 +528,34 @@ Top Level Output File Name         : CachedMemory.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 165
+# BELS                             : 813
 #      GND                         : 1
-#      INV                         : 2
+#      INV                         : 1
 #      LUT1                        : 1
-#      LUT2                        : 13
-#      LUT3                        : 2
-#      LUT4                        : 21
-#      LUT5                        : 3
-#      LUT6                        : 103
+#      LUT2                        : 15
+#      LUT3                        : 25
+#      LUT4                        : 28
+#      LUT5                        : 104
+#      LUT6                        : 559
 #      MUXCY                       : 1
-#      MUXF7                       : 10
-#      MUXF8                       : 5
+#      MUXF7                       : 61
+#      MUXF8                       : 14
 #      VCC                         : 1
 #      XORCY                       : 2
-# FlipFlops/Latches                : 88
-#      FD                          : 2
-#      FDC                         : 1
-#      FDE                         : 65
-#      FDP                         : 2
-#      FDR                         : 18
-# Clock Buffers                    : 1
+# FlipFlops/Latches                : 924
+#      FD                          : 37
+#      FDC                         : 4
+#      FDE                         : 196
+#      FDP                         : 1
+#      FDR                         : 27
+#      FDRE                        : 656
+#      FDS                         : 2
+#      LDC                         : 1
+# Clock Buffers                    : 2
+#      BUFG                        : 1
 #      BUFGP                       : 1
-# IO Buffers                       : 22
-#      IBUF                        : 13
+# IO Buffers                       : 30
+#      IBUF                        : 21
 #      OBUF                        : 9
 
 Device utilization summary:
@@ -1292,23 +565,23 @@ Selected Device : 7a100tcsg324-3
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:              88  out of  126800     0%  
- Number of Slice LUTs:                  145  out of  63400     0%  
-    Number used as Logic:               145  out of  63400     0%  
+ Number of Slice Registers:             924  out of  126800     0%  
+ Number of Slice LUTs:                  733  out of  63400     1%  
+    Number used as Logic:               733  out of  63400     1%  
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:    145
-   Number with an unused Flip Flop:      57  out of    145    39%  
-   Number with an unused LUT:             0  out of    145     0%  
-   Number of fully used LUT-FF pairs:    88  out of    145    60%  
-   Number of unique control sets:         6
+ Number of LUT Flip Flop pairs used:   1498
+   Number with an unused Flip Flop:     574  out of   1498    38%  
+   Number with an unused LUT:           765  out of   1498    51%  
+   Number of fully used LUT-FF pairs:   159  out of   1498    10%  
+   Number of unique control sets:       109
 
 IO Utilization: 
  Number of IOs:                          31
- Number of bonded IOBs:                  23  out of    210    10%  
+ Number of bonded IOBs:                  31  out of    210    14%  
 
 Specific Feature Utilization:
- Number of BUFG/BUFGCTRLs:                1  out of     32     3%  
+ Number of BUFG/BUFGCTRLs:                2  out of     32     6%  
 
 ---------------------------
 Partition Resource Summary:
@@ -1328,12 +601,16 @@ NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
 
 Clock Information:
 ------------------
------------------------------------+------------------------+-------+
-Clock Signal                       | Clock buffer(FF name)  | Load  |
------------------------------------+------------------------+-------+
-clk                                | BUFGP                  | 84    |
-mem_clk                            | NONE(state_2)          | 4     |
------------------------------------+------------------------+-------+
+-------------------------------------------------------+------------------------+-------+
+Clock Signal                                           | Clock buffer(FF name)  | Load  |
+-------------------------------------------------------+------------------------+-------+
+clk                                                    | BUFGP                  | 253   |
+mem_clk                                                | BUFG                   | 670   |
+PWR_6_o_GND_6_o_AND_358_o(PWR_6_o_GND_6_o_AND_358_o1:O)| NONE(*)(state_0_LDC)   | 1     |
+-------------------------------------------------------+------------------------+-------+
+(*) This 1 clock signal(s) are generated by combinatorial logic,
+and XST is not able to identify which are the primary clock signals.
+Please use the CLOCK_SIGNAL constraint to specify the clock signal(s) generated by combinatorial logic.
 INFO:Xst:2169 - HDL ADVISOR - Some clock signals were not automatically buffered by XST with BUFG/BUFR resources. Please use the buffer_type constraint in order to insert these buffers to the clock signals to help prevent skew problems.
 
 Asynchronous Control Signals Information:
@@ -1344,10 +621,10 @@ Timing Summary:
 ---------------
 Speed Grade: -3
 
-   Minimum period: 3.031ns (Maximum Frequency: 329.946MHz)
-   Minimum input arrival time before clock: 2.922ns
-   Maximum output required time after clock: 0.645ns
-   Maximum combinational path delay: No path found
+   Minimum period: 4.036ns (Maximum Frequency: 247.771MHz)
+   Minimum input arrival time before clock: 4.790ns
+   Maximum output required time after clock: 1.799ns
+   Maximum combinational path delay: 1.685ns
 
 Timing Details:
 ---------------
@@ -1355,131 +632,250 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clk'
-  Clock period: 3.031ns (frequency: 329.946MHz)
-  Total number of paths / destination ports: 7851 / 150
+  Clock period: 4.036ns (frequency: 247.771MHz)
+  Total number of paths / destination ports: 72854 / 254
 -------------------------------------------------------------------------
-Delay:               3.031ns (Levels of Logic = 6)
-  Source:            cache[6]_tag_0 (FF)
-  Destination:       cache[0]_v (FF)
+Delay:               4.036ns (Levels of Logic = 7)
+  Source:            cache[5]_v (FF)
+  Destination:       mem_data_in_0 (FF)
   Source Clock:      clk rising
   Destination Clock: clk rising
 
-  Data Path: cache[6]_tag_0 to cache[0]_v
+  Data Path: cache[5]_v to mem_data_in_0
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q              2   0.361   0.561  cache[6]_tag_0 (cache[6]_tag_0)
-     LUT6:I2->O            1   0.097   0.000  Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_51 (Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_51)
-     MUXF7:I1->O           1   0.279   0.000  Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_4_f7 (Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_4_f7)
-     MUXF8:I0->O           1   0.218   0.379  Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_2_f8 (addr[3]_cache[15]_tag[3]_wide_mux_20_OUT<0>)
-     LUT4:I2->O            2   0.097   0.384  n00344_SW0 (N01)
-     LUT6:I4->O           17   0.097   0.454  _n167231 (_n16723)
-     LUT6:I4->O            1   0.097   0.000  cache[7]_v_glue_set (cache[7]_v_glue_set)
-     FDR:D                     0.008          cache[7]_v
+     FDR:C->Q              4   0.361   0.393  cache[5]_v (cache[5]_v)
+     LUT2:I0->O            3   0.097   0.566  cache[5]_v_cache[5]_d_AND_292_o1 (cache[5]_v_cache[5]_d_AND_292_o)
+     LUT6:I2->O            1   0.097   0.379  Mmux_PWR_6_o_GND_6_o_mux_41_OUT26 (Mmux_PWR_6_o_GND_6_o_mux_41_OUT25)
+     LUT6:I4->O           49   0.097   0.793  Mmux_PWR_6_o_GND_6_o_mux_41_OUT27 (PWR_6_o_GND_6_o_mux_41_OUT<1>)
+     LUT6:I1->O            1   0.097   0.000  mux16_4_f7_G (N465)
+     MUXF7:I1->O           1   0.279   0.379  mux16_4_f7 (mux16_4_f7)
+     LUT6:I4->O            1   0.097   0.295  Mmux_GND_6_o_mem_data_in[7]_mux_493_OUT11 (GND_6_o_mem_data_in[7]_mux_493_OUT<0>)
+     LUT6:I5->O            1   0.097   0.000  mem_data_in_0_rstpot (mem_data_in_0_rstpot)
+     FD:D                      0.008          mem_data_in_0
     ----------------------------------------
-    Total                      3.031ns (1.254ns logic, 1.777ns route)
-                                       (41.4% logic, 58.6% route)
+    Total                      4.036ns (1.230ns logic, 2.806ns route)
+                                       (30.5% logic, 69.5% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'mem_clk'
-  Clock period: 1.503ns (frequency: 665.159MHz)
-  Total number of paths / destination ports: 20 / 8
+  Clock period: 3.336ns (frequency: 299.804MHz)
+  Total number of paths / destination ports: 5767 / 675
 -------------------------------------------------------------------------
-Delay:               1.503ns (Levels of Logic = 1)
-  Source:            state_2 (FF)
-  Destination:       state_2 (FF)
+Delay:               3.336ns (Levels of Logic = 4)
+  Source:            state_0_P_0 (FF)
+  Destination:       state_0_C_0 (FF)
   Source Clock:      mem_clk rising
   Destination Clock: mem_clk rising
 
-  Data Path: state_2 to state_2
+  Data Path: state_0_P_0 to state_0_C_0
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDC:C->Q              7   0.361   0.407  state_2 (state_2)
-     LUT2:I0->O            3   0.097   0.289  GND_6_o_GND_6_o_OR_44_o1 (GND_6_o_GND_6_o_OR_44_o)
-     FDC:CLR                   0.349          state_2
+     FDP:C->Q              8   0.361   0.716  state_0_P_0 (state_0_P_0)
+     LUT5:I0->O           44   0.097   0.620  GND_6_o_state[3]_equal_200_o<3>11 (GND_6_o_state[3]_equal_200_o<3>1)
+     LUT6:I3->O            4   0.097   0.309  GND_6_o_GND_6_o_AND_342_o1 (GND_6_o_GND_6_o_AND_342_o)
+     LUT5:I4->O            4   0.097   0.309  PWR_6_o_GND_6_o_OR_89_o1 (PWR_6_o_GND_6_o_OR_89_o)
+     LUT4:I3->O            2   0.097   0.283  PWR_6_o_GND_6_o_AND_359_o1 (PWR_6_o_GND_6_o_AND_359_o)
+     FDC:CLR                   0.349          state_0_C_0
     ----------------------------------------
-    Total                      1.503ns (0.807ns logic, 0.696ns route)
-                                       (53.7% logic, 46.3% route)
+    Total                      3.336ns (1.098ns logic, 2.238ns route)
+                                       (32.9% logic, 67.1% route)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'PWR_6_o_GND_6_o_AND_358_o'
+  Clock period: 3.059ns (frequency: 326.956MHz)
+  Total number of paths / destination ports: 4 / 1
+-------------------------------------------------------------------------
+Delay:               3.059ns (Levels of Logic = 4)
+  Source:            state_0_LDC (LATCH)
+  Destination:       state_0_LDC (LATCH)
+  Source Clock:      PWR_6_o_GND_6_o_AND_358_o falling
+  Destination Clock: PWR_6_o_GND_6_o_AND_358_o falling
+
+  Data Path: state_0_LDC to state_0_LDC
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     LDC:G->Q              8   0.472   0.328  state_0_LDC (state_0_LDC)
+     LUT5:I4->O           44   0.097   0.620  GND_6_o_state[3]_equal_200_o<3>11 (GND_6_o_state[3]_equal_200_o<3>1)
+     LUT6:I3->O            4   0.097   0.309  GND_6_o_GND_6_o_AND_342_o1 (GND_6_o_GND_6_o_AND_342_o)
+     LUT5:I4->O            4   0.097   0.309  PWR_6_o_GND_6_o_OR_89_o1 (PWR_6_o_GND_6_o_OR_89_o)
+     LUT4:I3->O            2   0.097   0.283  PWR_6_o_GND_6_o_AND_359_o1 (PWR_6_o_GND_6_o_AND_359_o)
+     LDC:CLR                   0.349          state_0_LDC
+    ----------------------------------------
+    Total                      3.059ns (1.209ns logic, 1.850ns route)
+                                       (39.5% logic, 60.5% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clk'
-  Total number of paths / destination ports: 6746 / 161
+  Total number of paths / destination ports: 62379 / 465
 -------------------------------------------------------------------------
-Offset:              2.922ns (Levels of Logic = 7)
-  Source:            addr<1> (PAD)
-  Destination:       cache[0]_v (FF)
+Offset:              4.790ns (Levels of Logic = 8)
+  Source:            dump (PAD)
+  Destination:       mem_addr_0 (FF)
   Destination Clock: clk rising
 
-  Data Path: addr<1> to cache[0]_v
+  Data Path: dump to mem_addr_0
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O           105   0.001   0.811  addr_1_IBUF (addr_1_IBUF)
-     LUT6:I0->O            1   0.097   0.000  Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_51 (Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_51)
-     MUXF7:I1->O           1   0.279   0.000  Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_4_f7 (Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_4_f7)
-     MUXF8:I0->O           1   0.218   0.379  Mmux_addr[3]_cache[15]_tag[3]_wide_mux_20_OUT_2_f8 (addr[3]_cache[15]_tag[3]_wide_mux_20_OUT<0>)
-     LUT4:I2->O            2   0.097   0.384  n00344_SW0 (N01)
-     LUT6:I4->O           17   0.097   0.454  _n167231 (_n16723)
-     LUT6:I4->O            1   0.097   0.000  cache[7]_v_glue_set (cache[7]_v_glue_set)
-     FDR:D                     0.008          cache[7]_v
+     IBUF:I->O            32   0.001   0.790  dump_IBUF (dump_IBUF)
+     LUT5:I0->O           49   0.097   0.803  init_we_AND_286_o1 (init_we_AND_286_o)
+     LUT6:I0->O           11   0.097   0.740  _n4835_inv11 (_n4835_inv1)
+     LUT6:I0->O            1   0.097   0.000  _n2665121_SW0_G (N421)
+     MUXF7:I1->O           3   0.279   0.521  _n2665121_SW0 (N86)
+     LUT3:I0->O            1   0.097   0.683  _n21621_SW0_SW0 (N266)
+     LUT6:I1->O            2   0.097   0.383  Reset_OR_DriverANDClockEnable21_SW1 (N90)
+     LUT6:I4->O            1   0.097   0.000  mem_addr_0_rstpot (mem_addr_0_rstpot)
+     FD:D                      0.008          mem_addr_0
     ----------------------------------------
-    Total                      2.922ns (0.894ns logic, 2.028ns route)
-                                       (30.6% logic, 69.4% route)
+    Total                      4.790ns (0.870ns logic, 3.920ns route)
+                                       (18.2% logic, 81.8% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'mem_clk'
+  Total number of paths / destination ports: 435 / 5
+-------------------------------------------------------------------------
+Offset:              3.850ns (Levels of Logic = 8)
+  Source:            addr<1> (PAD)
+  Destination:       state_0_C_0 (FF)
+  Destination Clock: mem_clk rising
+
+  Data Path: addr<1> to state_0_C_0
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            74   0.001   0.807  addr_1_IBUF (addr_1_IBUF)
+     LUT6:I0->O            1   0.097   0.000  mux_51 (mux_51)
+     MUXF7:I1->O           1   0.279   0.000  mux_4_f7 (mux_4_f7)
+     MUXF8:I0->O           3   0.218   0.389  mux_2_f8 (addr[3]_cache[15]_tag[3]_wide_mux_356_OUT<0>)
+     LUT4:I2->O           10   0.097   0.421  n06554_SW0 (N5)
+     LUT6:I4->O            4   0.097   0.309  GND_6_o_GND_6_o_AND_342_o1 (GND_6_o_GND_6_o_AND_342_o)
+     LUT5:I4->O            4   0.097   0.309  PWR_6_o_GND_6_o_OR_89_o1 (PWR_6_o_GND_6_o_OR_89_o)
+     LUT4:I3->O            2   0.097   0.283  PWR_6_o_GND_6_o_AND_359_o1 (PWR_6_o_GND_6_o_AND_359_o)
+     FDC:CLR                   0.349          state_0_C_0
+    ----------------------------------------
+    Total                      3.850ns (1.332ns logic, 2.518ns route)
+                                       (34.6% logic, 65.4% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'PWR_6_o_GND_6_o_AND_358_o'
+  Total number of paths / destination ports: 129 / 1
+-------------------------------------------------------------------------
+Offset:              3.850ns (Levels of Logic = 8)
+  Source:            addr<1> (PAD)
+  Destination:       state_0_LDC (LATCH)
+  Destination Clock: PWR_6_o_GND_6_o_AND_358_o falling
+
+  Data Path: addr<1> to state_0_LDC
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            74   0.001   0.807  addr_1_IBUF (addr_1_IBUF)
+     LUT6:I0->O            1   0.097   0.000  mux_51 (mux_51)
+     MUXF7:I1->O           1   0.279   0.000  mux_4_f7 (mux_4_f7)
+     MUXF8:I0->O           3   0.218   0.389  mux_2_f8 (addr[3]_cache[15]_tag[3]_wide_mux_356_OUT<0>)
+     LUT4:I2->O           10   0.097   0.421  n06554_SW0 (N5)
+     LUT6:I4->O            4   0.097   0.309  GND_6_o_GND_6_o_AND_342_o1 (GND_6_o_GND_6_o_AND_342_o)
+     LUT5:I4->O            4   0.097   0.309  PWR_6_o_GND_6_o_OR_89_o1 (PWR_6_o_GND_6_o_OR_89_o)
+     LUT4:I3->O            2   0.097   0.283  PWR_6_o_GND_6_o_AND_359_o1 (PWR_6_o_GND_6_o_AND_359_o)
+     LDC:CLR                   0.349          state_0_LDC
+    ----------------------------------------
+    Total                      3.850ns (1.332ns logic, 2.518ns route)
+                                       (34.6% logic, 65.4% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clk'
-  Total number of paths / destination ports: 1 / 1
+  Total number of paths / destination ports: 129 / 9
 -------------------------------------------------------------------------
-Offset:              0.645ns (Levels of Logic = 1)
-  Source:            dataReady (FF)
-  Destination:       ack (PAD)
+Offset:              1.799ns (Levels of Logic = 4)
+  Source:            cache[6]_data_7 (FF)
+  Destination:       output<7> (PAD)
   Source Clock:      clk rising
 
-  Data Path: dataReady to ack
+  Data Path: cache[6]_data_7 to output<7>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               2   0.361   0.283  dataReady (dataReady)
-     OBUF:I->O                 0.000          ack_OBUF (ack)
+     FDE:C->Q              2   0.361   0.561  cache[6]_data_7 (cache[6]_data_7)
+     LUT6:I2->O            1   0.097   0.000  mux11_51 (mux11_51)
+     MUXF7:I1->O           1   0.279   0.000  mux11_4_f7 (mux11_4_f7)
+     MUXF8:I0->O           2   0.218   0.283  mux11_2_f8 (output_7_OBUF)
+     OBUF:I->O                 0.000          output_7_OBUF (output<7>)
     ----------------------------------------
-    Total                      0.645ns (0.361ns logic, 0.283ns route)
-                                       (56.0% logic, 44.0% route)
+    Total                      1.799ns (0.955ns logic, 0.844ns route)
+                                       (53.1% logic, 46.9% route)
+
+=========================================================================
+Timing constraint: Default path analysis
+  Total number of paths / destination ports: 88 / 8
+-------------------------------------------------------------------------
+Delay:               1.685ns (Levels of Logic = 5)
+  Source:            addr<1> (PAD)
+  Destination:       output<7> (PAD)
+
+  Data Path: addr<1> to output<7>
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            74   0.001   0.807  addr_1_IBUF (addr_1_IBUF)
+     LUT6:I0->O            1   0.097   0.000  mux6_51 (mux6_51)
+     MUXF7:I1->O           1   0.279   0.000  mux6_4_f7 (mux6_4_f7)
+     MUXF8:I0->O           2   0.218   0.283  mux6_2_f8 (output_2_OBUF)
+     OBUF:I->O                 0.000          output_2_OBUF (output<2>)
+    ----------------------------------------
+    Total                      1.685ns (0.595ns logic, 1.090ns route)
+                                       (35.3% logic, 64.7% route)
 
 =========================================================================
 
 Cross Clock Domains Report:
 --------------------------
 
+Clock to Setup on destination clock PWR_6_o_GND_6_o_AND_358_o
+-------------------------+---------+---------+---------+---------+
+                         | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock             |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+-------------------------+---------+---------+---------+---------+
+PWR_6_o_GND_6_o_AND_358_o|         |         |    3.059|         |
+clk                      |         |         |    3.964|         |
+mem_clk                  |         |         |    3.336|         |
+-------------------------+---------+---------+---------+---------+
+
 Clock to Setup on destination clock clk
----------------+---------+---------+---------+---------+
-               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
-Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
----------------+---------+---------+---------+---------+
-clk            |    3.031|         |         |         |
-mem_clk        |    2.380|         |         |         |
----------------+---------+---------+---------+---------+
+-------------------------+---------+---------+---------+---------+
+                         | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock             |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+-------------------------+---------+---------+---------+---------+
+PWR_6_o_GND_6_o_AND_358_o|         |    4.647|         |         |
+clk                      |    4.036|         |         |         |
+mem_clk                  |    4.404|         |         |         |
+-------------------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem_clk
----------------+---------+---------+---------+---------+
-               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
-Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
----------------+---------+---------+---------+---------+
-mem_clk        |    1.503|         |         |         |
----------------+---------+---------+---------+---------+
+-------------------------+---------+---------+---------+---------+
+                         | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock             |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+-------------------------+---------+---------+---------+---------+
+PWR_6_o_GND_6_o_AND_358_o|         |    3.059|         |         |
+clk                      |    3.964|         |         |         |
+mem_clk                  |    3.336|         |         |         |
+-------------------------+---------+---------+---------+---------+
 
 =========================================================================
 
 
-Total REAL time to Xst completion: 15.00 secs
-Total CPU time to Xst completion: 11.65 secs
+Total REAL time to Xst completion: 22.00 secs
+Total CPU time to Xst completion: 17.21 secs
  
 --> 
 
 
-Total memory usage is 516712 kilobytes
+Total memory usage is 518852 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :  847 (   0 filtered)
+Number of warnings :   87 (   0 filtered)
 Number of infos    :    2 (   0 filtered)
 

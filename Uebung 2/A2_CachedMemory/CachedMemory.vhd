@@ -88,7 +88,7 @@ architecture Behavioral of CachedMemory is
   type cacheStruct is array (0 to 15) of cacheLine;
   signal cache : cacheStruct;
   
-  type stateType is (none, wb, wb_ready, reading, re_ready);
+  type stateType is (none, wb, wb_ready, reading, re_ready, resetting, reset_ready, initializing, init_ready, dumping, dump_ready);
   signal state : stateType := none;
   
   signal dataReady : STD_LOGIC := '0';
@@ -132,6 +132,7 @@ begin
     variable tmpIndex : integer;
     variable waitForMem : std_logic := '0';
     variable waitedOneMemClk : std_logic := '0';
+    variable lineToDump : integer := 0;
     
   begin
     if rising_edge(mem_clk) then
@@ -149,6 +150,27 @@ begin
         else
           waitedOneMemClk := '1';
         end if;
+      elsif(state = initializing) then
+        if(waitedOneMemClk = '1') then
+          waitedOneMemClk := '0';
+          state <= init_ready;
+        else
+          waitedOneMemClk := '1';
+        end if;
+      elsif(state = resetting) then
+        if(waitedOneMemClk = '1') then
+          waitedOneMemClk := '0';
+          state <= reset_ready;
+        else
+          waitedOneMemClk := '1';
+        end if;
+      elsif(state = dumping) then
+        if(waitedOneMemClk = '1') then
+          waitedOneMemClk := '0';
+          state <= dump_ready;
+        else
+          waitedOneMemClk := '1';
+        end if;
       else
         -- ignore other states
       end if;
@@ -160,12 +182,71 @@ begin
       -- *** Init ***
       if(init = '1' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
         dataReady <= '0';
-        -- TODO:
+        if(state = none) then
+          mem_init    <= '1';
+          mem_dump    <= '0';
+          mem_reset   <= '0';
+          mem_re      <= '0';
+          mem_we      <= '0';
+          mem_addr    <= (others => '0');
+          mem_data_in <= (others => '0');
+          
+          state <= initializing;
+        elsif(state = init_ready) then
+          state <= none;
+          dataReady <= '1';
+        end if;
+        
         
       -- *** Dump ***
       elsif(init = '0' AND dump = '1' AND reset = '0' AND re = '0' AND we = '0') then
         dataReady <= '0';
-        -- TODO:
+        if(state = none or state = wb_ready) then
+          -- start dumping
+          lineToDump := -1;
+          
+          for i in 0 to cache'length-1 loop
+            if(cache(i).v = '1' and cache(i).d = '1') then
+              lineToDump := i;
+            end if;
+          end loop;
+          
+          if(lineToDump = -1) then
+            mem_init    <= '0';
+            mem_dump    <= '1';
+            mem_reset   <= '0';
+            mem_re      <= '0';
+            mem_we      <= '0';
+            mem_addr    <= (others => '0');
+            mem_data_in <= (others => '0');
+            
+            state <= dumping;
+          else
+            mem_init    <= '0';
+            mem_dump    <= '0';
+            mem_reset   <= '0';
+            mem_re      <= '0';
+            mem_we      <= '1';
+            mem_addr(3 downto 0) <= std_logic_vector(to_unsigned(lineToDump, 4));
+            mem_addr(7 downto 4) <= cache(lineToDump).tag;
+            mem_data_in <= cache(lineToDump).data;
+                  
+            cache(tmpIndex).d <= '0';
+            state <= wb;
+          end if;
+        elsif(state = dump_ready) then
+          mem_init    <= '0';
+          mem_dump    <= '0';
+          mem_reset   <= '0';
+          mem_re      <= '0';
+          mem_we      <= '0';
+          mem_addr    <= (others => '0');
+          mem_data_in <= (others => '0');
+          state <= dumping;
+            
+          dataReady <= '1';
+          state <= none;
+        end if;
         
       -- *** Reset ***
       elsif(init = '0' AND dump = '0' AND reset = '1' AND re = '0' AND we = '0') then
@@ -173,7 +254,20 @@ begin
         for i in 0 to cache'length-1 loop
           cache(i).v <= '0';
         end loop;
-        -- TODO: Reset memory
+        if(state = none) then
+          mem_init    <= '0';
+          mem_dump    <= '0';
+          mem_reset   <= '1';
+          mem_re      <= '0';
+          mem_we      <= '0';
+          mem_addr    <= (others => '0');
+          mem_data_in <= (others => '0');
+          
+          state <= resetting;
+        elsif(state = reset_ready) then
+          state <= none;
+          dataReady <= '1';
+        end if;
         
       -- *** Read ***
       elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '1' AND we = '0') then
@@ -196,7 +290,8 @@ begin
                   mem_reset   <= '0';
                   mem_re      <= '0';
                   mem_we      <= '1';
-                  mem_addr    <= addr;
+                  mem_addr(3 downto 0) <= addr(3 downto 0);
+                  mem_addr(7 downto 4) <= cache(tmpIndex).tag;
                   mem_data_in <= cache(tmpIndex).data;
                   
                   cache(tmpIndex).d <= '0';
@@ -208,7 +303,6 @@ begin
               -- Miss: Andere Daten im Cache und sauber.
               --  Hole Daten aus dem Speicher. Setze data = read
               if((state = none or state = wb_ready) and (waitForMem = '0')) then
-                -- TODO: Read
                 mem_init    <= '0';
                 mem_dump    <= '0';
                 mem_reset   <= '0';
@@ -231,7 +325,6 @@ begin
             -- Miss: Daten nicht im Cache. Dirty und Tag egal da invalid.
             --  Hole Daten aus dem Speicher. Setze v = 1, d = 0, data = read
             if(state = none) then
-              -- TODO: Read
               mem_init    <= '0';
               mem_dump    <= '0';
               mem_reset   <= '0';
@@ -258,29 +351,95 @@ begin
             mem_we      <= '0';
             mem_addr    <= (others => '0');
             mem_data_in <= (others => '0');
-            --mem_output <= (others => '0');
               
             cache(tmpIndex).v <= '1';
             cache(tmpIndex).d <= '0';
             
             dataReady <= '1';
+            state <= none;
           end if;
         end if;
-        
-        
-        
+
       -- *** Write ***
       elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '1') then
         dataReady <= '0';
-      -- TODO
+        if(state = none or state = wb_ready) then
+          tmpTag := addr(7 downto 4);
+          tmpIndex := to_integer(unsigned(addr(3 downto 0)));
+
+          if(cache(tmpIndex).v = '1') then
+            if(cache(tmpIndex).d = '1') then
+              if(tmpTag /= cache(tmpIndex).tag) then
+                -- Andere Daten im Cache und valid und dirty.
+                --  Schreibe zurueck in Speicher. Setze d = 0
+                --  Lesen aus Speicher wird spaeter durchgefuehrt
+                if(state = none) then
+                  -- TODO: Write Back
+                  mem_init    <= '0';
+                  mem_dump    <= '0';
+                  mem_reset   <= '0';
+                  mem_re      <= '0';
+                  mem_we      <= '1';
+                  mem_addr(3 downto 0) <= addr(3 downto 0);
+                  mem_addr(7 downto 4) <= cache(tmpIndex).tag;
+                  mem_data_in <= cache(tmpIndex).data;
+                  
+                  cache(tmpIndex).d <= '0';
+                  
+                  state <= wb;
+                  waitForMem := '1'; -- wird zusaetzlich zu state gesetzt, da sich state erst nach dem prozess aendert
+                end if;
+                -- Daten im Cache und valid und dirty.
+                --  Cache kann ueberschrieben werden
+              end if;
+              -- Daten im Cache und valid und sauber.
+              --  Cache kann ueberschrieben werden
+            end if;
+              -- Daten nicht im Cache.
+              --  Cache kann ueberschrieben werden
+          end if;
+          
+          -- Es sind keine anderen Daten im Cache, er kann ueberschrieben werden
+          if((state = none or state = wb_ready) and (waitForMem = '0')) then
+            mem_init    <= '0';
+            mem_dump    <= '0';
+            mem_reset   <= '0';
+            mem_re      <= '0';
+            mem_we      <= '0';
+            mem_addr    <= (others => '0');
+            mem_data_in <= (others => '0');
+            
+            cache(tmpIndex).tag <= tmpTag;
+            cache(tmpIndex).data <= data_in;
+            cache(tmpIndex).v <= '1';
+            cache(tmpIndex).d <= '1';
+            
+            dataReady <= '1';
+            state <= none;
+          end if;
+        end if;
       
       -- *** Nothing ***
       elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
+        mem_init    <= '0';
+        mem_dump    <= '0';
+        mem_reset   <= '0';
+        mem_re      <= '0';
+        mem_we      <= '0';
+        mem_addr    <= (others => '0');
+        mem_data_in <= (others => '0');
       
       -- *** Fehlerhafte Eingabe ***
       else
+        mem_init    <= '0';
+        mem_dump    <= '0';
+        mem_reset   <= '0';
+        mem_re      <= '0';
+        mem_we      <= '0';
+        mem_addr    <= (others => '0');
+        mem_data_in <= (others => '0');
+        
         dataReady <= '0';
-        -- TODO
       end if;
     end if;
   end process;
