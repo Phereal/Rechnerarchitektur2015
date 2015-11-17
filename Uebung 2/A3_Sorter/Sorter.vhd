@@ -119,8 +119,33 @@ begin
                getOutput := '1';
             else
                firstValue := mem_output;
+               firstValueValid := '1';
             end if;
          end if;
+         
+         --Dies ist eine if-Abfrage statt eines else, da die
+         --Anweisung in demselben Schritt erfolgen darf.
+         if(firstValueValid = '1' AND currentValueValid = '0')
+         then
+            currentValue := firstValue;
+            currentValueValid := 1;
+         end if;
+
+         if(currentValueValid = '1' AND nextValueValid = '0')
+         then 
+            if (getOutput = '0')
+            then
+               mem_addr <= std_logic_vector(unsigned(pointer)+1); --noch night ganz richtig
+               mem_re   <= '1';
+               waitForOutput := '1';
+               getOutput := '1';
+            else
+               nextValue := mem_output;
+               nextValueValid := '1';
+            end if;
+         end if;
+            
+         
       end if;
          
    end if;

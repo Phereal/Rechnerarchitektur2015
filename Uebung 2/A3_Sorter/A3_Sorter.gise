@@ -40,6 +40,8 @@
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_STX" xil_pn:name="Sorter.stx"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_REPORT" xil_pn:name="Sorter.syr"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST" xil_pn:name="Sorter.xst"/>
+    <file xil_pn:fileType="FILE_HTML" xil_pn:name="Sorter_envsettings.html"/>
+    <file xil_pn:fileType="FILE_HTML" xil_pn:name="Sorter_summary.html"/>
     <file xil_pn:fileType="FILE_XRPT" xil_pn:name="Sorter_xst.xrpt"/>
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/xst.xmsgs"/>
     <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="webtalk_pn.xml"/>
@@ -75,9 +77,8 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447763778" xil_pn:in_ck="2918557350967137133" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447763742">
-      <status xil_pn:value="SuccessfullyRun"/>
-      <status xil_pn:value="WarningsGenerated"/>
+    <transform xil_pn:end_ts="1447778926" xil_pn:in_ck="2918557350967137133" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447778901">
+      <status xil_pn:value="FailedRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
@@ -88,7 +89,6 @@
       <outfile xil_pn:name="Sorter.ngc"/>
       <outfile xil_pn:name="Sorter.ngr"/>
       <outfile xil_pn:name="Sorter.prj"/>
-      <outfile xil_pn:name="Sorter.stx"/>
       <outfile xil_pn:name="Sorter.syr"/>
       <outfile xil_pn:name="Sorter.xst"/>
       <outfile xil_pn:name="Sorter_xst.xrpt"/>
