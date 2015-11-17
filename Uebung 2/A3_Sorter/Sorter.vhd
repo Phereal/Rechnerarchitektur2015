@@ -75,6 +75,11 @@ begin
    variable firstValueValid: STD_LOGIC                := '0';
    variable getOutput: STD_LOGIC                      := '0';
    variable waitForOutput: STD_LOGIC                  := '0';   
+   variable amountCorrectLastDigits: Integer          := 0; --Anzahl korrekte Endziffern
+   variable sortAgain: STD_LOGIC                      := '0'; --Durchlauf ohne Sortierung?
+   variable replaceCurrentValue: STD_LOGIC            := '0';
+   
+   
  
  begin
   if rising_edge(clk)
@@ -114,12 +119,14 @@ begin
             if (getOutput = '0')
             then
                mem_addr <= addr_start;
+               mem_we   <= '0';
                mem_re   <= '1';
                waitForOutput := '1';
                getOutput := '1';
             else
                firstValue := mem_output;
                firstValueValid := '1';
+               getOutput := '0';
             end if;
          end if;
          
@@ -128,26 +135,65 @@ begin
          if(firstValueValid = '1' AND currentValueValid = '0')
          then
             currentValue := firstValue;
-            currentValueValid := 1;
+            currentValueValid := '1';
          end if;
 
          if(currentValueValid = '1' AND nextValueValid = '0')
          then 
             if (getOutput = '0')
             then
-               mem_addr <= std_logic_vector(unsigned(pointer)+1); --noch night ganz richtig
+               mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8)); --so richtig?
+               mem_we <= '0';
                mem_re   <= '1';
                waitForOutput := '1';
                getOutput := '1';
             else
                nextValue := mem_output;
                nextValueValid := '1';
+               getOutput := '0';
             end if;
          end if;
+         
+         --Im folgenden Codeblock wird festgestellt, was sortiert wird.
+         --Allerdings wird bei jedem Durchlauf nur 1 Schreibvorgang durchgeführt!
+         --Dies spart Zeit, da der Speicher 1 Clock cycle zum speichern benötigt.
+         --
+         --1. Fall
+         --Wenn der aktuelle Wert größer ist als der nächste Wert, wird der aktuelle Wert
+         --durch den nächsten ersetzt. 
+         --Der zweite Wert wird allerdings nocht nicht verändert und liegt daher doppelt vor.
+         --Er wird zwischengespeichert und im nächsten Schritt als aktueller Wert behandelt
+         --
+         --2. Fall
+         --Wenn die beiden Werte in der korrekten Reihenfolge sind, wird der aktuelle Wert
+         --mit dem zwischengespeicherten aktuellen Wert überschrieben,
+         --
+         --Wenn der erste Fall bei der Sortierung bisher nicht auftrat, geschieht hier nichts.
+         if(firstValueValid = '1' AND currentValueValid = '1' AND nextValueValid = '1')
+         then
+            mem_re <= '0'; --Auf keinen Fall lesen!
+            pointer := std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8));
+            nextValueValid := '0';
             
-         
+            if (currentValue>nextValue)
+            then
+               mem_addr <= nextValue;
+               mem_we <= '1';
+               --currentValue bleibt gleich, da es nach vorne verschoben wurde!
+               replaceCurrentValue := '1';
+               sortAgain := '1';
+            else
+               if (replaceCurrentValue = '1')
+               then
+                  replaceCurrentValue := '0';
+                  mem_addr <= currentValue;
+                  mem_we <= '1';
+                  mem_re <= '0';
+               end if;
+               currentValue := nextValue;
+            end if;
+         end if;
       end if;
-         
    end if;
  end if;
  end process;

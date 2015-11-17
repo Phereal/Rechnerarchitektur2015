@@ -44,6 +44,9 @@
     <file xil_pn:fileType="FILE_HTML" xil_pn:name="Sorter_summary.html"/>
     <file xil_pn:fileType="FILE_XRPT" xil_pn:name="Sorter_xst.xrpt"/>
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/xst.xmsgs"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="netgen"/>
+    <file xil_pn:branch="PostSynthSim" xil_pn:fileType="FILE_NETGEN_REPORT" xil_pn:name="netgen/synthesis/Sorter_synthesis.nlf"/>
+    <file xil_pn:branch="PostSynthSim" xil_pn:fileType="FILE_VHDL" xil_pn:name="netgen/synthesis/Sorter_synthesis.vhd"/>
     <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="webtalk_pn.xml"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xst"/>
   </files>
@@ -77,24 +80,37 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447778926" xil_pn:in_ck="2918557350967137133" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447778901">
-      <status xil_pn:value="FailedRun"/>
+    <transform xil_pn:end_ts="1447799104" xil_pn:in_ck="2918557350967137133" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447799066">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemory.ngr"/>
       <outfile xil_pn:name="Sorter.lso"/>
       <outfile xil_pn:name="Sorter.ngc"/>
       <outfile xil_pn:name="Sorter.ngr"/>
       <outfile xil_pn:name="Sorter.prj"/>
+      <outfile xil_pn:name="Sorter.stx"/>
       <outfile xil_pn:name="Sorter.syr"/>
       <outfile xil_pn:name="Sorter.xst"/>
       <outfile xil_pn:name="Sorter_xst.xrpt"/>
       <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="webtalk_pn.xml"/>
       <outfile xil_pn:name="xst"/>
+    </transform>
+    <transform xil_pn:end_ts="1447795780" xil_pn:name="TRAN_compileBCD2" xil_pn:prop_ck="-5725044227457452745" xil_pn:start_ts="1447795779">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1447795785" xil_pn:in_ck="-1339619289758552228" xil_pn:name="TRAN_postSynthesisSimModel" xil_pn:prop_ck="8783543604115854618" xil_pn:start_ts="1447795780">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <outfile xil_pn:name="netgen"/>
+      <outfile xil_pn:name="netgen/synthesis/Sorter_synthesis.nlf"/>
+      <outfile xil_pn:name="netgen/synthesis/Sorter_synthesis.vhd"/>
     </transform>
   </transforms>
 
