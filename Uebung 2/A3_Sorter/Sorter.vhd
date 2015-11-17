@@ -63,12 +63,18 @@ begin
  execute: process (clk)
    --Verzögert Sortierung, damit init den Speicher füllen kann.
    --Erinnerung: Muss bei dump wieder auch Ursprungswert gestellt werden!
-   variable initCompleted : Integer := 200;
+   variable initDelay : Integer := 200;
    --Gibt an, ob Sortierungg läuft.
    variable isRunning   : STD_LOGIC                   := '0';
    variable pointer     : std_logic_vector(7 downto 0):= addr_start;
    variable currentValue: std_logic_vector(7 downto 0);
    variable nextValue   : std_logic_vector(7 downto 0);
+   variable firstValue  : std_logic_vector(7 downto 0);
+   variable currentValueValid: STD_LOGIC              := '0';
+   variable nextValueValid: STD_LOGIC                 := '0';
+   variable firstValueValid: STD_LOGIC                := '0';
+   variable getOutput: STD_LOGIC                      := '0';
+   variable waitForOutput: STD_LOGIC                  := '0';   
  
  begin
   if rising_edge(clk)
@@ -76,14 +82,48 @@ begin
   
    if(start = '1' AND isRunning = '0')
    then
-      if (initCompleted /= 0)
-      then --Verzögerung
+      isRunning := '1';
+   end if;
+  
+   if(isRunning = '1')
+   then
+      --Load init values.
+      if (initDelay = 200)
+      then
          mem_init <= '1';
-         initCompleted := initCompleted-1;
-      else
-         
       end if;
-  end if;
+      
+      --Count down the delay.
+      if (initDelay > 0)
+      then
+         initDelay := initDelay-1;
+      end if;      
+   end if;
+   
+   --Sortierung!
+   if(waitForOutput = '1')
+   then
+      --1 cycle Verzögerung
+      waitForOutput := '0';
+      
+   else 
+      if(isRunning ='1' AND initDelay = 0)
+      then
+         if(firstValueValid = '0')
+         then 
+            if (getOutput = '0')
+            then
+               mem_addr <= addr_start;
+               mem_re   <= '1';
+               waitForOutput := '1';
+               getOutput := '1';
+            else
+               firstValue := mem_output;
+            end if;
+         end if;
+      end if;
+         
+   end if;
  end if;
  end process;
 end Behavioral;
