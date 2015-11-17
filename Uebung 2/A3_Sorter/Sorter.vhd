@@ -20,123 +20,71 @@ entity Sorter is
            done : out  STD_LOGIC);
 end Sorter;
 
-
-   --Gibt an, ob Sortierungg läuft.
-   signal isRunning   : STD_LOGIC :='0';
-
-   --Pointer, der auf das einzusortierende Element zeigt.
-   signal pointerSort : STD_LOGIC_VECTOR (7 downto 0); 
-
-   --Ist '1', wenn der Speicher im aktuellen Durchlauf sortert werden musste.
-   signal sortAgain   : STD_LOGIC :='0';
-
-   --Indiziert, ob auf die Antwort des Caches gewartet werden soll.
-   signal waitOneCycle   : STD_LOGIC :='0'; 
-   
-   --Gibt an, ob pointerSortData aus dem Speicher gelesen werden muss.
-   signal pointerSortDataValid : STD_LOGIC :='0';
-   
-   --Gibt an, ob der naechste Vergleichswert aus dem Speicher gelesen werden muss.
-   signal pointerSortDataNextValid : STD_LOGIC :='0';
-   
-   --Gibt an, ob der output des Speichers auszulesen ist.
-   signal memoryOutputReady : STD_LOGIC :='0';
-   
-      
-   --Zwischenspeicher fuer Cache-Outputs
-   
-   --Daten, auf die der Pointer zeigt.
-   signal pointerSortData : STD_LOGIC_VECTOR (7 downto 0); 
-   
-   --Daten, die den vom Pointer gezeigten folgen.
-   signal pointerSortDataNext : STD_LOGIC_VECTOR (7 downto 0); 
-
 architecture Behavioral of Sorter is
+
 
   component CachedMemory
    Port (
-      clk     : in  STD_LOGIC;
-      init    : in  STD_LOGIC;
-      dump    : in  STD_LOGIC;
-      reset   : in  STD_LOGIC;
-      re      : in  STD_LOGIC;
-      we      : in  STD_LOGIC;
-      addr    : in  STD_LOGIC_VECTOR (7 downto 0);
-      data_in : in  STD_LOGIC_VECTOR (7 downto 0);
-      output  : out  STD_LOGIC_VECTOR (7 downto 0);
-      ack     : out  STD_LOGIC
+    clk     : in  STD_LOGIC;
+    init    : in  STD_LOGIC;
+    dump    : in  STD_LOGIC;
+    reset   : in  STD_LOGIC;
+    re      : in  STD_LOGIC;
+    we      : in  STD_LOGIC;
+    addr    : in  STD_LOGIC_VECTOR (7 downto 0);
+    data_in : in  STD_LOGIC_VECTOR (7 downto 0);
+    output  : out  STD_LOGIC_VECTOR (7 downto 0);
+    ack     : out  STD_LOGIC
    );
    end component;
 
+  signal mem_clk      : std_logic := '0';
+  signal mem_init     : std_logic := '0';
+  signal mem_dump     : std_logic := '0';
+  signal mem_reset    : std_logic := '0';
+  signal mem_re       : std_logic := '0';
+  signal mem_we       : std_logic := '0';
+  signal mem_addr     : std_logic_vector(7 downto 0) := (others => '0');
+  signal mem_data_in  : std_logic_vector(7 downto 0) := (others => '0');
+  signal mem_output   : std_logic_vector(7 downto 0);
 
 begin
+  mem: CachedMemory PORT MAP (
+    clk     => mem_clk,
+    init    => mem_init,
+    dump    => mem_dump,
+    reset   => mem_reset,
+    re      => mem_re,
+    we      => mem_we,
+    addr    => mem_addr,
+    data_in => mem_data_in,
+    output  => mem_output);
+
  execute: process (clk)
+   --Verzögert Sortierung, damit init den Speicher füllen kann.
+   --Erinnerung: Muss bei dump wieder auch Ursprungswert gestellt werden!
+   variable initCompleted : Integer := 200;
+   --Gibt an, ob Sortierungg läuft.
+   variable isRunning   : STD_LOGIC                   := '0';
+   variable pointer     : std_logic_vector(7 downto 0):= addr_start;
+   variable currentValue: std_logic_vector(7 downto 0);
+   variable nextValue   : std_logic_vector(7 downto 0);
+ 
  begin
   if rising_edge(clk)
   then
   
-   --Wenn Sortierung fertig ist und start immer noch '1' ist,
-   --muss done auf '0' gesetzt werden und die Variablen mit
-   --Startwerten gefüllt werden.
-   if (start = '1' AND isRunning /= '1')
+   if(start = '1' AND isRunning = '0')
    then
-      isRunning <= '0';               --Sortierung läuft.
-      pointerSort <= addr_start; --Fange an Anfangsadresse an.
-      pointerSortDataValid <= '0';   --Noch kein Wert geladen. Muss gelesen werden.
-      pointerSortDataNextValid <= '0';
-      sortAgain <= '0';            --Noch kein Anlass für 2. Durchlauf.
-      waitOneCycle <= '1';         --Read zu Beginn der Suche, daher warten.
-      
-       --+1 ist das hier: std_logic_vector(unsigned(addr_start)+1);
-   end if;
-   
-      --Wenn done '0' ist, muss die Sortierung laufen.
-   if (isRunning = '0')
-   then
-      --Wir stellen sicher, dass wir genau 1 Clock Cycle auf den Output
-      --des Cache-Speichers warten.
-      if (waitOneCycle = '1')
-      then
-         waitOneCycle <= '0';
-         memoryOutputReady <= '1';
-      
-      --Lade, wenn noetig, pointer-Daten aus dem Speicher.
-      else if (pointerSortDataValid = '0')
-      then
-        if (memoryOutputReady = '0')
-        then
-            waitOneCylye <= '1';
-            re <= '1';
-            addr <= pointerSort;
-        else
-            pointerSortData <= output;
-            pointerSortDataValid <= '1';
-        end if;
-      
-      --Dasselbe Spiel mit naechstem pointer-Wert.
-      else if (pointerSortDataNextValid = '0')
-      then
-        if (memoryOutputReady = '0')
-        then
-            waitOneCylye <= '1';
-            re <= '1';
-            addr <= std_logic_vector(unsigned(pointerSort)+1); --Adresse nach pointer.
-        else
-            pointerSortDataNext <= output;
-            pointerSortDataNextValid <= '1';
-        end if;
+      if (initCompleted /= 0)
+      then --Verzögerung
+         mem_init <= '1';
+         initCompleted := initCompleted-1;
+      else
+         
       end if;
-      
-      --Wenn Daten korrekt geladen wurden: 
-      --todo... vllt eine queue um die schreibvorgaenge einzureihen?
-      
-       
-            
-        
-         
-         
-      
   end if;
+ end if;
  end process;
 end Behavioral;
 

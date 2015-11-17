@@ -1,1 +1,2 @@
+vhdl work "../A2_CachedMemory/CachedMemory.vhd"
 vhdl work "Sorter.vhd"
