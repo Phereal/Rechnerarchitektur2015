@@ -27,6 +27,8 @@
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+USE ieee.std_logic_unsigned.all;
+USE ieee.numeric_std.ALL;
  
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -123,100 +125,147 @@ BEGIN
     reset    <= '0';
     wait until rising_edge(clk);
     
-    --report "Init UUT!";
-    --init    <= '1';
+    report "Init UUT!";
+    init    <= '1';
+    wait until rising_edge(clk);
+    wait for (clk_period*16);
+    init    <= '0';
+    wait until rising_edge(clk);
+    
+    
+    for i in 0 to (15) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2);
+      
+      assert( ack = '0' )
+        report "Testfall 1." & integer'image(i) & ": Ack != 0"
+        severity failure;
+        
+      wait until rising_edge(ack);
+      assert( output = std_logic_vector(to_unsigned(i, addr'length)) )
+        report "Testfall 1." & integer'image(i) & ": out != " & integer'image(i)
+        severity failure;
+        
+    end loop;
+    
+    for i in 0 to (15) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2);
+      
+      assert( ack = '1' )
+        report "Testfall 2." & integer'image(i) & ": Ack != 1"
+        severity failure;
+      assert( output = std_logic_vector(to_unsigned(i, addr'length)) )
+        report "Testfall 2." & integer'image(i) & ": out != " & integer'image(i)
+        severity failure;
+    end loop;
+    
+
+    
+    
+    
+    --report "Write value to UUT!";
+    --we       <= '1';
+    --addr     <= "00000000";
+    --data_in  <= "01010101";
     --wait until rising_edge(clk);
-    --wait for (clk_period*1000);
-    --init    <= '0';
-    --wait for (clk_period*100);
+    --wait for (clk_period/2);
+    --we       <= '0';
+    --data_in  <= "00000000";
+    --
+    --report "Write another value to UUT!";
+    --we       <= '1';
+    --addr     <= "00000001";
+    --data_in  <= "11001100";
     --wait until rising_edge(clk);
-    
-    report "Write value to UUT!";
-    we       <= '1';
-    addr     <= "00000000";
-    data_in  <= "01010101";
-    wait until rising_edge(clk);
-    wait for (clk_period/2);
-    we       <= '0';
-    data_in  <= "00000000";
-    
-    report "Write another value to UUT!";
-    we       <= '1';
-    addr     <= "00000001";
-    data_in  <= "11001100";
-    wait until rising_edge(clk);
-    wait for (clk_period/2);
-    we       <= '0';
-    data_in  <= "00000000";
-    
-    
-    report "Reread value from UUT!";
-    re       <= '1';
-    addr     <= "00000000";
-    wait until rising_edge(clk);
-    wait for (clk_period/2);
-    re       <= '0';
-    addr     <= "00000000";
-    data_in  <= "00000000";
-    assert( ack = '1' ) report "Reread 1: ack != 1" severity failure;
-    assert( output = "01010101" ) report "Reread 1: out != 01010101" severity failure;
-    
-    
-    report "Reread another value from UUT!";
-    re       <= '1';
-    addr     <= "00000001";
-    wait until rising_edge(clk);
-    wait for (clk_period/2);
-    re       <= '0';
-    addr     <= "00000000";
-    data_in  <= "00000000";
-    assert( ack = '1' ) report "Reread 2: ack != 1" severity failure;
-    assert( output = "11001100" ) report "Reread 2: out != 11001100" severity failure;
-    
-    
-    
-    
-    report "Overwrite value to UUT!";
-    we       <= '1';
-    addr     <= "00010000";
-    data_in  <= "11100011";
-    wait until rising_edge(clk);
-    wait for (clk_period*20);
-    we       <= '0';
-    data_in  <= "00000000";
-    
-    report "Reread value from UUT!";
-    re       <= '1';
-    wait until rising_edge(clk);
-    wait for (clk_period/2);
-    re       <= '0';
-    addr     <= "00000000";
-    data_in  <= "00000000";
-    assert( ack = '1' ) report "Reread 3: ack != 1" severity failure;
-    assert( output = "11100011" ) report "Reread 3: out != 11100011" severity failure;
-    
-    report "Reread value from UUT!";
-    re       <= '1';
-    addr     <= "00000001";
-    wait until rising_edge(clk);
-    wait for (clk_period/2);
-    re       <= '0';
-    addr     <= "00000000";
-    data_in  <= "00000000";
-    assert( ack = '1' ) report "Reread 4: ack != 1" severity failure;
-    assert( output = "11001100" ) report "Reread 4: out != 11001100" severity failure;
-    
-    
-    report "Reread value from UUT!";
-    re       <= '1';
-    addr     <= "00000000";
-    wait until rising_edge(clk);
-    wait for (clk_period*20);
-    re       <= '0';
-    addr     <= "00000000";
-    data_in  <= "00000000";
-    assert( ack = '1' ) report "Overrread 1: ack != 1" severity failure;
-    assert( output = "01010101" ) report "Overrread 1: out != 01010101" severity failure;
+    --wait for (clk_period/2);
+    --we       <= '0';
+    --data_in  <= "00000000";
+    --
+    --
+    --report "Reread value from UUT!";
+    --re       <= '1';
+    --addr     <= "00000000";
+    --wait until rising_edge(clk);
+    --wait for (clk_period/2);
+    --re       <= '0';
+    --addr     <= "00000000";
+    --data_in  <= "00000000";
+    --assert( ack = '1' ) report "Reread 1: ack != 1" severity failure;
+    --assert( output = "01010101" ) report "Reread 1: out != 01010101" severity failure;
+    --
+    --
+    --report "Reread another value from UUT!";
+    --re       <= '1';
+    --addr     <= "00000001";
+    --wait until rising_edge(clk);
+    --wait for (clk_period/2);
+    --re       <= '0';
+    --addr     <= "00000000";
+    --data_in  <= "00000000";
+    --assert( ack = '1' ) report "Reread 2: ack != 1" severity failure;
+    --assert( output = "11001100" ) report "Reread 2: out != 11001100" severity failure;
+    --
+    --
+    --
+    --
+    --report "Overwrite value to UUT!";
+    --we       <= '1';
+    --addr     <= "00010000";
+    --data_in  <= "11100011";
+    --wait until rising_edge(clk);
+    --wait for (clk_period*20);
+    --we       <= '0';
+    --data_in  <= "00000000";
+    --
+    --report "Reread value from UUT!";
+    --re       <= '1';
+    --wait until rising_edge(clk);
+    --wait for (clk_period/2);
+    --re       <= '0';
+    --addr     <= "00000000";
+    --data_in  <= "00000000";
+    --assert( ack = '1' ) report "Reread 3: ack != 1" severity failure;
+    --assert( output = "11100011" ) report "Reread 3: out != 11100011" severity failure;
+    --
+    --report "Reread value from UUT!";
+    --re       <= '1';
+    --addr     <= "00000001";
+    --wait until rising_edge(clk);
+    --wait for (clk_period/2);
+    --re       <= '0';
+    --addr     <= "00000000";
+    --data_in  <= "00000000";
+    --assert( ack = '1' ) report "Reread 4: ack != 1" severity failure;
+    --assert( output = "11001100" ) report "Reread 4: out != 11001100" severity failure;
+    --
+    --
+    --report "Reread value from UUT!";
+    --re       <= '1';
+    --addr     <= "00000000";
+    --wait until rising_edge(clk);
+    --wait for (clk_period*20);
+    --re       <= '0';
+    --addr     <= "00000000";
+    --data_in  <= "00000000";
+    --assert( ack = '1' ) report "Overrread 1: ack != 1" severity failure;
+    --assert( output = "01010101" ) report "Overrread 1: out != 01010101" severity failure;
     
     
     

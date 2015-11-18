@@ -55,9 +55,7 @@ type storage is array (0 to 80) of std_logic_vector(7 downto 0);
 -- Wir erstellen unser 'Register' vom Type storage. Initial werden alle Registerelemente mit einem
 -- leeren Bitvektor gefüllt. Nur Element 80 im Array wird vordefiniert für falsche Adresswerte!
 signal reg : storage := (80 => "XXXXXXXX", others => "00000000");
--- Wir erstellen das lokale Signal 'iaddr', in den wir den 8 Bit Eingangsvektor addr als Integer
--- abspeichern wollen.
-signal iaddr : integer range 0 to 255 := 0;
+
 
 begin
 -- Der Prozess execute reagiert auf die steigende Taktflanke (clk)
@@ -85,6 +83,10 @@ variable ioaddr : integer;
 variable iodata : std_logic_vector(7 downto 0);
 variable iotmp : std_logic_vector(7 downto 0);
 
+-- Wir erstellen das lokale Signal 'iaddr', in den wir den 8 Bit Eingangsvektor addr als Integer
+-- abspeichern wollen.
+variable iaddr : integer range 0 to 255 := 0;
+
 begin
 	-- Wie in der Aufgabenstellung gefordert reagieren wir nur auf die Steigende Taktflanke von clk
 	-- wir bauen also eine synchrone Schaltung!
@@ -93,9 +95,9 @@ begin
 		-- damit er für die Adressierung anhand der Array Position genutzt werden kann
 		-- Dabei werden nur Interger Werte angenommen, die kleiner als 80 sind
 		-- Somit werden OutofBounds Exception verhindert!
-		iaddr <= to_integer(unsigned(addr));
+		iaddr := to_integer(unsigned(addr));
 		if(iaddr >= 80) then
-			iaddr <= 80;
+			iaddr := 80;
 			report "Array Index out of Bounds: " & integer'image(iaddr);
 		end if;
 		-- Wenn am Eingang 'init' eine '1' anliegt, soll der Inhalt der Datei memory.dat in das register
