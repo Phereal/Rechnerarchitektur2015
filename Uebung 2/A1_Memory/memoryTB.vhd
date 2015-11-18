@@ -447,7 +447,7 @@ BEGIN
     re <= '0';
     we <= '0';
     reset <= '1';
-    wait for 1ns;
+    wait until rising_edge(clk);
     reset <= '0';
     wait for 1ns;
     
@@ -591,7 +591,7 @@ BEGIN
     re <= '0';
     we <= '0';
     reset <= '1';
-    wait for 1ns;
+    wait until rising_edge(clk);
     reset <= '0';
     wait for 1ns;
     
@@ -723,7 +723,7 @@ BEGIN
     re <= '0';
     we <= '0';
     reset <= '1';
-    wait for 1ns;
+    wait until rising_edge(clk);
     reset <= '0';
     wait for 1ns;
     -- Belege Speicher vor
@@ -839,7 +839,7 @@ BEGIN
     -- Setze Testwerte
     testAddr := "00000000";
     testData_in := "10101010"; -- beliebiege Eingangsdaten
-    testOutput := "00000000"; -- keine Aenderung zum Reset Addr 01
+    testOutput := "01010101"; 
     -- Warte bis steigende Taktflanke vorbei
     wait until rising_edge(clk);
     wait for (clk_period/10);
@@ -871,7 +871,7 @@ BEGIN
         "Output   = " & integer'image(to_integer(unsigned(output)))
       severity failure;
     testAddr := "00000001";
-    testOutput := "01010101";
+    testOutput := "10101010";
     -- Pruefe Vorgang Addr 1
     -- Setze Eingaenge zum Lesen
     re <= '1';
@@ -907,7 +907,7 @@ BEGIN
     -- Setze Testwerte
     testAddr := "00000001";
     testData_in := "00000000"; -- beliebiege Eingangsdaten
-    testOutput := "00000000"; -- keine Aenderung zum Reset
+    testOutput := "01010101"; 
     -- Lese
     wait until rising_edge(clk);
     wait for (clk_period/10);
