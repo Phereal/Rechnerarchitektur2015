@@ -96,11 +96,18 @@ begin
   
    if(isRunning = '1')
    then
-      report "isRunning-Loop betreten.";
       --Load init values.
       if (initDelay = 200)
       then
+         report "Habe mem_init auf 1 gesetzt und warte jetzt einen Takt.";
          mem_init <= '1';
+      end if;
+      
+      if (initDelay = 199)
+      then
+         report "Habe mem_init wieder auf 0 gesetzt.";
+         report "Warte noch ein paar hundert Zyklen, um init Zeit zu lassen.";
+         mem_init <= '0';
       end if;
       
       --Count down the delay.
@@ -115,12 +122,14 @@ begin
          then 
             if (getOutput = '0')
             then
+               report "firstValue ist ungültig. Lade aus dem Speicher...";
                mem_addr <= addr_start;
                mem_we   <= '0';
                mem_re   <= '1';
                getOutput := '1';
             else if (mem_ack='1')
             then
+               report "firstValue aus dem Speicher geladen!";
                firstValue := mem_output;
                firstValueValid := '1';
                getOutput := '0';
@@ -131,6 +140,7 @@ begin
          --Anweisung in demselben Schritt erfolgen darf.
          if(firstValueValid = '1' AND currentValueValid = '0')
          then
+            report "currentValue war ungültig, also wurde es durch firstValue ersetzt.";
             currentValue := firstValue;
             currentValueValid := '1';
          end if;
@@ -139,6 +149,7 @@ begin
          then 
             if (getOutput = '0')
             then
+               report "nextValue ist ungültig. Fordere Inhalt der nächsten Adresse an...";
                mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8)); --so richtig?
                mem_we <= '0';
                mem_re   <= '1';
@@ -146,6 +157,7 @@ begin
             
             else if (getOutput = '1' AND mem_ack = '1')
             then
+               report "nextValue wurde geladen.";
                nextValue := mem_output;
                nextValueValid := '1';
                getOutput := '0';
@@ -176,6 +188,7 @@ begin
             if (currentValue>nextValue)
             then
             --Werte tauschen
+               report "Tausche currentValue und nextValue, weil nextValue kleiner war.";
                mem_addr <= pointer;
                mem_data_in <= nextValue;
                mem_we <= '1';
@@ -184,8 +197,10 @@ begin
                sortAgain := '1';
             else
             --Werte bereits in richtiger Reihefolge
+            report "Die Werte waren bereits in korrekter Reihenfolge.";
                if (replaceCurrentValue = '1')
                then
+                  report "Ueberschreibe Wert am Pointer mit currenValue.";
                   replaceCurrentValue := '0';
                   mem_addr <= pointer;
                   mem_data_in <= currentValue;
@@ -201,12 +216,14 @@ begin
             --Suchdurchlauf beenden?
             if (to_integer(unsigned(pointer)) > to_integer(unsigned(addr_end)) - amountCorrectLastDigits)
             then
+               report "Ende des Sortierbereiches erreicht.";
                --Wir sparen uns einen Vergleich pro Suchdurchlauf.
                amountCorrectLastDigits := amountCorrectLastDigits +1;
                
                --Für erneute Sortierung vorbereiten:
                if (sortAgain = '1')
                then
+                  report "Starte Sortiervorgang neu.";
                   sortAgain := '0';
                   firstValueValid:= '0';
                   currentValueValid:= '0';
@@ -214,6 +231,7 @@ begin
                   --Zwischengespeicherten Wert schreiben
                   if (replaceCurrentValue = '1')
                   then
+                     report "Ersetze zuvor aber noch pointer-Wert durch currentValue.";
                      replaceCurrentValue := '0';
                      mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) - 1, 8));
                      mem_data_in <= currentValue;
@@ -221,10 +239,12 @@ begin
                      mem_re <= '0';
                   end if;
                   
+                  report "--------------";
                   pointer := addr_start; --Wichtig!
                
                --FERTIG SORTIERT!
                else
+                  report "Heureka! Sortierung ist fertig.";
                   if (replaceCurrentValue = '1')
                   then
                      replaceCurrentValue := '0';
