@@ -1,6 +1,9 @@
-set -tmpdir "/home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/xst/projnav.tmp"
-set -xsthdpdir "/home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/xst"
-run -compileonly yes
+set -tmpdir "xst/projnav.tmp"
+set -xsthdpdir "xst"
+run
+-ifn Sorter.prj
+-ofn Sorter
+-ofmt NGC
 -p xc7a100t-3-csg324
 -top Sorter
 -opt_mode Speed
@@ -47,4 +50,3 @@ run -compileonly yes
 -iob Auto
 -equivalent_register_removal YES
 -slice_utilization_ratio_maxmargin 5
--ifn Sorter.prj

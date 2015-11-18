@@ -80,14 +80,10 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447799104" xil_pn:in_ck="2918557350967137133" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447799066">
+    <transform xil_pn:end_ts="1447853696" xil_pn:in_ck="2918557350967137133" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447853654">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="InputChanged"/>
-      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemory.ngr"/>
       <outfile xil_pn:name="Sorter.lso"/>
       <outfile xil_pn:name="Sorter.ngc"/>
@@ -109,7 +105,6 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="InputChanged"/>
       <outfile xil_pn:name="netgen"/>
       <outfile xil_pn:name="netgen/synthesis/Sorter_synthesis.nlf"/>

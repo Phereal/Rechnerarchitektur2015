@@ -105,12 +105,10 @@ begin
       then
          initDelay := initDelay-1;
       end if;      
-   end if;
-   
-   --Sortierung!
    else 
       if(isRunning ='1' AND initDelay = 0)
       then
+      end if;
          if(firstValueValid = '0')
          then 
             if (getOutput = '0')
