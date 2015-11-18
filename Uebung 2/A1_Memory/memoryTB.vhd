@@ -1,13 +1,80 @@
--- Testziele:
--- + Init
---    - ???????????????
--- + Reset
---  - Reset erfolgt
---  - Asynchron
---    - Sofort übernommen
---    - Keine Aenderung auch nach einem Takt und anderen Signalen
-
-
+---------------------------------------------------------------------------------------------------
+-- Rechnerarchitektur und Eingebettete Systeme
+-- Uebungszettel 2 - Aufgabe 1: Memory Testbench
+--
+-- Die Testfaelle wurden so gewahlt, dass zum Einen die Anforderungen aus der Aufgabestellung ge-
+-- prueft werden und zum Anderen wurden weitere Testsfaelle gewaehlt, die die verschiedenen
+-- Zustaende des Speichers pruefen:
+--
+-- Zuordnung von Testfall zu Aufgabenstellung:
+-- 1. "Der Speicher soll 80 Byte speichern können. Diese Bytes sollen gelesen und geschrieben
+--    werden können."
+--    Geprueft durch Testfall 2.
+--
+-- 2. "Der Prozess des Schreibens oder Lesens soll bei einer steigenden Flanke der Clock clk
+--    begonnen werden."
+--    Geprueft durch Testfall 6.
+--
+-- 3. "Nach insgesamt einem Taktschritt soll die Operation abgeschlossen sein."
+--    Geprueft durch Testfall 2.
+--
+-- 4. "Liegt am Signal reset eine 1, so wird der gesamte Speicher gelöscht und alle Werte werden
+--    auf 0 gesetzt."
+--    Geprueft durch Testfall 1. Weiterhin wird reset durch weitere Testfaelle verwendet und somit
+--    geprueft.
+--
+-- 5. "Die Bits re (read enable) und we (write enable) geben an, ob gelesen oder geschrieben werden
+--    soll. Für Lesen und Schreiben steht die betroffene Adresse des Speichers in addr. Soll
+--    geschrieben werden, so steht der zu schreibende Wert in data_in. Soll gelesen werden, so wird
+--    der entsprechendeWert in output ausgegeben..."
+--    Geprueft durch Testfall 2. Weiterhin werden diese Bedingungen als Vorraussetzung fuer die
+--    Funktion folgender Testfaelle benoetigt.
+--
+-- 8. "... und bis zum nächsten Lesebefehl gehalten."
+--    Geprueft durch Testfall 6.
+--
+-- 9. "Für ein einfaches Debugging wird der Speicher mit der Möglichkeit ausgestattet, seinen
+--    Inhalt aus einer Datei mit dem Namen memory.dat einzulesen. Der Einlese-Vorgang soll dann
+--    beginnen, wenn der Eingang init gesetzt ist. Dieser Möglichkeit ist insbesondere für den
+--    Sorter von Bedeutung, da man diesen anderweitig nicht mit Daten füttern könnte."
+--    Geprueft durch CachedMemory und dessen Testbench.
+--
+-- 10. "Entsprechend steuert das Signal dump die Ausgabe des Speichers in die Datei dump.dat."
+--    Geprueft durch CachedMemory und dessen Testbench.
+--
+-- 11. "Im Fehlerfall soll XXXXXXXX am Ausgang anliegen."
+--    Geprueft durch Testfall 5.
+--
+-- Beschreibung der einzelnen Testfaelle:
+-- Testfall 1:
+--  - Pueft den Zustand nach Init und Reset (Output jeder Speicherzelle "00000000").
+--  - Prueft das Lesen ("re") des Wertes "00000000".
+-- Testfall 2:
+--  - Prueft das Schreiben ("we") in jede Speicherzelle.
+--  - Prueft das "output" seinen Wert beim Schreiben nicht aendert.
+--  - Prueft das Lesen ("re") jeder Speicherzelle.
+--  - Prueft das "output" beim Lesen den gelesenen Wert nicht beeinflusst.
+--  - Prueft das jeder geschriebene Wert der richtigen Speicherzelle zugeordnet wird.
+--  - Prueft das jeder Schreib- oder Lesevorgang nach einem Takt abgeschlossen ist.
+--  - Prueft das Wirken der Signale "addr", "data_in", "we", "re" und "output"
+--    (z.B. "addr" bestimmt die zu schreibende/lesende Adresse").
+--  - Prueft das mindestens 80 Byte gespeichert werden koennen (Adresse "00000000" - "01001111").
+-- Testfall 3:
+--  - Prueft das jedes Bit jeder Speicherzelle mit 0 und 1 beschrieben werden kann.
+--  - Prueft das nebeneinanderer liegende Bit einer Speicherzelle nicht ueberschieben werden.
+-- Testfall 4:
+--  - Prueft das eine Speicherzelle jeden moeglichen 8-Bit-Wert annehmen kann.
+--  - Es wird nur drei Speicherzellen geprüft: 1. Speicherzelle, n. Speicherzelle und eine
+--    beliebige (2.) dazwischen.
+-- Testfall 5:
+--  - Prueft das maximal an Adresse n-1 -also 80 Speicherzellen- geschrieben
+--    oder gelesen werden kann. Ansonsten soll "XXXXXXXX" an "output" anliegen.
+--  - Prueft das danach wieder geschrieben und gelesen werden kann
+-- Testfall 6:
+--  - Prueft das Lese- und Schreiboperationen nur bei steigender Flanke uebernommen wird.
+--  - Prueft das ein Abbrechen des Lesevorgangs "output" nicht ueberschreibt und "output"
+--    bis zum naechsten Lesebefehl gehalten wird (ein Takt ohne Lesebefehl)
+---------------------------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_unsigned.all;
@@ -380,7 +447,7 @@ BEGIN
     re <= '0';
     we <= '0';
     reset <= '1';
-    wait for 1ns;
+    wait until rising_edge(clk);
     reset <= '0';
     wait for 1ns;
     
@@ -524,7 +591,7 @@ BEGIN
     re <= '0';
     we <= '0';
     reset <= '1';
-    wait for 1ns;
+    wait until rising_edge(clk);
     reset <= '0';
     wait for 1ns;
     
@@ -656,7 +723,7 @@ BEGIN
     re <= '0';
     we <= '0';
     reset <= '1';
-    wait for 1ns;
+    wait until rising_edge(clk);
     reset <= '0';
     wait for 1ns;
     -- Belege Speicher vor
@@ -772,7 +839,7 @@ BEGIN
     -- Setze Testwerte
     testAddr := "00000000";
     testData_in := "10101010"; -- beliebiege Eingangsdaten
-    testOutput := "00000000"; -- keine Aenderung zum Reset Addr 01
+    testOutput := "01010101"; 
     -- Warte bis steigende Taktflanke vorbei
     wait until rising_edge(clk);
     wait for (clk_period/10);
@@ -804,7 +871,7 @@ BEGIN
         "Output   = " & integer'image(to_integer(unsigned(output)))
       severity failure;
     testAddr := "00000001";
-    testOutput := "01010101";
+    testOutput := "10101010";
     -- Pruefe Vorgang Addr 1
     -- Setze Eingaenge zum Lesen
     re <= '1';
@@ -840,7 +907,7 @@ BEGIN
     -- Setze Testwerte
     testAddr := "00000001";
     testData_in := "00000000"; -- beliebiege Eingangsdaten
-    testOutput := "00000000"; -- keine Aenderung zum Reset
+    testOutput := "01010101"; 
     -- Lese
     wait until rising_edge(clk);
     wait for (clk_period/10);

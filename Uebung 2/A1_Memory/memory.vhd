@@ -56,6 +56,7 @@ type storage is array (0 to 80) of std_logic_vector(7 downto 0);
 -- leeren Bitvektor gefüllt. Nur Element 80 im Array wird vordefiniert für falsche Adresswerte!
 signal reg : storage := (80 => "XXXXXXXX", others => "00000000");
 
+signal bufferOut : std_logic_vector(7 downto 0) := (others => '0');
 
 begin
 -- Der Prozess execute reagiert auf die steigende Taktflanke (clk)
@@ -86,6 +87,7 @@ variable iotmp : std_logic_vector(7 downto 0);
 -- Wir erstellen die lokale Variable 'iaddr', in den wir den 8 Bit Eingangsvektor addr als Integer
 -- abspeichern wollen.
 variable iaddr : integer range 0 to 255 := 0;
+
 
 begin
 	-- Wie in der Aufgabenstellung gefordert reagieren wir nur auf die Steigende Taktflanke von clk
@@ -123,7 +125,7 @@ begin
 			-- da wir in Xilinx normalerweise keine Dateieingaben und Ausgaben schreiben können, da wir ja Hardware bauen.
 			-- Da die Dateieingabe und Ausgabe also nicht als Signale gelten würden wir die Eingänge init und dump nicht
 			-- benutzen und sie würden bei der Synthese wegoptimiert. Daher ein 8 Bit Vektor bestehend aus 'X' am Ausgang.
-			output <= "XXXXXXXX";
+			bufferOut <= "XXXXXXXX";
 		-- Wenn am Eingang 'dump' eine '1' anliegt, soll der Inhalt des Registers in die Datei dump.dat geschrieben
 		-- werden. Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
 		elsif(dump = '1' AND init = '0' AND reset = '0' AND re = '0' AND we = '0') then
@@ -150,29 +152,38 @@ begin
 			-- da wir in Xilinx normalerweise keine Dateieingaben und Ausgaben schreiben können, da wir ja Hardware bauen.
 			-- Da die Dateieingabe und Ausgabe also nicht als Signale gelten würden wir die Eingänge init und dump nicht
 			-- benutzen und sie würden bei der Synthese wegoptimiert. Daher ein 8 Bit Vektor bestehend aus 'X' am Ausgang.
-			output <= "XXXXXXXX";
+			bufferOut <= "XXXXXXXX";
 		-- Wenn am Eingang re eine '1' anliegt, sollen die Daten, die in der Speicherzelle
 		-- "addr" am Ausgang "output" angelegt werden! 
 		-- Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
 		elsif(re = '1' AND dump = '0' AND init = '0' AND reset = '0' AND we = '0') then
-			output <= reg(iaddr);
+			bufferOut <= reg(iaddr);
 		-- Wenn am Eingang "we" eine '1' anliegt, sollen die Daten, die am Eingang "data_in"
 		-- anliegen in die Speicherzelle geschrieben werden, die durch "addr" definiert ist.
 		-- Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
 		elsif(we = '1' AND re = '0' AND dump = '0' AND init = '0' AND reset = '0') then
-			reg(iaddr) <= data_in;
+			if(iaddr = 80) then
+        bufferOut <= "XXXXXXXX";
+      else
+        reg(iaddr) <= data_in;
+      end if;
 		-- Wenn der Reseteingang aktiviert ist, werden alle Einträge des Registers auf 0 zurückgesetzt.
 		-- Dabei wird das Array sequentiell durchlaufen.
 		-- Die Fallunterscheidung verbietet eine '1' an einem anderen Eingang.
 		elsif(reset = '1' AND we = '0' AND re = '0' AND dump = '0' AND init = '0') then
 			reg <= (80 => "XXXXXXXX", others => "00000000");
+			bufferOut <= "00000000";
 		-- Wenn keiner der oben genannten Fälle abgefangen wurde, muss es sich um eine fehlerhafte Belegung der
 		-- Eingänge handeln. In diesem Fall verändern wir den Inhalt des Registers nicht und geben nur einen
 		--	Bitvektor gefüllt mit 'X' an den Ausgang.
+		elsif(reset = '0' AND we = '0' AND re = '0' AND dump = '0' AND init = '0') then
+			bufferOut <= bufferOut;
 		else
-			output <= "XXXXXXXX";
+			bufferOut <= "XXXXXXXX";
 		end if;
 	end if;
 end process;
+
+  output <= bufferOut;
 
 end memory_impl;
