@@ -47,6 +47,7 @@ architecture Behavioral of Sorter is
   signal mem_addr     : std_logic_vector(7 downto 0) := (others => '0');
   signal mem_data_in  : std_logic_vector(7 downto 0) := (others => '0');
   signal mem_output   : std_logic_vector(7 downto 0);
+  signal mem_ack      : std_logic := '0';
 
 begin
   mem: CachedMemory PORT MAP (
@@ -58,7 +59,8 @@ begin
     we      => mem_we,
     addr    => mem_addr,
     data_in => mem_data_in,
-    output  => mem_output);
+    output  => mem_output,
+    ack     => mem_ack);
 
  execute: process (clk)
    --Verzögert Sortierung, damit init den Speicher füllen kann.
@@ -106,11 +108,6 @@ begin
    end if;
    
    --Sortierung!
-   if(waitForOutput = '1')
-   then
-      --1 cycle Verzögerung
-      waitForOutput := '0';
-      
    else 
       if(isRunning ='1' AND initDelay = 0)
       then
@@ -121,9 +118,9 @@ begin
                mem_addr <= addr_start;
                mem_we   <= '0';
                mem_re   <= '1';
-               waitForOutput := '1';
                getOutput := '1';
-            else
+            else if (mem_ack='1')
+            then
                firstValue := mem_output;
                firstValueValid := '1';
                getOutput := '0';
@@ -145,12 +142,14 @@ begin
                mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8)); --so richtig?
                mem_we <= '0';
                mem_re   <= '1';
-               waitForOutput := '1';
                getOutput := '1';
-            else
+            
+            else if (getOutput = '1' AND mem_ack = '1')
+            then
                nextValue := mem_output;
                nextValueValid := '1';
                getOutput := '0';
+               end if;
             end if;
          end if;
          
@@ -177,12 +176,14 @@ begin
             
             if (currentValue>nextValue)
             then
+            --Werte tauschen
                mem_addr <= nextValue;
                mem_we <= '1';
                --currentValue bleibt gleich, da es nach vorne verschoben wurde!
                replaceCurrentValue := '1';
                sortAgain := '1';
             else
+            --Werte bereits in richtiger Reihefolge
                if (replaceCurrentValue = '1')
                then
                   replaceCurrentValue := '0';
@@ -190,8 +191,45 @@ begin
                   mem_we <= '1';
                   mem_re <= '0';
                end if;
-               currentValue := nextValue;
+            currentValue := nextValue;
             end if;
+            
+            --Suchdurchlauf beenden?
+            if (to_integer(unsigned(pointer)) > to_integer(unsigned(addr_end)) + amountCorrectLastDigits)
+            then
+               --Wir sparen uns einen Vergleich pro Suchdurchlauf.
+               amountCorrectLastDigits := amountCorrectLastDigits +1;
+               
+               --Für erneute Sortierung vorbereiten:
+               if (sortAgain = '1')
+               then
+                  currentValueValid := '0';
+                  nextValueValid := '0';
+                  pointer := addr_start;
+                  --Zwischengespeicherten Wert schreiben
+                  if (replaceCurrentValue = '1')
+                  then
+                     replaceCurrentValue := '0';
+                     mem_addr <= currentValue;
+                     mem_we <= '1';
+                     mem_re <= '0';
+                  end if;
+               
+               --FERTIG SORTIERT!
+               else
+                  if (replaceCurrentValue = '1')
+                  then
+                     replaceCurrentValue := '0';
+                     mem_addr <= currentValue;
+                     mem_we <= '1';
+                     mem_re <= '0';
+                  end if;
+                  mem_dump <= '1';
+               end if;
+                  
+               
+            end if;
+            
          end if;
       end if;
    end if;
