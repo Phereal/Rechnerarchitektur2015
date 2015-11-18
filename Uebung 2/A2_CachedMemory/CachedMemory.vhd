@@ -529,8 +529,9 @@ begin
       
       -- *** Fehlerhafte Eingabe ***
       else
-      
-      
+        -- disable outputs if erroneous inputs
+        bufferAck <= '0';
+        bufferOut <= "XXXXXXXX";
       
       end if;
     end if;

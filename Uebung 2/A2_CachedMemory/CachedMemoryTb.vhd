@@ -118,14 +118,12 @@ BEGIN
     -- hold reset state for 100 ns.
     
     report "Beginn der Testbench!";
-    report "Reset UUT!";
     reset    <= '1';
     wait until rising_edge(clk);
     wait for (clk_period*16);
     reset    <= '0';
     wait until rising_edge(clk);
     
-    report "Init UUT!";
     init    <= '1';
     wait until rising_edge(clk);
     wait for (clk_period*16);
