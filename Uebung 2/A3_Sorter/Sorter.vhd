@@ -125,7 +125,7 @@ begin
          then 
             if (getOutput = '0')
             then
-               report "currentValue ist ungültig. Fordere Inhalt der nächsten Adresse an...";
+               report "currentValue about to be read.";
                mem_addr <= std_logic_vector(unsigned(pointer) );
                mem_we <= '0';
                mem_re   <= '1';
@@ -145,6 +145,7 @@ begin
          then 
             if (getOutput = '0')
             then
+               report "nextValue about to be read.";
                mem_addr <= std_logic_vector(unsigned(pointer) + 1);
                mem_we <= '0';
                mem_re   <= '1';
@@ -153,7 +154,6 @@ begin
             else 
                if (getOutput = '1' AND mem_ack = '1')
                then
-                  report "nextValue wurde geladen.";
                   nextValue := mem_output;
                   nextValueValid := '1';
                   getOutput := '0';
@@ -187,7 +187,7 @@ begin
             then
             --Werte tauschen
                report "#Tausche currentValue und nextValue, weil nextValue kleiner war.";
-               report "#Write " &integer'image(to_integer(unsigned(pointer)))& " <= " &integer'image(to_integer(unsigned(nextValue)));
+               report "#Write " &integer'image(to_integer(unsigned(nextValue)))& " (next) to adress" &integer'image(to_integer(unsigned(pointer)));
                
                mem_addr <= pointer;
                mem_data_in <= nextValue;
@@ -199,7 +199,9 @@ begin
             else
                --Werte bereits in richtiger Reihefolge
                report "#Die Werte waren bereits in korrekter Reihenfolge.";
-               report "#Write " &integer'image(to_integer(unsigned(pointer)))& " <= " &integer'image(to_integer(unsigned(currentValue)));
+               report "#Write " &integer'image(to_integer(unsigned(currentValue)))
+                      & " (curr) to adress " &integer'image(to_integer(unsigned(pointer)))
+                      & "(just in case.)";
                mem_addr <= pointer;
                mem_data_in <= currentValue;
                mem_we <= '1';
@@ -211,7 +213,7 @@ begin
             
             
             --Suchdurchlauf beenden?
-            if (to_integer(unsigned(pointer) +1 ) > to_integer(unsigned(addr_end))  - amountCorrectLastDigits)
+            if (to_integer(unsigned(pointer) +2 ) > to_integer(unsigned(addr_end))  - amountCorrectLastDigits)
             then
                report "Ende des Sortierbereiches erreicht.";
                --Wir sparen uns einen Vergleich pro Suchdurchlauf.
@@ -228,6 +230,9 @@ begin
                   if (replaceCurrentValue = '1')
                   then
                      report "Ersetze zuvor aber noch pointer-Wert durch currentValue.";
+                     report "#Write " &integer'image(to_integer(unsigned(nextValue)))
+                      & " (curr) to adress " &integer'image(to_integer(unsigned(pointer)))
+                      & "(just in case.)";
                      replaceCurrentValue := '0';
                      mem_addr <= pointer;
                      mem_data_in <= currentValue;
