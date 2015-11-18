@@ -40,18 +40,93 @@
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_STX" xil_pn:name="Sorter.stx"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_REPORT" xil_pn:name="Sorter.syr"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST" xil_pn:name="Sorter.xst"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="SorterTB_beh.prj"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="SorterTB_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="SorterTB_isim_beh.wdb"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="SorterTB_stx_beh.prj"/>
     <file xil_pn:fileType="FILE_HTML" xil_pn:name="Sorter_envsettings.html"/>
     <file xil_pn:fileType="FILE_HTML" xil_pn:name="Sorter_summary.html"/>
     <file xil_pn:fileType="FILE_XRPT" xil_pn:name="Sorter_xst.xrpt"/>
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/xst.xmsgs"/>
+    <file xil_pn:fileType="FILE_LOG" xil_pn:name="fuse.log"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="isim"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_CMD" xil_pn:name="isim.cmd"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_LOG" xil_pn:name="isim.log"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="netgen"/>
     <file xil_pn:fileType="FILE_NETGEN_REPORT" xil_pn:name="netgen/synthesis/Sorter_synthesis.nlf"/>
     <file xil_pn:fileType="FILE_VHDL" xil_pn:name="netgen/synthesis/Sorter_synthesis.vhd"/>
     <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="webtalk_pn.xml"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_INI" xil_pn:name="xilinxsim.ini"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xst"/>
   </files>
 
   <transforms xmlns="http://www.xilinx.com/XMLSchema">
+    <transform xil_pn:end_ts="1447854871" xil_pn:name="TRAN_copyInitialToAbstractSimulation" xil_pn:start_ts="1447854871">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1447857554" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447857554">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="../A1_Memory/memory.vhd"/>
+      <outfile xil_pn:name="../A2_CachedMemory/CachedMemory.vhd"/>
+      <outfile xil_pn:name="Sorter.vhd"/>
+      <outfile xil_pn:name="SorterTB.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1447856201" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="4798324724495685483" xil_pn:start_ts="1447856201">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1447856201" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="5194661619949411785" xil_pn:start_ts="1447856201">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1447854872" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="-3921446663932931224" xil_pn:start_ts="1447854872">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1447857640" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447857640">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="../A1_Memory/memory.vhd"/>
+      <outfile xil_pn:name="../A2_CachedMemory/CachedMemory.vhd"/>
+      <outfile xil_pn:name="Sorter.vhd"/>
+      <outfile xil_pn:name="SorterTB.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1447857644" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-2316700847790464762" xil_pn:start_ts="1447857640">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="SorterTB_beh.prj"/>
+      <outfile xil_pn:name="SorterTB_isim_beh.exe"/>
+      <outfile xil_pn:name="fuse.log"/>
+      <outfile xil_pn:name="isim"/>
+      <outfile xil_pn:name="isim.log"/>
+      <outfile xil_pn:name="xilinxsim.ini"/>
+    </transform>
+    <transform xil_pn:end_ts="1447857644" xil_pn:in_ck="-8556773637213957308" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="2403012280135564659" xil_pn:start_ts="1447857644">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="SorterTB_isim_beh.wdb"/>
+      <outfile xil_pn:name="isim.cmd"/>
+      <outfile xil_pn:name="isim.log"/>
+    </transform>
     <transform xil_pn:end_ts="1447531854" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1447531854">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
@@ -80,7 +155,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447853915" xil_pn:in_ck="2918557350967137133" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447853874">
+    <transform xil_pn:end_ts="1447857905" xil_pn:in_ck="2967026527128918074" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447857857">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
@@ -92,6 +167,8 @@
       <outfile xil_pn:name="Sorter.stx"/>
       <outfile xil_pn:name="Sorter.syr"/>
       <outfile xil_pn:name="Sorter.xst"/>
+      <outfile xil_pn:name="SorterTB_beh.prj"/>
+      <outfile xil_pn:name="SorterTB_stx_beh.prj"/>
       <outfile xil_pn:name="Sorter_xst.xrpt"/>
       <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="webtalk_pn.xml"/>

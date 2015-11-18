@@ -90,6 +90,8 @@ begin
    if(start = '1' AND isRunning = '0')
    then
       isRunning := '1';
+      initDelay := 100;
+      done <= '0';
    end if;
   
    if(isRunning = '1')
@@ -105,7 +107,7 @@ begin
       then
          initDelay := initDelay-1;
       end if;      
-   else 
+   
       if(isRunning ='1' AND initDelay = 0)
       then
       end if;
@@ -211,6 +213,7 @@ begin
                      mem_addr <= currentValue;
                      mem_we <= '1';
                      mem_re <= '0';
+                     currentValue := firstValue;
                   end if;
                
                --FERTIG SORTIERT!
@@ -223,6 +226,7 @@ begin
                      mem_re <= '0';
                   end if;
                   mem_dump <= '1';
+                  done <= '1';
                end if;
                   
                
