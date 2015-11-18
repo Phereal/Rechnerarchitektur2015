@@ -1,38 +1,64 @@
---------------------------------------------------------------------------------
--- Company: 
--- Engineer:
+---------------------------------------------------------------------------------------------------
+-- Rechnerarchitektur und Eingebettete Systeme
+-- Uebungszettel 2 - Aufgabe 2: Direct Mapped Cache Testbench
 --
--- Create Date:   17:32:27 11/15/2015
--- Design Name:   
--- Module Name:   /home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemoryTb.vhd
--- Project Name:  A2_CachedMemory
--- Target Device:  
--- Tool versions:  
--- Description:   
--- 
--- VHDL Test Bench Created by ISE for module: CachedMemory
--- 
--- Dependencies:
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Die Testfaelle wurden so gewahlt, dass zum Einen die Anforderungen aus der Aufgabestellung ge-
+-- prueft werden und zum Anderen wurden weitere Testsfaelle gewaehlt, die die verschiedenen
+-- Zustaende des Caches pruefen (Init, Reset, Dump, Read, Write, KeineEingabe).
+-- Weiterhin wurde die Funktionalitaet WriteBack, ausgeloest sowohl durch read als auch durch write
+-- getestet und das Verhalten der Beschreibung am Beginn der CachedMemory.vhd entspricht.
+-- Es wurde geprueft ob alle 80 Byte des Speichers addressierbar sind.
 --
--- Notes: 
--- This testbench has been automatically generated using types std_logic and
--- std_logic_vector for the ports of the unit under test.  Xilinx recommends
--- that these types always be used for the top-level I/O of a design in order
--- to guarantee that the testbench will bind correctly to the post-implementation 
--- simulation model.
---------------------------------------------------------------------------------
+-- Zuordnung von Testfall zu Aufgabenstellung:
+-- 1. "Der obige Speicher soll um einen direct mapped Cache erweitert werden, der 16 Adressen 
+--    vorhalten kann."
+--    Wird durch Testfall 2 und 3 getestet indem zwei Sets von 16 Adressen hintereinander gelesen
+--    werden. Das Ueberpruefen von ack laesst darauf schliessen ob der 2. set aus dem Speicher
+--    geladen wurde (zeit unterschied bis ack). Weiterhin muessen die gelesenen Cachelines mit
+--    den erwarteten Werten im Speicher ueber einstimmen.
+--
+-- 2. "Der Ausgang ack signalisiert hierbei, dass die gewünschten Daten am Ausgang anliegen. Der
+--    Wert wird auf 0 gesetzt, sobald eine Leseanfrage eingeht."
+--    Wird durch Testfall 8 geprueft.
+--
+-- 3. "Beachte hierbei, dass es wichtig ist, dass ack nicht auf 1 steht, bevor die Daten wirklich
+--    vorliegen."
+--    Wird durch fast alle Tests geprueft (z.B. Testfall 1 und 2) da direkt nach rising_edge(ack)
+--    der output geprueft wird.
+--
+-- 4. "Es gilt zu beachten, dass der Cache über eine achtmal schnellere clock betrieben wird, als
+--    der eigentliche Speicher (da sonst ein Cache auch ziemlich sinnlos wäre). Es wird also eine
+--    zweite clock domain benötigt. Hierzu muss ein entsprechender clock divider implementiert
+--    werden."
+--    Wird durch fast alle Tests geprueft (z.B. Testfall 1) ueber ack = '0' bei Speicher
+--    zugriffen.
+--
+-- 5. "Beachte, dass beim dumpen des Caches natürlich die Einträge im Cache selbst berücksichtigt
+--    werden müssen."
+--    Wird durch Testfall 9 und 10 getestet indem zuerst der Speicher mit Werten gefuellt wird,
+--    wovon einige dirty sind und der Speicher danach gedumpt wird. Das dumpfile dump.dat wurde
+--    danach manuell ueberpruft, es entsprach den erwarteten Werten.
+--
+-- Weitere Tests:
+-- 6.   Init wird vor Testfall 1 ausgefuehrt und dann durch Testfall 1 geprueft. Weiterhin wurde in
+--      Isim der interne Speicher von mem manuel ueberprueft (Entsprach den Vorstellungen)
+-- 7.   Reset wird vor Testfall 1 ausgefuehrt und dann manuell in Isim ueberprueft ob alle Cachelines
+--      invalid sind.
+-- 8.   Read mit CacheMiss wird in Testfall 1 geprueft.
+-- 9.   Read mit CacheHit wird in Testfall 2 geprueft.
+-- 10.  Read mit WriteBack wird in Testfall 3 geprueft.
+-- 11.  Mehrfacher Read nach WriteBack wird in Testfall 4 geprueft.
+-- 12.  Schreiben ohne WriteBack wird in Testfall 5 geprueft.
+-- 13.  Ob zuvor geschriebene Werte durch Schreiben anderer Daten zurueckgeschrieben 
+--      (writeback) werden, wird in Testfall 6 geprueft.
+-- 14.  Ob zuvor geschriebene Werte durch Lesen anderer Daten zurueckgeschrieben 
+--      (writeback) werden, wird in Testfall 7 geprueft.
+-- 15.  Addressierbarkeit aller 80 Speicheradressen, wird in Testfall 9 geprueft.
+---------------------------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_unsigned.all;
 USE ieee.numeric_std.ALL;
- 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---USE ieee.numeric_std.ALL;
  
 ENTITY CachedMemoryTb IS
 END CachedMemoryTb;
@@ -220,7 +246,7 @@ BEGIN
         severity failure;
     end loop;
     
-    -- Testfall 5: Pruefe das schreiben in den cache (kein mem zugriff, da wb nur wenn valid, dirty und andere daten)
+    -- Testfall 5: Pruefe das Schreiben in den cache (kein mem Zugriff, da wb nur wenn valid, dirty und andere daten)
     for i in 0 to (15) loop
       init     <= '0';
       dump     <= '0';
