@@ -65,7 +65,7 @@ begin
  execute: process (clk)
    --Verzögert Sortierung, damit init den Speicher füllen kann.
    --Erinnerung: Muss bei dump wieder auch Ursprungswert gestellt werden!
-   variable initDelay : Integer := 200;
+   variable initDelay : Integer := 500;
    --Gibt an, ob Sortierungg läuft.
    variable isRunning   : STD_LOGIC                   := '0';
    variable pointer     : std_logic_vector(7 downto 0):= addr_start;
@@ -89,21 +89,22 @@ begin
   
    if(start = '1' AND isRunning = '0')
    then
+      pointer := addr_start;
       isRunning := '1';
-      initDelay := 200;
+      initDelay := 500;
       done <= '0';
    end if;
   
    if(isRunning = '1')
    then
       --Load init values.
-      if (initDelay = 200)
+      if (initDelay = 500)
       then
          report "Habe mem_init auf 1 gesetzt und warte jetzt einen Takt.";
          mem_init <= '1';
       end if;
       
-      if (initDelay = 199)
+      if (initDelay = 499)
       then
          report "Habe mem_init wieder auf 0 gesetzt.";
          report "Warte noch ein paar hundert Zyklen, um init Zeit zu lassen.";
@@ -118,6 +119,7 @@ begin
    
       if(isRunning ='1' AND initDelay = 0)
       then
+      
          if(firstValueValid = '0')
          then 
             if (getOutput = '0')
@@ -127,14 +129,16 @@ begin
                mem_we   <= '0';
                mem_re   <= '1';
                getOutput := '1';
-            else if (mem_ack='1')
-            then
-               report "firstValue aus dem Speicher geladen!";
-               firstValue := mem_output;
-               firstValueValid := '1';
-               getOutput := '0';
+            else 
+               if (mem_ack='1')
+               then
+                  report "firstValue aus dem Speicher geladen!";
+                  firstValue := mem_output;
+                  firstValueValid := '1';
+                  getOutput := '0';
+               end if;
             end if;
-         end if;
+         else report "firstValueValid = '1'";
          
          --Dies ist eine if-Abfrage statt eines else, da die
          --Anweisung in demselben Schritt erfolgen darf.
@@ -143,6 +147,8 @@ begin
             report "currentValue war ungültig, also wurde es durch firstValue ersetzt.";
             currentValue := firstValue;
             currentValueValid := '1';
+         else
+            report "currentValueValid= '1'";
          end if;
 
          if(currentValueValid = '1' AND nextValueValid = '0')
@@ -155,14 +161,19 @@ begin
                mem_re   <= '1';
                getOutput := '1';
             
-            else if (getOutput = '1' AND mem_ack = '1')
-            then
-               report "nextValue wurde geladen.";
-               nextValue := mem_output;
-               nextValueValid := '1';
-               getOutput := '0';
+            else 
+               if (getOutput = '1' AND mem_ack = '1')
+               then
+                  report "nextValue wurde geladen.";
+                  nextValue := mem_output;
+                  nextValueValid := '1';
+                  getOutput := '0';
+               else
+                  report "Warte auf mem_ack = '1'...";
                end if;
             end if;
+         else 
+            report "nextValueValid = '1'";
          end if;
          
          --Im folgenden Codeblock wird festgestellt, was sortiert wird.
