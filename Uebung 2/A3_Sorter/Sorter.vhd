@@ -83,9 +83,9 @@ begin
    
    
  
- begin
-  if rising_edge(clk)
-  then
+begin
+ if rising_edge(clk)
+ then
   
    if(start = '1' AND isRunning = '0')
    then
@@ -119,36 +119,30 @@ begin
    
       if(isRunning ='1' AND initDelay = 0)
       then
-      
-         if(firstValueValid = '0')
+
+         if(currentValueValid = '0')
          then 
             if (getOutput = '0')
             then
-               report "firstValue ist ungültig. Lade aus dem Speicher...";
-               mem_addr <= addr_start;
-               mem_we   <= '0';
+               report "currentValue ist ungültig. Fordere Inhalt der nächsten Adresse an...";
+               mem_addr <= std_logic_vector(unsigned(pointer) );
+               mem_we <= '0';
                mem_re   <= '1';
                getOutput := '1';
+            
             else 
-               if (mem_ack='1')
+               if (getOutput = '1' AND mem_ack = '1')
                then
-                  report "firstValue aus dem Speicher geladen!";
-                  firstValue := mem_output;
-                  firstValueValid := '1';
+                  report "currentValue wurde geladen.";
+                  currentValue := mem_output;
+                  currentValueValid := '1';
                   getOutput := '0';
+               else
+                  report "Warte auf mem_ack = '1'...";
                end if;
             end if;
-         else report "  firstValueValid = '1'";
-         
-         --Dies ist eine if-Abfrage statt eines else, da die
-         --Anweisung in demselben Schritt erfolgen darf.
-         if(firstValueValid = '1' AND currentValueValid = '0')
-         then
-            report "currentValue war ungültig, also wurde es durch firstValue ersetzt.";
-            currentValue := firstValue;
-            currentValueValid := '1';
-         else
-            report "   currentValueValid= '1'";
+         else 
+            report "   currentValueValid = '1'";
          end if;
 
          if(currentValueValid = '1' AND nextValueValid = '0')
@@ -156,7 +150,7 @@ begin
             if (getOutput = '0')
             then
                report "nextValue ist ungültig. Fordere Inhalt der nächsten Adresse an...";
-               mem_addr <= std_logic_vector(unsigned(pointer) + 1); --so richtig?
+               mem_addr <= std_logic_vector(unsigned(pointer) + 1);
                mem_we <= '0';
                mem_re   <= '1';
                getOutput := '1';
@@ -191,7 +185,7 @@ begin
          --mit dem zwischengespeicherten aktuellen Wert überschrieben,
          --
          --Wenn der erste Fall bei der Sortierung bisher nicht auftrat, geschieht hier nichts.
-         if(firstValueValid = '1' AND currentValueValid = '1' AND nextValueValid = '1')
+         if(currentValueValid = '1' AND nextValueValid = '1')
          then
             report "--Zwischenspeicher OK. Sortiere!--";
             mem_re <= '0'; --Auf keinen Fall etwas lesen!
@@ -237,7 +231,6 @@ begin
                then
                   report "Starte Sortiervorgang neu.";
                   sortAgain := '0';
-                  firstValueValid:= '0';
                   currentValueValid:= '0';
                   nextValueValid := '0';
                   --Zwischengespeicherten Wert schreiben
@@ -269,12 +262,12 @@ begin
                   done <= '1';
                   isRunning := '0';
                end if;
-              end if;
+              
             end if;
          end if;
       end if;
    end if;
  end if;
- end process;
+end process;
 end Behavioral;
 
