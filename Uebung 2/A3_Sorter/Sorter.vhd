@@ -93,7 +93,7 @@ begin
   
    if(start = '1' AND isRunning = '0')
    then
-      mem_dump := '1';
+      mem_dump <= '0';
       pointer := addr_start;
       isRunning := '1';
       initDelay := 500;
