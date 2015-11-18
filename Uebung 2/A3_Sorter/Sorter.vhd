@@ -191,12 +191,14 @@ begin
                   mem_we <= '1';
                   mem_re <= '0';
                end if;
-            pointer := std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8));
+            
             currentValue := nextValue;
             end if;
             
+            pointer := std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8));
+            
             --Suchdurchlauf beenden?
-            if (to_integer(unsigned(pointer)) > to_integer(unsigned(addr_end)) + amountCorrectLastDigits)
+            if (to_integer(unsigned(pointer)) > to_integer(unsigned(addr_end)) - amountCorrectLastDigits)
             then
                --Wir sparen uns einen Vergleich pro Suchdurchlauf.
                amountCorrectLastDigits := amountCorrectLastDigits +1;
@@ -204,25 +206,28 @@ begin
                --Für erneute Sortierung vorbereiten:
                if (sortAgain = '1')
                then
-                  currentValueValid := '0';
+                  firstValueValid:= '0';
+                  currentValueValid:= '0';
                   nextValueValid := '0';
-                  pointer := addr_start;
                   --Zwischengespeicherten Wert schreiben
                   if (replaceCurrentValue = '1')
                   then
                      replaceCurrentValue := '0';
-                     mem_addr <= currentValue;
+                     mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) - 1, 8));
+                     mem_data_in <= currentValue;
                      mem_we <= '1';
                      mem_re <= '0';
-                     currentValue := firstValue;
                   end if;
+                  
+                  pointer := addr_start; --Wichtig!
                
                --FERTIG SORTIERT!
                else
                   if (replaceCurrentValue = '1')
                   then
                      replaceCurrentValue := '0';
-                     mem_addr <= currentValue;
+                     mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) - 1, 8));
+                     mem_data_in <= currentValue;
                      mem_we <= '1';
                      mem_re <= '0';
                   end if;
