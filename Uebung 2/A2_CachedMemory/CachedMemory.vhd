@@ -94,14 +94,14 @@ architecture Behavioral of CachedMemory is
   type memStates is (memIdle, memBusy);
   signal memState : memStates := memIdle;
   
-  type memRequests is (noMemRequest, memRequestInit, memRequestReset, memRequestRead, memRequestWB);
+  type memRequests is (noMemRequest, memRequestInit, memRequestReset, memRequestRead, memRequestWB, memRequestWBForDump, memRequestDump);
   signal memRequest : memRequests := noMemRequest;
   
-  type memContentStates is (memContentUndefined, memContentInit, memContentReset, memContentRead, memContentWB);
+  type memContentStates is (memContentUndefined, memContentInit, memContentReset, memContentRead, memContentWB, memContentDumped);
   signal memContentState : memContentStates := memContentUndefined;
   
-  signal buffer_mem_clk      : std_logic := '0';
-  signal buffer_mem_addr     : std_logic_vector(7 downto 0) := (others => '0');
+  signal buffer_mem_clk   : std_logic := '0';
+  signal buffer_mem_addr  : std_logic_vector(7 downto 0) := (others => '0');
   
   
   -- ==========
@@ -213,6 +213,26 @@ begin
           -- tell this process and the main process that mem is busy and its contents are undefined.
           memState <= memBusy;
           memContentState <= memContentUndefined;
+        
+        -- *** WB for dump request ***
+        elsif(memRequest = memRequestWBForDump) then
+          -- save the cache line index for later use in busy
+          lastMemAddr := buffer_mem_addr;
+          mem_we    <= '1';
+          mem_addr(3 downto 0) <= lastMemAddr(3 downto 0);
+          mem_addr(7 downto 4) <= cache(to_integer(unsigned(lastMemAddr(3 downto 0)))).tag;
+          mem_data_in <= cache(to_integer(unsigned(lastMemAddr(3 downto 0)))).data;
+          
+          -- tell this process and the main process that mem is busy and its contents are undefined.
+          memState <= memBusy;
+          memContentState <= memContentUndefined;
+        
+        -- *** Dump request ***
+        elsif(memRequest = memRequestDump) then
+          mem_dump <= '1';
+          -- tell this process and the main process that mem is busy and its contents are undefined.
+          memState <= memBusy;
+          memContentState <= memContentUndefined;
         end if;
       else
         -- mem was busy for one mem_clk and should have processed its in-/outputs.
@@ -265,6 +285,22 @@ begin
           cacheRequestFromMem <= cacheRequestCleanLine;
           -- tell the main process that the content of mem is now wb (not yet used, just here for consistency).
           memContentState <= memContentWB;
+        
+        -- *** Last request: WB ***
+        elsif(lastMemRequest = memRequestWBForDump) then
+          -- update bits in cache line via CacheDriver
+          -- buffer cache inputs for cacheDriver
+          buffer_cacheFromMem_addr  <= lastMemAddr;
+          -- tell cacheDriver to update data in cache
+          cacheRequestFromMem <= cacheRequestCleanLine;
+          -- tell the main process that the content of mem is now wb (not yet used, just here for consistency).
+          memContentState <= memContentWB;
+        
+        -- *** Last request: Dump ***
+        elsif(lastMemRequest = memRequestDump) then
+          -- tell the main process that the content of mem is now dumped.
+          memContentState <= memContentDumped;
+          -- no need to set cacheRequestFromMem here, since cache dump is controlled by main
         end if;
       end if;
     end if;
@@ -343,6 +379,8 @@ begin
     variable tmpIntTag   : integer := 0;
     variable tmpIntIndex : integer := 0;
     
+    variable readyForDump : STD_LOGIC := '1';
+    
   begin
     -- preset cacheDriver request. Located here to make sure the signal is reset between clks,
     -- since the cacheDriver only reacts on changing of the signal and other states than noCacheRequest.
@@ -383,6 +421,30 @@ begin
       
       -- *** Dump ***
       elsif(init = '0' AND dump = '1' AND reset = '0' AND re = '0' AND we = '0') then
+        readyForDump := '1';
+      
+        -- write back cache for mem dump (last cache line first)
+        for i in 0 to cache'length-1 loop
+          if( (cache(i).v = '1') AND (cache(i).d = '1') ) then
+            readyForDump := '0';
+            -- wait until mem has finished its things
+            if(memState = memIdle) then
+              -- save the addr to provide memDriver with the right cache line
+              buffer_mem_addr(3 downto 0) <= std_logic_vector(to_unsigned(i, 4));
+              buffer_mem_addr(7 downto 4) <= (others => '0');
+              -- send request to memDriver to wb mem
+              memRequest <= memRequestWBForDump;
+            end if;
+          end if;
+        end loop;
+        
+        if( readyForDump = '1' ) then
+          -- wait until mem has finished its things
+          if((memState = memIdle) AND (memContentState /= memContentDumped) ) then
+            -- send request to memDriver to reset mem
+            memRequest <= memRequestDump;
+          end if;
+        end if;
       -- *** Dump End ***
       
       
@@ -542,4 +604,3 @@ begin
   output  <= bufferOut;
 
 end Behavioral;
-
