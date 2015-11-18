@@ -88,17 +88,43 @@ architecture Behavioral of CachedMemory is
   type cacheStruct is array (0 to 15) of cacheLine;
   signal cache : cacheStruct;
   
-  type stateType is (none, wb, wb_ready, reading, re_ready, resetting, reset_ready, initializing, init_ready, dumping, dump_ready);
-  signal state : stateType := none;
+  -- ==========
+  -- Memory states and buffer
+  -- ==========
+  type memStates is (memIdle, memBusy);
+  signal memState : memStates := memIdle;
   
-  signal dataReady : STD_LOGIC := '0';
+  type memRequests is (noMemRequest, memRequestInit, memRequestReset, memRequestRead, memRequestWB);
+  signal memRequest : memRequests := noMemRequest;
+  
+  type memContentStates is (memContentUndefined, memContentInit, memContentReset, memContentRead, memContentWB);
+  signal memContentState : memContentStates := memContentUndefined;
+  
+  signal buffer_mem_clk      : std_logic := '0';
+  signal buffer_mem_addr     : std_logic_vector(7 downto 0) := (others => '0');
   
   
+  -- ==========
+  -- Cache states and buffer
+  -- ==========
+  type cacheRequests is (noCacheRequest, cacheRequestInit, cacheRequestReset, cacheRequestWrite, cacheRequestCleanLine);
+  signal cacheRequestFromMem  : cacheRequests := noCacheRequest;
+  signal cacheRequestFromMain : cacheRequests := noCacheRequest;
   
-
-
-
-
+  signal buffer_cacheFromMem_addr : std_logic_vector(7 downto 0) := (others => '0');
+  signal buffer_cacheFromMem_data : std_logic_vector(7 downto 0) := (others => '0');
+  signal buffer_cacheFromMem_d    : std_logic := '0';
+  signal buffer_cacheFromMem_v    : std_logic := '0';
+  
+  signal buffer_cacheFromMain_addr : std_logic_vector(7 downto 0) := (others => '0');
+  signal buffer_cacheFromMain_data : std_logic_vector(7 downto 0) := (others => '0');
+  signal buffer_cacheFromMain_d    : std_logic := '0';
+  signal buffer_cacheFromMain_v    : std_logic := '0';
+  
+  signal bufferAck : STD_LOGIC := '0';
+  signal bufferOut : STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
+  
+  
 begin
 
   -- Clock process definitions
@@ -109,12 +135,14 @@ begin
     if rising_edge(clk) then
       if clkCnt = (clkDiv / 2 - 1) then
         clkCnt := 0;
-        mem_clk <= not(mem_clk);
+        buffer_mem_clk <= not(buffer_mem_clk);
       else
         clkCnt := clkCnt + 1;
       end if;
     end if;
   end process;
+  
+  
 
   mem: Memory PORT MAP (
     clk     => mem_clk,
@@ -125,328 +153,390 @@ begin
     we      => mem_we,
     addr    => mem_addr,
     data_in => mem_data_in,
-    output  => mem_output);
-
-  execute: process (clk, mem_clk)
-    variable tmpTag : STD_LOGIC_VECTOR (3 downto 0);
-    variable tmpIndex : integer;
-    variable waitForMem : std_logic := '0';
-    variable waitedOneMemClk : std_logic := '0';
-    variable lineToDump : integer := 0;
-    
+    output  => mem_output
+  );
+  
+  
+  
+  memDriver: process (buffer_mem_clk)
+    variable lastMemRequest : memRequests := noMemRequest;
+    variable lastMemAddr : std_logic_vector(7 downto 0) := (others => '0');
   begin
-    if rising_edge(mem_clk) then
-      if(state = wb) then
-        if(waitedOneMemClk = '1') then
-          waitedOneMemClk := '0';
-          state <= wb_ready;
-        else
-          waitedOneMemClk := '1';
-        end if;
-      elsif(state = reading) then
-        if(waitedOneMemClk = '1') then
-          waitedOneMemClk := '0';
-          state <= re_ready;
-        else
-          waitedOneMemClk := '1';
-        end if;
-      elsif(state = initializing) then
-        if(waitedOneMemClk = '1') then
-          waitedOneMemClk := '0';
-          state <= init_ready;
-        else
-          waitedOneMemClk := '1';
-        end if;
-      elsif(state = resetting) then
-        if(waitedOneMemClk = '1') then
-          waitedOneMemClk := '0';
-          state <= reset_ready;
-        else
-          waitedOneMemClk := '1';
-        end if;
-      elsif(state = dumping) then
-        if(waitedOneMemClk = '1') then
-          waitedOneMemClk := '0';
-          state <= dump_ready;
-        else
-          waitedOneMemClk := '1';
+    -- preset cacheDriver request. Located here to make sure the signal is reset between mem_clks,
+    -- since the cacheDriver only reacts on changing of the signal and other states than noCacheRequest.
+    cacheRequestFromMem <= noCacheRequest;
+      
+    if rising_edge(buffer_mem_clk) then
+      if(memState = memIdle) then
+        -- preset mem inputs. if an request is pending, it will set its needed inputs
+        mem_init    <= '0';
+        mem_dump    <= '0';
+        mem_reset   <= '0';
+        mem_re      <= '0';
+        mem_we      <= '0';
+        mem_addr    <= (others => '0');
+        mem_data_in <= (others => '0');
+        
+        -- save last mem request for later processing in busy
+        lastMemRequest  := memRequest;
+        lastMemAddr     := addr;
+        
+        -- *** Init request ***
+        if(memRequest = memRequestInit) then
+          mem_init <= '1';
+          -- tell this process and the main process that mem is busy and its contents are undefined.
+          memState <= memBusy;
+          memContentState <= memContentUndefined;
+        
+        -- *** Reset request ***
+        elsif(memRequest = memRequestReset) then
+          mem_reset <= '1';
+          -- tell this process and the main process that mem is busy and its contents are undefined.
+          memState <= memBusy;
+          memContentState <= memContentUndefined;
+        
+        -- *** Read request ***
+        elsif(memRequest = memRequestRead) then
+          mem_re    <= '1';
+          mem_addr  <= lastMemAddr;
+          -- tell this process and the main process that mem is busy and its contents are undefined.
+          memState <= memBusy;
+          memContentState <= memContentUndefined;
+        
+        -- *** WB request ***
+        elsif(memRequest = memRequestWB) then
+          mem_we    <= '1';
+          mem_addr(3 downto 0) <= lastMemAddr(3 downto 0);
+          mem_addr(7 downto 4) <= cache(to_integer(unsigned(lastMemAddr(3 downto 0)))).tag;
+          mem_data_in <= cache(to_integer(unsigned(lastMemAddr(3 downto 0)))).data;
+          
+          -- tell this process and the main process that mem is busy and its contents are undefined.
+          memState <= memBusy;
+          memContentState <= memContentUndefined;
         end if;
       else
-        -- ignore other states
+        -- mem was busy for one mem_clk and should have processed its in-/outputs.
+        -- stop mem from doing unwanted things.
+        mem_init    <= '0';
+        mem_dump    <= '0';
+        mem_reset   <= '0';
+        mem_re      <= '0';
+        mem_we      <= '0';
+        mem_addr    <= (others => '0');
+        mem_data_in <= (others => '0');
+        -- tell main process that mem is idle again.
+        memState <= memIdle;
+        
+        -- check last request (maybe as variable?)
+        -- *** Last request: Init ***
+        if(lastMemRequest = memRequestInit) then
+          -- tell the main process that the content of mem is now initialized.
+          memContentState <= memContentInit;
+          -- no need to set cacheRequestFromMem here, since cache init is controlled by main
+        
+        -- *** Last request: Reset ***
+        elsif(lastMemRequest = memRequestReset) then
+          -- tell the main process that the content of mem is now reset.
+          memContentState <= memContentReset;
+          -- no need to set cacheRequestFromMem here, since cache init is controlled by main
+        
+        -- *** Last request: Read ***
+        elsif(lastMemRequest = memRequestRead) then
+          -- check if mem_output is valid
+          if( (mem_output /= "XXXXXXXX") AND (mem_output /= "UUUUUUUU") ) then
+            -- data is valid => write it in the cache via CacheDriver
+            -- buffer cache inputs for cacheDriver
+            buffer_cacheFromMem_addr  <= lastMemAddr;
+            buffer_cacheFromMem_data  <= mem_output;
+            buffer_cacheFromMem_d     <= '0';
+            buffer_cacheFromMem_v     <= '1';
+            -- tell cacheDriver to write data to cache
+            cacheRequestFromMem <= cacheRequestWrite;
+          end if;
+          -- tell the main process that the content of mem is now read (not yet used, just here for consistency).
+          memContentState <= memContentRead;
+        
+        -- *** Last request: WB ***
+        elsif(lastMemRequest = memRequestWB) then
+          -- update bits in cache line via CacheDriver
+          -- buffer cache inputs for cacheDriver
+          buffer_cacheFromMem_addr  <= lastMemAddr;
+          -- tell cacheDriver to update data in cache
+          cacheRequestFromMem <= cacheRequestCleanLine;
+          -- tell the main process that the content of mem is now wb (not yet used, just here for consistency).
+          memContentState <= memContentWB;
+        end if;
       end if;
     end if;
-  
-    if rising_edge(clk) then
-      waitForMem := '0';
     
-      -- *** Init ***
-      if(init = '1' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
-        dataReady <= '0';
-        if(state = none) then
-          mem_init    <= '1';
-          mem_dump    <= '0';
-          mem_reset   <= '0';
-          mem_re      <= '0';
-          mem_we      <= '0';
-          mem_addr    <= (others => '0');
-          mem_data_in <= (others => '0');
-          
-          state <= initializing;
-        elsif(state = init_ready) then
-          state <= none;
-          dataReady <= '1';
-        end if;
+    -- forward the clock signal to mem after its inputs are set.
+    mem_clk <= buffer_mem_clk;
+  end process;
+  
+  
+  
+  cacheDriver: process(cacheRequestFromMem, cacheRequestFromMain)
+    variable tmpCacheIndex : integer := 0;
+    variable prevRequestFromMem  : cacheRequests := noCacheRequest;
+    variable prevRequestFromMain : cacheRequests := noCacheRequest;
+  begin
+    if( cacheRequestFromMem /= prevRequestFromMem) then
+      -- save this request as previous
+      prevRequestFromMem := cacheRequestFromMem;
+      -- buffer the cache index, since the conversion is so long
+      tmpCacheIndex := to_integer(unsigned(buffer_cacheFromMem_addr(3 downto 0)));
+      
+      -- *** Request from mem: Write ***
+      if( cacheRequestFromMem = cacheRequestWrite ) then
+        -- write buffered values from mem to cache
+        cache(tmpCacheIndex).tag  <= buffer_cacheFromMem_addr(7 downto 4);
+        cache(tmpCacheIndex).data <= buffer_cacheFromMem_data ;
+        cache(tmpCacheIndex).d    <= buffer_cacheFromMem_d;
+        cache(tmpCacheIndex).v    <= buffer_cacheFromMem_v;
         
-        
-      -- *** Dump ***
-      elsif(init = '0' AND dump = '1' AND reset = '0' AND re = '0' AND we = '0') then
-        dataReady <= '0';
-        if(state = none or state = wb_ready) then
-          -- start dumping
-          lineToDump := -1;
-          
-          for i in 0 to cache'length-1 loop
-            if(cache(i).v = '1' and cache(i).d = '1') then
-              lineToDump := i;
-            end if;
-          end loop;
-          
-          if(lineToDump = -1) then
-            mem_init    <= '0';
-            mem_dump    <= '1';
-            mem_reset   <= '0';
-            mem_re      <= '0';
-            mem_we      <= '0';
-            mem_addr    <= (others => '0');
-            mem_data_in <= (others => '0');
-            
-            state <= dumping;
-          else
-            mem_init    <= '0';
-            mem_dump    <= '0';
-            mem_reset   <= '0';
-            mem_re      <= '0';
-            mem_we      <= '1';
-            mem_addr(3 downto 0) <= std_logic_vector(to_unsigned(lineToDump, 4));
-            mem_addr(7 downto 4) <= cache(lineToDump).tag;
-            mem_data_in <= cache(lineToDump).data;
-                  
-            cache(tmpIndex).d <= '0';
-            state <= wb;
-          end if;
-        elsif(state = dump_ready) then
-          mem_init    <= '0';
-          mem_dump    <= '0';
-          mem_reset   <= '0';
-          mem_re      <= '0';
-          mem_we      <= '0';
-          mem_addr    <= (others => '0');
-          mem_data_in <= (others => '0');
-          state <= dumping;
-            
-          dataReady <= '1';
-          state <= none;
-        end if;
-        
-      -- *** Reset ***
-      elsif(init = '0' AND dump = '0' AND reset = '1' AND re = '0' AND we = '0') then
-        dataReady <= '0';
+      -- *** Request from mem: CleanLine ***
+      elsif( cacheRequestFromMem = cacheRequestCleanLine ) then
+        -- update dirty bit in cache at buffered index from mem
+        cache(tmpCacheIndex).d <= '0';
+      end if;
+    end if;
+    
+    
+    if( cacheRequestFromMain /= prevRequestFromMain) then
+      -- save this request as previous
+      prevRequestFromMain := cacheRequestFromMain;
+      -- buffer the cache index, since the conversion is so long
+      tmpCacheIndex := to_integer(unsigned(buffer_cacheFromMain_addr(3 downto 0)));
+      
+      -- *** Request from main: Init ***
+      if( cacheRequestFromMain = cacheRequestInit ) then
+        -- invalidate cache for init
         for i in 0 to cache'length-1 loop
           cache(i).v <= '0';
         end loop;
-        if(state = none) then
-          mem_init    <= '0';
-          mem_dump    <= '0';
-          mem_reset   <= '1';
-          mem_re      <= '0';
-          mem_we      <= '0';
-          mem_addr    <= (others => '0');
-          mem_data_in <= (others => '0');
-          
-          state <= resetting;
-        elsif(state = reset_ready) then
-          state <= none;
-          dataReady <= '1';
-        end if;
         
-      -- *** Read ***
-      elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '1' AND we = '0') then
-        dataReady <= '0';
-        if(state = none or state = wb_ready or state = re_ready) then
-          tmpTag := addr(7 downto 4);
-          tmpIndex := to_integer(unsigned(addr(3 downto 0)));
-
-          -- TODO: noch keine Absicherung falls lesen aus Speicher fehlschlaegt, pruefung nach unten in valid = 1?
-          if(cache(tmpIndex).v = '1') then
-            if(tmpTag /= cache(tmpIndex).tag) then
-              if(cache(tmpIndex).d = '1') then
-                -- Miss: Andere Daten im Cache und dirty.
-                --  Schreibe zurueck in Speicher. Setze d = 0
-                --  Lesen aus Speicher wird spaeter durchgefuehrt
-                if(state = none) then
-                  -- TODO: Write Back
-                  mem_init    <= '0';
-                  mem_dump    <= '0';
-                  mem_reset   <= '0';
-                  mem_re      <= '0';
-                  mem_we      <= '1';
-                  mem_addr(3 downto 0) <= addr(3 downto 0);
-                  mem_addr(7 downto 4) <= cache(tmpIndex).tag;
-                  mem_data_in <= cache(tmpIndex).data;
-                  
-                  cache(tmpIndex).d <= '0';
-                  
-                  state <= wb;
-                  waitForMem := '1'; -- wird zusaetzlich zu state gesetzt, da sich state erst nach dem prozess aendert
-                end if;
-              end if;
-              -- Miss: Andere Daten im Cache und sauber.
-              --  Hole Daten aus dem Speicher. Setze data = read
-              if((state = none or state = wb_ready) and (waitForMem = '0')) then
-                mem_init    <= '0';
-                mem_dump    <= '0';
-                mem_reset   <= '0';
-                mem_re      <= '1';
-                mem_we      <= '0';
-                mem_addr    <= addr;
-                mem_data_in <= (others => '0');
-                
-                cache(tmpIndex).data <= mem_output;
-                cache(tmpIndex).tag <= tmpTag;
-                cache(tmpIndex).v <= '0'; -- maybe set in rifing_edge(mem_clk)
-                
-                state <= reading;
-                waitForMem := '1'; -- wird zusaetzlich zu state gesetzt, da sich state erst nach dem prozess aendert
-              end if;
-            end if;
-            -- Hit: Daten im Cache. Dirty egal da write back Strategie.
-            --  Lesen aus Speicher wird nicht benoetigt.
-          else
-            -- Miss: Daten nicht im Cache. Dirty und Tag egal da invalid.
-            --  Hole Daten aus dem Speicher. Setze v = 1, d = 0, data = read
-            if(state = none) then
-              mem_init    <= '0';
-              mem_dump    <= '0';
-              mem_reset   <= '0';
-              mem_re      <= '1';
-              mem_we      <= '0';
-              mem_addr    <= addr;
-              mem_data_in <= (others => '0');
-                
-              cache(tmpIndex).data <= mem_output;
-              cache(tmpIndex).tag <= tmpTag;
-              cache(tmpIndex).v <= '0'; -- maybe set in rifing_edge(mem_clk)
-              
-              state <= reading;
-              waitForMem := '1'; -- wird zusaetzlich zu state gesetzt, da sich state erst nach dem prozess aendert
-            end if;
-          end if;
+      -- *** Request from main: Reset ***
+      elsif( cacheRequestFromMain = cacheRequestReset ) then
+        -- invalidate cache for reset
+        for i in 0 to cache'length-1 loop
+          cache(i).v <= '0';
+        end loop;
         
-          -- Daten sind jetzt im Cache und koennen zurueck gegeben werden
-          if((state = none or state = re_ready) and (waitForMem = '0')) then
-            mem_init    <= '0';
-            mem_dump    <= '0';
-            mem_reset   <= '0';
-            mem_re      <= '0';
-            mem_we      <= '0';
-            mem_addr    <= (others => '0');
-            mem_data_in <= (others => '0');
-              
-            cache(tmpIndex).v <= '1';
-            cache(tmpIndex).d <= '0';
-            
-            dataReady <= '1';
-            state <= none;
-          end if;
-        end if;
-
-      -- *** Write ***
-      elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '1') then
-        dataReady <= '0';
-        if(state = none or state = wb_ready) then
-          tmpTag := addr(7 downto 4);
-          tmpIndex := to_integer(unsigned(addr(3 downto 0)));
-
-          if(cache(tmpIndex).v = '1') then
-            if(cache(tmpIndex).d = '1') then
-              if(tmpTag /= cache(tmpIndex).tag) then
-                -- Andere Daten im Cache und valid und dirty.
-                --  Schreibe zurueck in Speicher. Setze d = 0
-                --  Lesen aus Speicher wird spaeter durchgefuehrt
-                if(state = none) then
-                  -- TODO: Write Back
-                  mem_init    <= '0';
-                  mem_dump    <= '0';
-                  mem_reset   <= '0';
-                  mem_re      <= '0';
-                  mem_we      <= '1';
-                  mem_addr(3 downto 0) <= addr(3 downto 0);
-                  mem_addr(7 downto 4) <= cache(tmpIndex).tag;
-                  mem_data_in <= cache(tmpIndex).data;
-                  
-                  cache(tmpIndex).d <= '0';
-                  
-                  state <= wb;
-                  waitForMem := '1'; -- wird zusaetzlich zu state gesetzt, da sich state erst nach dem prozess aendert
-                end if;
-                -- Daten im Cache und valid und dirty.
-                --  Cache kann ueberschrieben werden
-              end if;
-              -- Daten im Cache und valid und sauber.
-              --  Cache kann ueberschrieben werden
-            end if;
-              -- Daten nicht im Cache.
-              --  Cache kann ueberschrieben werden
-          end if;
-          
-          -- Es sind keine anderen Daten im Cache, er kann ueberschrieben werden
-          if((state = none or state = wb_ready) and (waitForMem = '0')) then
-            mem_init    <= '0';
-            mem_dump    <= '0';
-            mem_reset   <= '0';
-            mem_re      <= '0';
-            mem_we      <= '0';
-            mem_addr    <= (others => '0');
-            mem_data_in <= (others => '0');
-            
-            cache(tmpIndex).tag <= tmpTag;
-            cache(tmpIndex).data <= data_in;
-            cache(tmpIndex).v <= '1';
-            cache(tmpIndex).d <= '1';
-            
-            dataReady <= '1';
-            state <= none;
-          end if;
-        end if;
-      
-      -- *** Nothing ***
-      elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
-        mem_init    <= '0';
-        mem_dump    <= '0';
-        mem_reset   <= '0';
-        mem_re      <= '0';
-        mem_we      <= '0';
-        mem_addr    <= (others => '0');
-        mem_data_in <= (others => '0');
-      
-      -- *** Fehlerhafte Eingabe ***
-      else
-        mem_init    <= '0';
-        mem_dump    <= '0';
-        mem_reset   <= '0';
-        mem_re      <= '0';
-        mem_we      <= '0';
-        mem_addr    <= (others => '0');
-        mem_data_in <= (others => '0');
-        
-        dataReady <= '0';
+      -- *** Request from main: Write ***
+      elsif( cacheRequestFromMain = cacheRequestWrite ) then
+        -- write buffered values from main to cache
+        cache(tmpCacheIndex).tag  <= buffer_cacheFromMain_addr(7 downto 4);
+        cache(tmpCacheIndex).data <= buffer_cacheFromMain_data ;
+        cache(tmpCacheIndex).d    <= buffer_cacheFromMain_d;
+        cache(tmpCacheIndex).v    <= buffer_cacheFromMain_v;
       end if;
     end if;
   end process;
   
-  -- Ausgabe
-  ack <= dataReady;
-  output <= cache(to_integer(unsigned(addr(3 downto 0)))).data;
+  
+  
+  
+  
+  execute: process (clk)
+    variable tmpTag   : STD_LOGIC_VECTOR (3 downto 0) := (others => '0');
+    variable tmpIndex : STD_LOGIC_VECTOR (3 downto 0) := (others => '0');
+    variable tmpIntTag   : integer := 0;
+    variable tmpIntIndex : integer := 0;
+    
+  begin
+    -- preset cacheDriver request. Located here to make sure the signal is reset between clks,
+    -- since the cacheDriver only reacts on changing of the signal and other states than noCacheRequest.
+    cacheRequestFromMain <= noCacheRequest;
+  
+    if rising_edge(clk) then
+      -- aufteilen und zwischenspeichern der adresse zur leicheren handhabung
+      tmpTag    := addr(7 downto 4);
+      tmpIndex  := addr(3 downto 0);
+      tmpIntTag   := to_integer(unsigned(tmpTag));
+      tmpIntIndex := to_integer(unsigned(tmpIndex));
+      
+      -- buffer vorbelegen, so nicht jeder if-fall auf das zuruecksetzen aufpassen muss
+      bufferAck <= '0';
+      bufferOut <= "XXXXXXXX";
+      
+      memRequest <= noMemRequest;
+    
+      -- *** Init ***
+      -- may take up to 3 mem_clks if there are pending mem operations
+      if(init = '1' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
+        -- invalidate output no matter whether mem is busy or not, since the cache will be
+        -- invalidated immediately.
+        bufferAck <= '0';
+        bufferOut <= "XXXXXXXX";
+        -- cache is immediately invalidated, since the content of mem will be overwritten.
+        -- the user has to make sure the init signal is set long enough.
+        cacheRequestFromMain <= cacheRequestInit;
+        
+        -- wait until mem has finished its things
+        if((memState = memIdle) AND (memContentState /= memContentInit) ) then
+          -- send request to memDriver to init mem
+          memRequest <= memRequestInit;
+        end if;
+      -- *** Init End ***
+      
+      
+      
+      -- *** Dump ***
+      elsif(init = '0' AND dump = '1' AND reset = '0' AND re = '0' AND we = '0') then
+      -- *** Dump End ***
+      
+      
+      
+      -- *** Reset ***
+      elsif(init = '0' AND dump = '0' AND reset = '1' AND re = '0' AND we = '0') then
+        -- invalidate output no matter whether mem is busy or not, since the cache will be
+        -- invalidated immediately.
+        bufferAck <= '0';
+        bufferOut <= "XXXXXXXX";
+        -- cache is immediately invalidated, since the content of mem will be overwritten.
+        -- the user has to make sure the reset signal is set long enough.
+        cacheRequestFromMain <= cacheRequestReset;
+        
+        -- wait until mem has finished its things
+        if((memState = memIdle) AND (memContentState /= memContentReset) ) then
+          -- send request to memDriver to reset mem
+          memRequest <= memRequestReset;
+        end if;
+      -- *** Reset End ***
+        
+      
+      
+      -- *** Read ***
+      elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '1' AND we = '0') then
+        -- invalidate output no matter whether data is in cache or not. Will be set
+        -- if data is in cache.
+        bufferAck <= '0';
+        bufferOut <= "XXXXXXXX";
+        
+        -- check whether data is in cache
+        if(cache(tmpIntIndex).v = '1') then
+          if(tmpTag /= cache(tmpIntIndex).tag) then
+            if(cache(tmpIntIndex).d = '1') then
+              -- valid, other data, dirty => wb the dirty cacheline
+              -- wait until mem has finished its things
+              if(memState = memIdle) then
+                -- no need to save the addr to ensure that only the value at rising clk is
+                -- used, since the mem_clk has its rising edge at the same time (disregarding gate latency).
+                -- send request to memDriver to wb mem
+                memRequest <= memRequestWB;
+              end if;
+            else
+              -- valid, other data, clean => read data from cache
+              -- wait until mem has finished its things
+              if(memState = memIdle) then
+                -- no need to save the addr to ensure that only the value at rising clk is
+                -- used, since the mem_clk has its rising edge at the same time (disregarding gate latency).
+                -- send request to memDriver to read mem
+                memRequest <= memRequestRead;
+              end if;
+            end if;
+          else
+            -- valid, same data => output data in cache. no need to write back yet if dirty
+            bufferAck <= '1';
+            bufferOut <= cache(tmpIntIndex).data;
+          end if;
+        else
+          -- invalid => read data from cache (if invalid, then no need to check the other values)
+          -- wait until mem has finished its things
+          if(memState = memIdle) then
+            -- no need to save the addr to ensure that only the value at rising clk is
+            -- used, since the mem_clk has its rising edge at the same time (disregarding gate latency).
+            -- send request to memDriver to read mem
+            memRequest <= memRequestRead;
+          end if;
+        end if;
+      
+      
+      
+      -- *** Write ***
+      elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '1') then
+        -- check addressed cacheline
+        if(cache(tmpIntIndex).v = '1') then
+          if(tmpTag /= cache(tmpIntIndex).tag) then
+            if(cache(tmpIntIndex).d = '1') then
+              -- valid, other data, dirty => wb the dirty cacheline
+              -- wait until mem has finished its things
+              if(memState = memIdle) then
+                -- no need to save the addr to ensure that only the value at rising clk is
+                -- used, since the mem_clk has its rising edge at the same time (disregarding gate latency).
+                -- send request to memDriver to wb mem
+                memRequest <= memRequestWB;
+              end if;
+            else
+              -- valid, other data, clean => write data to cache
+              -- check if input is valid
+              if( (data_in /= "XXXXXXXX") AND (data_in /= "UUUUUUUU") ) then
+                -- data is valid => write it in the cache via CacheDriver
+                -- buffer cache inputs for cacheDriver
+                buffer_cacheFromMain_addr  <= addr;
+                buffer_cacheFromMain_data  <= data_in;
+                buffer_cacheFromMain_d     <= '1';
+                buffer_cacheFromMain_v     <= '1';
+                -- tell cacheDriver to write data to cache
+                cacheRequestFromMain <= cacheRequestWrite;
+                -- if needed, an write-ack can be send here
+                -- NOTE OPTIONAL ACK (email)
+              end if;
+            end if;
+          else
+            -- valid, same data => overwrite write data in cache (no need to check dirty, 
+            -- since wb only needed when other data)
+            -- check if input is valid
+            if( (data_in /= "XXXXXXXX") AND (data_in /= "UUUUUUUU") ) then
+              -- data is valid => write it in the cache via CacheDriver
+              -- buffer cache inputs for cacheDriver
+              buffer_cacheFromMain_addr  <= addr;
+              buffer_cacheFromMain_data  <= data_in;
+              buffer_cacheFromMain_d     <= '1';
+              buffer_cacheFromMain_v     <= '1';
+              -- tell cacheDriver to write data to cache
+              cacheRequestFromMain <= cacheRequestWrite;
+              -- if needed, an write-ack can be send here
+              -- NOTE OPTIONAL ACK (email)
+            end if;
+          end if;
+        else
+          -- invalid, same data => overwrite write data in cache (if invalid, 
+          -- then no need to check the other values)
+          -- check if input is valid
+          if( (data_in /= "XXXXXXXX") AND (data_in /= "UUUUUUUU") ) then
+            -- data is valid => write it in the cache via CacheDriver
+            -- buffer cache inputs for cacheDriver
+            buffer_cacheFromMain_addr  <= addr;
+            buffer_cacheFromMain_data  <= data_in;
+            buffer_cacheFromMain_d     <= '1';
+            buffer_cacheFromMain_v     <= '1';
+            -- tell cacheDriver to write data to cache
+            cacheRequestFromMain <= cacheRequestWrite;
+            -- if needed, an write-ack can be send here
+            -- NOTE OPTIONAL ACK (email)
+          end if;
+        end if;
+      
+      
+      
+      -- *** Nothing ***
+      elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
+      
+      
+      
+      -- *** Fehlerhafte Eingabe ***
+      else
+      
+      
+      
+      end if;
+    end if;
+  end process;
+  
+  -- Ausgabenetz
+  ack     <= bufferAck;
+  output  <= bufferOut;
 
 end Behavioral;
 

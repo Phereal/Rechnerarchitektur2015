@@ -98,17 +98,174 @@ BEGIN
    end process;
  
 
-   -- Stimulus process
-   stim_proc: process
-   begin		
-      -- hold reset state for 100 ns.
-      wait for 100 ns;	
+  -- Stimulus process
+  stim_proc: process
+  begin
+    init     <= '0';
+    dump     <= '0';
+    reset    <= '0';
+    re       <= '0';
+    we       <= '0';
+    addr     <= (others => '0');
+    data_in  <= (others => '0');
+  
+    wait for 100 ns;
+    
+    
+    
+    -- hold reset state for 100 ns.
+    
+    report "Beginn der Testbench!";
+    report "Reset UUT!";
+    reset    <= '1';
+    wait until rising_edge(clk);
+    wait for (clk_period*16);
+    reset    <= '0';
+    wait until rising_edge(clk);
+    
+    --report "Init UUT!";
+    --init    <= '1';
+    --wait until rising_edge(clk);
+    --wait for (clk_period*1000);
+    --init    <= '0';
+    --wait for (clk_period*100);
+    --wait until rising_edge(clk);
+    
+    report "Write value to UUT!";
+    we       <= '1';
+    addr     <= "00000000";
+    data_in  <= "01010101";
+    wait until rising_edge(clk);
+    wait for (clk_period/2);
+    we       <= '0';
+    data_in  <= "00000000";
+    
+    report "Write another value to UUT!";
+    we       <= '1';
+    addr     <= "00000001";
+    data_in  <= "11001100";
+    wait until rising_edge(clk);
+    wait for (clk_period/2);
+    we       <= '0';
+    data_in  <= "00000000";
+    
+    
+    report "Reread value from UUT!";
+    re       <= '1';
+    addr     <= "00000000";
+    wait until rising_edge(clk);
+    wait for (clk_period/2);
+    re       <= '0';
+    addr     <= "00000000";
+    data_in  <= "00000000";
+    assert( ack = '1' ) report "Reread 1: ack != 1" severity failure;
+    assert( output = "01010101" ) report "Reread 1: out != 01010101" severity failure;
+    
+    
+    report "Reread another value from UUT!";
+    re       <= '1';
+    addr     <= "00000001";
+    wait until rising_edge(clk);
+    wait for (clk_period/2);
+    re       <= '0';
+    addr     <= "00000000";
+    data_in  <= "00000000";
+    assert( ack = '1' ) report "Reread 2: ack != 1" severity failure;
+    assert( output = "11001100" ) report "Reread 2: out != 11001100" severity failure;
+    
+    
+    
+    
+    report "Overwrite value to UUT!";
+    we       <= '1';
+    addr     <= "00010000";
+    data_in  <= "11100011";
+    wait until rising_edge(clk);
+    wait for (clk_period*20);
+    we       <= '0';
+    data_in  <= "00000000";
+    
+    report "Reread value from UUT!";
+    re       <= '1';
+    wait until rising_edge(clk);
+    wait for (clk_period/2);
+    re       <= '0';
+    addr     <= "00000000";
+    data_in  <= "00000000";
+    assert( ack = '1' ) report "Reread 3: ack != 1" severity failure;
+    assert( output = "11100011" ) report "Reread 3: out != 11100011" severity failure;
+    
+    report "Reread value from UUT!";
+    re       <= '1';
+    addr     <= "00000001";
+    wait until rising_edge(clk);
+    wait for (clk_period/2);
+    re       <= '0';
+    addr     <= "00000000";
+    data_in  <= "00000000";
+    assert( ack = '1' ) report "Reread 4: ack != 1" severity failure;
+    assert( output = "11001100" ) report "Reread 4: out != 11001100" severity failure;
+    
+    
+    report "Reread value from UUT!";
+    re       <= '1';
+    addr     <= "00000000";
+    wait until rising_edge(clk);
+    wait for (clk_period*20);
+    re       <= '0';
+    addr     <= "00000000";
+    data_in  <= "00000000";
+    assert( ack = '1' ) report "Overrread 1: ack != 1" severity failure;
+    assert( output = "01010101" ) report "Overrread 1: out != 01010101" severity failure;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    --report "Overread value from UUT!";
+    --re       <= '1';
+    --addr     <= "00010000";
+    --wait until rising_edge(clk);
+    --wait for (clk_period/2);
+    --assert( ack = '0' ) report "Overread 1: ack != 0" severity failure;
+    --wait for (clk_period*100);
+    --assert( ack = '1' ) report "Overread 2: ack != 1" severity failure;
+    --assert( output = "00000000" ) report "Overread 2: out != 00000000" severity failure;
+    --re       <= '0';
+    --addr     <= "00000000";
+    --data_in  <= "00000000";
+    
+    
+    
+    
+    
+    
+    wait for (clk_period*16);
+    
+    
+    
 
-      wait for clk_period*10;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+      
 
-      -- insert stimulus here 
+    -- insert stimulus here 
 
-      wait;
-   end process;
+    report "Ende der Testbench!" severity failure;
+    wait;
+  end process;
 
 END;
