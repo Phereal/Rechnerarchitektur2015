@@ -30,7 +30,7 @@
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_STX" xil_pn:name="CachedMemory.stx"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_REPORT" xil_pn:name="CachedMemory.syr"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST" xil_pn:name="CachedMemory.xst"/>
-    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="CachedMemoryTb_beh.prj"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="CachedMemoryTb_beh.prj"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="CachedMemoryTb_isim_beh.exe"/>
     <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="CachedMemoryTb_isim_beh.wdb"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="CachedMemoryTb_stx_beh.prj"/>
@@ -95,6 +95,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForProperties"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="InputChanged"/>
@@ -108,6 +109,7 @@
     <transform xil_pn:end_ts="1447806187" xil_pn:in_ck="-564612124860432394" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-2386660654464153815" xil_pn:start_ts="1447806187">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForProperties"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="OutputChanged"/>
@@ -142,13 +144,10 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447805507" xil_pn:in_ck="-6389981142869448950" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="5155045001136514625" xil_pn:start_ts="1447805484">
+    <transform xil_pn:end_ts="1447808495" xil_pn:in_ck="-6389981142869448950" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="5155045001136514625" xil_pn:start_ts="1447808470">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="OutputChanged"/>
-      <status xil_pn:value="OutputRemoved"/>
       <outfile xil_pn:name="CachedMemory.lso"/>
       <outfile xil_pn:name="CachedMemory.ngc"/>
       <outfile xil_pn:name="CachedMemory.ngr"/>
@@ -156,6 +155,7 @@
       <outfile xil_pn:name="CachedMemory.stx"/>
       <outfile xil_pn:name="CachedMemory.syr"/>
       <outfile xil_pn:name="CachedMemory.xst"/>
+      <outfile xil_pn:name="CachedMemoryTb_beh.prj"/>
       <outfile xil_pn:name="CachedMemoryTb_stx_beh.prj"/>
       <outfile xil_pn:name="CachedMemory_stx_beh.prj"/>
       <outfile xil_pn:name="CachedMemory_xst.xrpt"/>

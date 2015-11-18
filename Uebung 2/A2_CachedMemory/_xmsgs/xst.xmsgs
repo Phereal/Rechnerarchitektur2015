@@ -26,13 +26,13 @@
 <msg type="warning" file="HDLCompiler" num="92" delta="old" >"/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 328: <arg fmt="%s" index="1">buffer_cachefrommain_addr</arg> should be on the sensitivity list of the process
 </msg>
 
-<msg type="warning" file="HDLCompiler" num="92" delta="new" >"/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 329: <arg fmt="%s" index="1">buffer_cachefrommain_data</arg> should be on the sensitivity list of the process
+<msg type="warning" file="HDLCompiler" num="92" delta="old" >"/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 329: <arg fmt="%s" index="1">buffer_cachefrommain_data</arg> should be on the sensitivity list of the process
 </msg>
 
-<msg type="warning" file="HDLCompiler" num="92" delta="new" >"/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 330: <arg fmt="%s" index="1">buffer_cachefrommain_d</arg> should be on the sensitivity list of the process
+<msg type="warning" file="HDLCompiler" num="92" delta="old" >"/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 330: <arg fmt="%s" index="1">buffer_cachefrommain_d</arg> should be on the sensitivity list of the process
 </msg>
 
-<msg type="warning" file="HDLCompiler" num="92" delta="new" >"/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 331: <arg fmt="%s" index="1">buffer_cachefrommain_v</arg> should be on the sensitivity list of the process
+<msg type="warning" file="HDLCompiler" num="92" delta="old" >"/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 331: <arg fmt="%s" index="1">buffer_cachefrommain_v</arg> should be on the sensitivity list of the process
 </msg>
 
 <msg type="warning" file="Xst" num="737" delta="old" >Found <arg fmt="%d" index="1">1</arg>-bit latch for signal &lt;<arg fmt="%s" index="2">cacheDriver.prevRequestFromMem&lt;2&gt;</arg>&gt;. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
@@ -735,11 +735,11 @@
 You should achieve better results by setting this init to <arg fmt="%i" index="3">1</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="1426" delta="new" >The value init of the FF/Latch <arg fmt="%s" index="1">buffer_cacheFromMain_v</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">CachedMemory</arg>.
+<msg type="warning" file="Xst" num="1426" delta="old" >The value init of the FF/Latch <arg fmt="%s" index="1">buffer_cacheFromMain_v</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">CachedMemory</arg>.
 You should achieve better results by setting this init to <arg fmt="%i" index="3">1</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="1426" delta="new" >The value init of the FF/Latch <arg fmt="%s" index="1">buffer_cacheFromMain_d</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">CachedMemory</arg>.
+<msg type="warning" file="Xst" num="1426" delta="old" >The value init of the FF/Latch <arg fmt="%s" index="1">buffer_cacheFromMain_d</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">CachedMemory</arg>.
 You should achieve better results by setting this init to <arg fmt="%i" index="3">1</arg>.
 </msg>
 
@@ -750,18 +750,18 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 You should achieve better results by setting this init to <arg fmt="%i" index="3">1</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="1426" delta="new" >The value init of the FF/Latch <arg fmt="%s" index="1">buffer_cacheFromMain_v</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">CachedMemory</arg>.
+<msg type="warning" file="Xst" num="1426" delta="old" >The value init of the FF/Latch <arg fmt="%s" index="1">buffer_cacheFromMain_v</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">CachedMemory</arg>.
 You should achieve better results by setting this init to <arg fmt="%i" index="3">1</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="1426" delta="new" >The value init of the FF/Latch <arg fmt="%s" index="1">buffer_cacheFromMain_d</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">CachedMemory</arg>.
+<msg type="warning" file="Xst" num="1426" delta="old" >The value init of the FF/Latch <arg fmt="%s" index="1">buffer_cacheFromMain_d</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">CachedMemory</arg>.
 You should achieve better results by setting this init to <arg fmt="%i" index="3">1</arg>.
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMain_d</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;buffer_cacheFromMain_v&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMain_d</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;buffer_cacheFromMain_v&gt; </arg>
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">cacheRequestFromMain_2</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">cacheRequestFromMain_2</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
 <msg type="warning" file="Xst" num="1896" delta="old" >Due to other FF/Latch trimming, FF/Latch &lt;<arg fmt="%s" index="1">cacheDriver.prevRequestFromMain_2</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
@@ -770,7 +770,7 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">cacheRequestFromMem_0</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;cacheRequestFromMem_1&gt; </arg>
 </msg>
 
-<msg type="info" file="Xst" num="2261" delta="new" >The FF/Latch &lt;<arg fmt="%s" index="1">cacheDriver.prevRequestFromMem_0</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;cacheDriver.prevRequestFromMem_1&gt; </arg>
+<msg type="info" file="Xst" num="2261" delta="old" >The FF/Latch &lt;<arg fmt="%s" index="1">cacheDriver.prevRequestFromMem_0</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;cacheDriver.prevRequestFromMem_1&gt; </arg>
 </msg>
 
 <msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_28_2</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
@@ -2000,28 +2000,28 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_75_4</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_0</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_0</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_1</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_1</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_2</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_2</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_3</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_3</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_4</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_4</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_5</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_5</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_6</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_6</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1293" delta="new" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_7</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">buffer_cacheFromMem_data_7</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
 <msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_79_7</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
@@ -2597,7 +2597,7 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="warning" file="Xst" num="1293" delta="old" >FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_56_1</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1896" delta="new" >Due to other FF/Latch trimming, FF/Latch &lt;<arg fmt="%s" index="1">mem_clk_process.clkCnt_31</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1896" delta="old" >Due to other FF/Latch trimming, FF/Latch &lt;<arg fmt="%s" index="1">mem_clk_process.clkCnt_31</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
 <msg type="warning" file="Xst" num="1896" delta="old" >Due to other FF/Latch trimming, FF/Latch &lt;<arg fmt="%s" index="1">mem_clk_process.clkCnt_30</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
@@ -2687,187 +2687,187 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="warning" file="Xst" num="1896" delta="old" >Due to other FF/Latch trimming, FF/Latch &lt;<arg fmt="%s" index="1">mem_clk_process.clkCnt_25</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">CachedMemory</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_0</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_3</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_4</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_5</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_6</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_32_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_48_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_16_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_0_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_64_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_addr_2</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
@@ -2894,10 +2894,10 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/iaddr_1</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_data_in_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/reg_80_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_init</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
@@ -2906,13 +2906,13 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_reset</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_we</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_we</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem_re</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="1898" delta="new" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
+<msg type="warning" file="Xst" num="1898" delta="old" >Due to constant pushing, FF/Latch &lt;<arg fmt="%s" index="1">mem/output_7</arg>&gt; is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="2677" delta="old" >Node &lt;<arg fmt="%s" index="1">mem_addr_4</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">CachedMemory</arg>&gt;.
