@@ -51,7 +51,7 @@ architecture Behavioral of Sorter is
 
 begin
   mem: CachedMemory PORT MAP (
-    clk     => mem_clk,
+    clk     => clk,
     init    => mem_init,
     dump    => mem_dump,
     reset   => mem_reset,
@@ -90,7 +90,7 @@ begin
    if(start = '1' AND isRunning = '0')
    then
       isRunning := '1';
-      initDelay := 100;
+      initDelay := 200;
       done <= '0';
    end if;
   
@@ -110,7 +110,6 @@ begin
    
       if(isRunning ='1' AND initDelay = 0)
       then
-      end if;
          if(firstValueValid = '0')
          then 
             if (getOutput = '0')
@@ -231,7 +230,7 @@ begin
                   
                
             end if;
-            
+            end if;
          end if;
       end if;
    end if;

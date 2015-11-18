@@ -120,7 +120,7 @@ BEGIN
       
       start <= '1';
       
-      wait until done = '1';
+      wait for clk_period * 9999;
       
       wait;
       
