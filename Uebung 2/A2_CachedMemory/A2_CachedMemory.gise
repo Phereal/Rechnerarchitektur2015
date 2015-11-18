@@ -57,12 +57,16 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447877936" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447877936">
+    <transform xil_pn:end_ts="1447878486" xil_pn:in_ck="-7839473688684167259" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447878486">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="../A1_Memory/memory.vhd"/>
       <outfile xil_pn:name="CachedMemory.vhd"/>
       <outfile xil_pn:name="CachedMemoryTb.vhd"/>
-      <outfile xil_pn:name="memory.vhd"/>
     </transform>
     <transform xil_pn:end_ts="1447877942" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="-748005454641772217" xil_pn:start_ts="1447877942">
       <status xil_pn:value="SuccessfullyRun"/>
@@ -76,17 +80,25 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447877942" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447877942">
+    <transform xil_pn:end_ts="1447878486" xil_pn:in_ck="-7839473688684167259" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447878486">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="../A1_Memory/memory.vhd"/>
       <outfile xil_pn:name="CachedMemory.vhd"/>
       <outfile xil_pn:name="CachedMemoryTb.vhd"/>
-      <outfile xil_pn:name="memory.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1447877945" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="3327613868614588532" xil_pn:start_ts="1447877942">
+    <transform xil_pn:end_ts="1447878489" xil_pn:in_ck="-7839473688684167259" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="3327613868614588532" xil_pn:start_ts="1447878486">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemoryTb_beh.prj"/>
       <outfile xil_pn:name="CachedMemoryTb_isim_beh.exe"/>
@@ -95,9 +107,10 @@
       <outfile xil_pn:name="isim.log"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1447877946" xil_pn:in_ck="-5372220998726789834" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-2386660654464153815" xil_pn:start_ts="1447877945">
+    <transform xil_pn:end_ts="1447878490" xil_pn:in_ck="-5372220998726789834" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-2386660654464153815" xil_pn:start_ts="1447878489">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemoryTb_isim_beh.wdb"/>
@@ -132,7 +145,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447860023" xil_pn:in_ck="-6389981142869448950" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="5155045001136514625" xil_pn:start_ts="1447859998">
+    <transform xil_pn:end_ts="1447878532" xil_pn:in_ck="-2642948175640549970" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="5155045001136514625" xil_pn:start_ts="1447878508">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
@@ -145,6 +158,8 @@
       <outfile xil_pn:name="CachedMemory.stx"/>
       <outfile xil_pn:name="CachedMemory.syr"/>
       <outfile xil_pn:name="CachedMemory.xst"/>
+      <outfile xil_pn:name="CachedMemoryTb_beh.prj"/>
+      <outfile xil_pn:name="CachedMemory_stx_beh.prj"/>
       <outfile xil_pn:name="CachedMemory_xst.xrpt"/>
       <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="webtalk_pn.xml"/>

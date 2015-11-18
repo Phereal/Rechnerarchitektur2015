@@ -75,7 +75,7 @@ begin
 -- liegt, wie in der Aufgabenstellung gefordert ein Bitvektor aus 'X' an
 -- output an.
 execute: process (clk)
--- Deklaration der Hilfsvariablen zum einlesen und schreiben der Dateien
+-- Deklaration der Hilfsvariablen zum Einlesen und Schreiben der Dateien
 -- memory.dat und dump.dat
 file iofile : text;
 variable ioline : line;
@@ -83,7 +83,7 @@ variable ioaddr : integer;
 variable iodata : std_logic_vector(7 downto 0);
 variable iotmp : std_logic_vector(7 downto 0);
 
--- Wir erstellen das lokale Signal 'iaddr', in den wir den 8 Bit Eingangsvektor addr als Integer
+-- Wir erstellen die lokale Variable 'iaddr', in den wir den 8 Bit Eingangsvektor addr als Integer
 -- abspeichern wollen.
 variable iaddr : integer range 0 to 255 := 0;
 
