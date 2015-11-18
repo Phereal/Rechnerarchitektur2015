@@ -96,6 +96,7 @@ begin
   
    if(isRunning = '1')
    then
+      report "isRunning-Loop betreten.";
       --Load init values.
       if (initDelay = 200)
       then
@@ -206,6 +207,7 @@ begin
                --Für erneute Sortierung vorbereiten:
                if (sortAgain = '1')
                then
+                  sortAgain := '0';
                   firstValueValid:= '0';
                   currentValueValid:= '0';
                   nextValueValid := '0';
@@ -234,9 +236,7 @@ begin
                   mem_dump <= '1';
                   done <= '1';
                end if;
-                  
-               
-            end if;
+              end if;
             end if;
          end if;
       end if;

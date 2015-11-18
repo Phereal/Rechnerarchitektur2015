@@ -107,7 +107,7 @@ BEGIN
       report "Input auf gesamten Speicherbereich setzen und Sortierung starten...";
       
       addr_start  <= "00000000";
-      addr_end    <= "01001111";
+      addr_end    <= "00000011";
       start       <= '1';
       
       report "Sortierung gestartet. Warte auf done-Leitung..";
