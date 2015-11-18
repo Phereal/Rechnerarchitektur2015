@@ -57,9 +57,13 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447830544" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447830544">
+    <transform xil_pn:end_ts="1447836557" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447836557">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemory.vhd"/>
       <outfile xil_pn:name="CachedMemoryTb.vhd"/>
       <outfile xil_pn:name="memory.vhd"/>
@@ -76,17 +80,25 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447830544" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447830544">
+    <transform xil_pn:end_ts="1447836557" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447836557">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemory.vhd"/>
       <outfile xil_pn:name="CachedMemoryTb.vhd"/>
       <outfile xil_pn:name="memory.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1447832585" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="3327613868614588532" xil_pn:start_ts="1447832580">
+    <transform xil_pn:end_ts="1447836567" xil_pn:in_ck="-8851524990107617151" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="3327613868614588532" xil_pn:start_ts="1447836557">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemoryTb_beh.prj"/>
       <outfile xil_pn:name="CachedMemoryTb_isim_beh.exe"/>
@@ -95,9 +107,10 @@
       <outfile xil_pn:name="isim.log"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1447832585" xil_pn:in_ck="-564612124860432394" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-2386660654464153815" xil_pn:start_ts="1447832585">
+    <transform xil_pn:end_ts="1447836567" xil_pn:in_ck="-564612124860432394" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-2386660654464153815" xil_pn:start_ts="1447836567">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemoryTb_isim_beh.wdb"/>
@@ -138,6 +151,7 @@
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="OutputChanged"/>
       <status xil_pn:value="OutputRemoved"/>
       <outfile xil_pn:name="CachedMemory.lso"/>

@@ -132,7 +132,7 @@ BEGIN
     init    <= '0';
     wait until rising_edge(clk);
     
-    
+    -- Testfall 1: Pruefe das auslesen jeder cache line (hole data aus mem)
     for i in 0 to (15) loop
       init     <= '0';
       dump     <= '0';
@@ -156,6 +156,7 @@ BEGIN
         
     end loop;
     
+    -- Testfall 2: Pruefe das auslesen jeder cache line (hole data aus cache)
     for i in 0 to (15) loop
       init     <= '0';
       dump     <= '0';
@@ -176,7 +177,259 @@ BEGIN
         severity failure;
     end loop;
     
-
+    -- Testfall 3: Pruefe das uebr-lesen jeder cache line (anderer tag, hole data aus mem)
+    for i in 16 to (31) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2);
+      
+      assert( ack = '0' )
+        report "Testfall 3." & integer'image(i) & ": Ack != 0"
+        severity failure;
+        
+      wait until rising_edge(ack);
+      assert( output = std_logic_vector(to_unsigned(i, addr'length)) )
+        report "Testfall 3." & integer'image(i) & ": out != " & integer'image(i)
+        severity failure;
+        
+    end loop;
+    
+    -- Testfall 4: Pruefe das auslesen jeder zuvor ueber-lesenden cache line (hole data aus cache)
+    for i in 16 to (31) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2);
+      
+      assert( ack = '1' )
+        report "Testfall 4." & integer'image(i) & ": Ack != 1"
+        severity failure;
+      assert( output = std_logic_vector(to_unsigned(i, addr'length)) )
+        report "Testfall 4." & integer'image(i) & ": out != " & integer'image(i)
+        severity failure;
+    end loop;
+    
+    -- Testfall 5: Pruefe das schreiben in den cache (kein mem zugriff, da wb nur wenn valid, dirty und andere daten)
+    for i in 0 to (15) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '0';
+      we       <= '1';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= std_logic_vector(to_unsigned(i+3, addr'length));
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2);
+      
+      assert( ack = '0' )
+        report "Testfall 5.1." & integer'image(i) & ": Ack != 0"
+        severity failure;
+    end loop;
+    
+    for i in 0 to (15) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2);
+      
+      assert( ack = '1' )
+        report "Testfall 5.2." & integer'image(i) & ": Ack != 1"
+        severity failure;
+      assert( output = std_logic_vector(to_unsigned(i+3, addr'length)) )
+        report "Testfall 5.2." & integer'image(i) & ": out != " & integer'image(i+3)
+        severity failure;
+    end loop;
+    
+    -- Testfall 6: Pruefe wb durch ueberschreiben (wb, da valid, dirty und andere daten durch Testfall 5)
+    for i in 16 to (31) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '0';
+      we       <= '1';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= std_logic_vector(to_unsigned(i+7, addr'length));
+      
+      wait until rising_edge(clk);
+      wait for (clk_period*16); -- warte lange genug fuer wb
+      
+      assert( ack = '0' )
+        report "Testfall 6.1." & integer'image(i) & ": Ack != 0"
+        severity failure;
+    end loop;
+    
+    for i in 16 to (31) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2); -- kurz warten da 16-31 in cache
+      
+      assert( ack = '1' )
+        report "Testfall 6.2." & integer'image(i) & ": Ack != 1"
+        severity failure;
+      assert( output = std_logic_vector(to_unsigned(i+7, addr'length)) )
+        report "Testfall 6.2." & integer'image(i) & ": out != " & integer'image(i+7)
+        severity failure;
+    end loop;
+    
+    -- Testfall 7: Pruefe wb durch ueberlesen (wb, da valid, dirty und andere daten durch Testfall 5)
+    for i in 0 to (15) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2); -- kurz warten um ack zu pruefen
+      
+      assert( ack = '0' )
+        report "Testfall 7.1." & integer'image(i) & ": Ack != 0"
+        severity failure;
+      
+      wait until rising_edge(ack);
+      
+      -- vergleich mit werten aus Testfall 5
+      assert( output = std_logic_vector(to_unsigned(i+3, addr'length)) )
+        report "Testfall 7.1." & integer'image(i) & ": out != " & integer'image(i+3)
+        severity failure;
+    end loop;
+    
+    for i in 16 to (31) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2); -- kurz warten um ack zu pruefen
+      
+      assert( ack = '0' )
+        report "Testfall 7.2." & integer'image(i) & ": Ack != 0"
+        severity failure;
+      
+      wait until rising_edge(ack);
+      
+      -- vergleich mit werten aus Testfall 6
+      assert( output = std_logic_vector(to_unsigned(i+7, addr'length)) )
+        report "Testfall 7.2." & integer'image(i) & ": out != " & integer'image(i+7)
+        severity failure;
+    end loop;
+    
+    
+    -- Testfall 8: Pruefe das ack bis zum naechsten lesen 1 ist
+    -- bereite dirty cache vor
+    for i in 32 to (47) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '0';
+      we       <= '1';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '1');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2); -- kurz warten um ack zu pruefen
+      
+      assert( ack = '0' )
+        report "Testfall 8.1." & integer'image(i) & ": Ack != 0"
+        severity failure;
+    end loop;
+    
+    -- lese wert aus cache
+    init     <= '0';
+    dump     <= '0';
+    reset    <= '0';
+    re       <= '1';
+    we       <= '0';
+    addr     <= std_logic_vector(to_unsigned(32, addr'length));
+    data_in  <= (others => '0');
+      
+    wait until rising_edge(clk);
+    wait for (clk_period/2); -- kurz warten um ack zu pruefen
+      
+    assert( ack = '1' )
+      report "Testfall 8.2: Ack != 1"
+      severity failure;
+    assert( output = "11111111" )
+      report "Testfall 8.2: out != 11111111"
+      severity failure;
+    
+    -- disable re
+    init     <= '0';
+    dump     <= '0';
+    reset    <= '0';
+    re       <= '0';
+    we       <= '0';
+    addr     <= (others => '0');
+    data_in  <= (others => '0');
+    
+    for i in 0 to (100) loop -- warte 100 takte
+      wait until rising_edge(clk);
+      wait for (clk_period/2); -- kurz warten um ack zu pruefen
+      
+      assert( ack = '1' )
+        report "Testfall 8.3." & integer'image(i) & ": Ack != 1"
+        severity failure;
+      assert( output = "11111111" )
+        report "Testfall 8.3: out != 11111111"
+        severity failure;
+    end loop;
+    
+    -- lese wert aus mem um ack auf 0 zu setzen
+    init     <= '0';
+    dump     <= '0';
+    reset    <= '0';
+    re       <= '1';
+    we       <= '0';
+    addr     <= (others => '0');
+    data_in  <= (others => '0');
+      
+    wait until rising_edge(clk);
+    wait for (clk_period/2); -- kurz warten um ack zu pruefen
+      
+    assert( ack = '0' )
+      report "Testfall 8.4: Ack != 0"
+      severity failure;
+      
+    wait until rising_edge(ack);
+    
+    assert( output = std_logic_vector(to_unsigned(0+3, addr'length)) ) -- wert aus Testfall 5
+      report "Testfall 8.4: out != " & integer'image(0+3)
+      severity failure;
+    
+    
     
     
     
@@ -293,7 +546,7 @@ BEGIN
     
     
     
-    wait for (clk_period*16);
+    --wait for (clk_period*16);
     
     
     

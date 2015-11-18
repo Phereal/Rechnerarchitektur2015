@@ -522,7 +522,9 @@ begin
       
       -- *** Nothing ***
       elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
-      
+        -- same outputs if no request to cache is forwarded
+        bufferAck <= bufferAck;
+        bufferOut <= bufferOut;
       
       
       -- *** Fehlerhafte Eingabe ***
