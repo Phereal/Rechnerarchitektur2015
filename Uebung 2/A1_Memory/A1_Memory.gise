@@ -49,8 +49,9 @@
   <transforms xmlns="http://www.xilinx.com/XMLSchema">
     <transform xil_pn:end_ts="1447831443" xil_pn:name="TRAN_copyInitialToAbstractSimulation" xil_pn:start_ts="1447831443">
       <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447832343" xil_pn:in_ck="-6464503125295713944" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447832343">
+    <transform xil_pn:end_ts="1447884419" xil_pn:in_ck="-6464503125295713944" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447884419">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="memory.vhd"/>
@@ -68,25 +69,24 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447832343" xil_pn:in_ck="-6464503125295713944" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447832343">
+    <transform xil_pn:end_ts="1447884419" xil_pn:in_ck="-6464503125295713944" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447884419">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="memory.vhd"/>
       <outfile xil_pn:name="memoryTB.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1447832347" xil_pn:in_ck="-6464503125295713944" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="6160612389825940228" xil_pn:start_ts="1447832343">
+    <transform xil_pn:end_ts="1447884426" xil_pn:in_ck="-6464503125295713944" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="6160612389825940228" xil_pn:start_ts="1447884419">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="fuse.log"/>
       <outfile xil_pn:name="isim"/>
-      <outfile xil_pn:name="isim.log"/>
       <outfile xil_pn:name="memoryTB_beh.prj"/>
       <outfile xil_pn:name="memoryTB_isim_beh.exe"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1447832347" xil_pn:in_ck="-8140539650901357090" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="6550708356159931769" xil_pn:start_ts="1447832347">
+    <transform xil_pn:end_ts="1447884537" xil_pn:in_ck="-8140539650901357090" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="6550708356159931769" xil_pn:start_ts="1447884537">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
@@ -97,6 +97,7 @@
     </transform>
     <transform xil_pn:end_ts="1447831407" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1447831407">
       <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
     </transform>
     <transform xil_pn:end_ts="1447831407" xil_pn:name="TRAN_schematicsToHdl" xil_pn:prop_ck="1430245968929079121" xil_pn:start_ts="1447831407">
       <status xil_pn:value="SuccessfullyRun"/>
@@ -125,17 +126,16 @@
     <transform xil_pn:end_ts="1447832324" xil_pn:in_ck="5205692440200649" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="5105335532662990646" xil_pn:start_ts="1447832310">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
-      <outfile xil_pn:name="Memory.lso"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputRemoved"/>
       <outfile xil_pn:name="Memory.ngc"/>
       <outfile xil_pn:name="Memory.ngr"/>
       <outfile xil_pn:name="Memory.prj"/>
-      <outfile xil_pn:name="Memory.stx"/>
       <outfile xil_pn:name="Memory.syr"/>
       <outfile xil_pn:name="Memory.xst"/>
       <outfile xil_pn:name="Memory_xst.xrpt"/>
-      <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="webtalk_pn.xml"/>
-      <outfile xil_pn:name="xst"/>
     </transform>
   </transforms>
 
