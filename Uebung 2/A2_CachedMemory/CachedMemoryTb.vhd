@@ -427,9 +427,50 @@ BEGIN
       report "Testfall 8.4: out != " & integer'image(0+3)
       severity failure;
     
+    -- Testfall 9: Pruefe das der gesamte Speicher adressierbar ist 0-79 (schreiben und lesen)
+    -- bereite dirty cache vor
+    for i in 0 to (79) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '0';
+      we       <= '1';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= std_logic_vector(to_unsigned(i*2, addr'length));
+      
+      wait until rising_edge(clk);
+      wait for (clk_period*16); -- kurz warten um ack zu pruefen
+      
+      assert( ack = '0' )
+        report "Testfall 9.1." & integer'image(i) & ": Ack != 0"
+        severity failure;
+    end loop;
+    
+    for i in 0 to (79) loop
+      init     <= '0';
+      dump     <= '0';
+      reset    <= '0';
+      re       <= '1';
+      we       <= '0';
+      addr     <= std_logic_vector(to_unsigned(i, addr'length));
+      data_in  <= (others => '0');
+      
+      wait until rising_edge(clk);
+      wait for (clk_period/2); -- kurz warten um ack zu pruefen
+      if(ack = '0') then
+        wait until rising_edge(ack);
+      end if;
+    
+    assert( output = std_logic_vector(to_unsigned(i*2, output'length)) )
+      report "Testfall 9.2." & integer'image(i) & ": out != " & integer'image(i*2)
+      severity failure;
+    end loop;
     
     
-    -- Tetsfall 9:  Gebe den Inhalt des Caches + memory in dump.dat aus.
+    
+    
+    
+    -- Tetsfall 10:  Gebe den Inhalt des Caches + memory in dump.dat aus.
     -- Schreibe den Inhalt des Caches in Memory und wenn alle Schreiboperationen abgeschlossen sind,
     -- setze das mem_dump = '1'!
     init     <= '0';

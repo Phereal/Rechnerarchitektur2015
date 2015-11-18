@@ -81,13 +81,13 @@
          <ClosedNode>/CachedMemory - Behavioral |home|steffen|Dokumente|Git|GitHub|Rechnerarchitektur2015|Uebung 2|A2_CachedMemory|CachedMemory.vhd</ClosedNode>
       </ClosedNodes>
       <SelectedItems>
-         <SelectedItem>mem - Memory - memory_impl (/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/memory.vhd)</SelectedItem>
+         <SelectedItem>CachedMemoryTb - behavior (/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemoryTb.vhd)</SelectedItem>
       </SelectedItems>
       <ScrollbarPosition orientation="vertical" >0</ScrollbarPosition>
       <ScrollbarPosition orientation="horizontal" >0</ScrollbarPosition>
       <ViewHeaderState orientation="horizontal" >000000ff000000000000000100000001000000000000000000000000000000000202000000010000000100000064000003d7000000020000000000000000000000000200000064ffffffff000000810000000300000002000003d70000000100000003000000000000000100000003</ViewHeaderState>
       <UserChangedColumnWidths orientation="horizontal" >true</UserChangedColumnWidths>
-      <CurrentItem>mem - Memory - memory_impl (/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/memory.vhd)</CurrentItem>
+      <CurrentItem>CachedMemoryTb - behavior (/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemoryTb.vhd)</CurrentItem>
    </ItemView>
    <ItemView engineview="BehavioralSim" sourcetype="" guiview="Process" >
       <ClosedNodes>
