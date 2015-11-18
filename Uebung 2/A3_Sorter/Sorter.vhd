@@ -93,6 +93,7 @@ begin
   
    if(start = '1' AND isRunning = '0')
    then
+      mem_dump := '1';
       pointer := addr_start;
       isRunning := '1';
       initDelay := 500;
@@ -182,6 +183,7 @@ begin
          
          if (internalDone = '1' AND saveLastValuePreviousSort='0')
          then
+            report "Set done to true.";
             initDelay := 5;
             mem_dump <= '1';
             done <= '1';
