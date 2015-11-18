@@ -170,13 +170,13 @@ begin
          if(firstValueValid = '1' AND currentValueValid = '1' AND nextValueValid = '1')
          then
             mem_re <= '0'; --Auf keinen Fall lesen!
-            pointer := std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8));
             nextValueValid := '0';
             
             if (currentValue>nextValue)
             then
             --Werte tauschen
-               mem_addr <= nextValue;
+               mem_addr <= pointer;
+               mem_data_in <= nextValue;
                mem_we <= '1';
                --currentValue bleibt gleich, da es nach vorne verschoben wurde!
                replaceCurrentValue := '1';
@@ -186,10 +186,12 @@ begin
                if (replaceCurrentValue = '1')
                then
                   replaceCurrentValue := '0';
-                  mem_addr <= currentValue;
+                  mem_addr <= pointer;
+                  mem_data_in <= currentValue;
                   mem_we <= '1';
                   mem_re <= '0';
                end if;
+            pointer := std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8));
             currentValue := nextValue;
             end if;
             
