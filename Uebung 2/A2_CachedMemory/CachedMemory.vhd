@@ -1,35 +1,63 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+---------------------------------------------------------------------------------------------------
+-- Rechnerarchitektur und Eingebettete Systeme
+-- Uebungszettel 2 - Aufgabe 2: Direct Mapped Cache
+--
+-- Der Grossteil der Quelltextkommentierung wurde hier durchgefuehrt, um die Uebersicht im Code zu
+-- erhalten. Kommentare in den Codeabschnitten dienen groesstenteils zur einfacheren Verfolgung
+-- des Programmablaufs.
+--
+--
+-- Der Cache hat, entsprechend der Aufgabenstellung, eine Nettogroesse von 16 Byte in 16
+-- Cachelines.
+--
+-- Als Schreibstrategien wurde "Write Back" (WB) verwendet um Schreibzugriffe auf den unter-
+-- liegenden Speicher zu verringern. Konkret heisst das, dass beim schreibenden Zugriff auf den
+-- Speicher das Datum nur in den Cache geschrieben wird und die Cacheline als "dirty" (d) markiert
+-- wird. Der eigentliche Schreibzugriff auf den Speicher wird erst ausgeloest, wenn die Cacheline 
+-- durch einen anderen Wert ersetzt werden soll (Lesen oder Schreiben einer anderen Adresse mit 
+-- gleichem "Tag").
 -- 
--- Create Date:    18:11:20 11/13/2015 
--- Design Name: 
--- Module Name:    CachedMemory - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
+-- Um 16 Byte im Cache Speichern zu koennen werden 16 Cachelines angelegt, die ueber die 4 LSB der
+-- Speicheradresse (2^4 = 16) indexiert werden. Daraus folgt das die restlichen 4 Bit (MSB: 7 - 4)
+-- als "Tag" in der Cacheline gespeichert werden muessen. Fuer die Daten werden 8 Bit in der Cache-
+-- line benoetigt. Zur Verwaltung der Cachelines werden noch ein Valid-Bit und ein Dirty-Bit je
+-- Cacheline gespeichert. Der eigentliche Cache hat somit eine Brutogroesse von 16* 14Bit = 28Byte.
 --
--- Dependencies: 
+-- Das Dirty-Bit bestimmt ob die Cacheline ggf. bei Aenderung in den Speicher zurueckgeschrieben
+-- werden muss. Das Valid-Bit bestimmt ob die Cacheline Daten aus dem Speicher enthaelt.
 --
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
+-- Die Realisierung des Caches wurde ueber vier Prozesse und ein Ausgabenetz ausserhalb der
+-- umgesetzt.
+-- Der Prozess "mem_clk_process" generiert den Clock fuer den Speicher, welche mit 1/8 des Cache-
+-- clocks laeuft (Aufgabenstellung).
+-- Der Prozess "execute" verarbeitet die Eingaenge des Caches und wird im weiteren Verlauf auch als
+-- "main" bezeichnet. Er prueft welche Eingaenge gesetzt sind und entscheidet dann je nach Zustand
+-- des Caches/ der Cacheline und der Eingaben was getan werden soll. Zugriffe auf den langsamen
+-- Speicher werden an den Prozess "memDriver" weitergeleitet, welcher dann entsprechend die Daten
+-- in den Speicher schreibt, oder aus dem Speicher liest und an den Prozess "cacheDriver" weiter-
+-- gibt. Der Prozess "cacheDriver" empfaengt Daten aus "main" und aus "memDriver" und schreibt die
+-- Daten entsprechend in den Cache.
 --
-----------------------------------------------------------------------------------
+-- Die Architektur mit drei Prozessen wurde so gewaehlt um vor allem den Zugriff auf den unter-
+-- liegenden Speicher zu schuetzen, da dieser um einiges laenger benoetigt bis er eine Anfrage ver-
+-- arbeitet hat. Durch eine Selbstsperre ("memState") und Synchronisationssignale ("memRequest", 
+-- "memContentState") wird sichergestellt, dass der Speicher genug Zeit hat um die geforderte
+-- Aktion auszufuehren.
+--
+-- Um den Cache konsistent zu halten und sowohl Cache-Aenderung aus "main" als auch aus "memDriver"
+-- verarbeiten zu koennen - Ein schreibender Zugriff nur aus "main" wuerde nach Speicherzugriffen 
+-- einen zusaetzlichen Takt benoetigen und wuerde hoeheren Aufwand bei der Synchronisation der
+-- beiden Prozesse erfordern. - werden alle schreibenden Cachezugriffe durch "cacheDriver"
+-- verwaltet. Zur Synchronisation dienen die Signale "cacheRequestFromMem" und 
+-- "cacheRequestFromMain", ein Lock wird nicht benoetigt, da der Prozess auf Aenderungen dieser
+-- Signale reagiert und beim internen Zugriff auf den Cache keine Verzoegerungen beruecksichtigt 
+-- werden muessen. Die zu schreibenden Daten und Adressen werden in Buffern zwischengespeichert
+-- ("main" und "memDriver" haben jeweils ihr eigenen Set von Buffern zum Zugriff auf "cacheDriver")
+---------------------------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-USE ieee.std_logic_unsigned.all;
-USE ieee.numeric_std.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+USE IEEE.STD_LOGIC_UNSIGNED.all;
+USE IEEE.NUMERIC_STD.ALL;
 
 entity CachedMemory is
   Port ( 
@@ -44,14 +72,6 @@ entity CachedMemory is
     output  : out  STD_LOGIC_VECTOR (7 downto 0);
     ack     : out  STD_LOGIC);
 end CachedMemory;
-
-
--- Direct Mapped Cache
--- Nettogroesse:            
---  16 Byte
--- Schreibstrategien:
---  - Write Back
---  - Fetch on Write
 
 architecture Behavioral of CachedMemory is
   component Memory
@@ -91,36 +111,57 @@ architecture Behavioral of CachedMemory is
   -- ==========
   -- Memory states and buffer
   -- ==========
+  -- memState is used to lock the main process and to ensure in memDriver that access to mem is
+  -- valid (e.g. one mem_clk has finished). It is set via memDriver.
   type memStates is (memIdle, memBusy);
   signal memState : memStates := memIdle;
   
-  type memRequests is (noMemRequest, memRequestInit, memRequestReset, memRequestRead, memRequestWB, memRequestWBForDump, memRequestDump);
+  -- memRequest is used by main to tell memDriver what it has to do. It is set by main.
+  type memRequests is ( noMemRequest, memRequestInit, memRequestReset, memRequestRead, 
+                        memRequestWB, memRequestWBForDump, memRequestDump);
   signal memRequest : memRequests := noMemRequest;
   
-  type memContentStates is (memContentUndefined, memContentInit, memContentReset, memContentRead, memContentWB, memContentDumped);
+  -- memContenState is used by memDriver to tell main whether it has finished a certain request or
+  -- not. It is set by memDriver.
+  type memContentStates is (memContentUndefined, memContentInit, memContentReset,
+                            memContentRead, memContentWB, memContentDumped);
   signal memContentState : memContentStates := memContentUndefined;
   
+  -- the buffer_mem_clk is the clock generated by mem_clk_process for mem. It is not directly
+  -- connected to mem, to enable memDriver to set mem's inputs first.
   signal buffer_mem_clk   : std_logic := '0';
+  -- buffer_mem_addr is used by main to buffer the line that has to be written back during dump.
   signal buffer_mem_addr  : std_logic_vector(7 downto 0) := (others => '0');
   
   
   -- ==========
   -- Cache states and buffer
   -- ==========
-  type cacheRequests is (noCacheRequest, cacheRequestInit, cacheRequestReset, cacheRequestWrite, cacheRequestCleanLine);
+  -- cacheRequestFromMem is used by memDriver to tell cacheDriver what it has to do. It is set by
+  -- memDriver.
+  -- cacheRequestFromMain is used by main to tell cacheDriver what it has to do. It is set by main.
+  -- Two signals are needed, since only one process can write to one single signal
+  type cacheRequests is ( noCacheRequest, cacheRequestInit, cacheRequestReset,
+                          cacheRequestWrite, cacheRequestCleanLine);
   signal cacheRequestFromMem  : cacheRequests := noCacheRequest;
   signal cacheRequestFromMain : cacheRequests := noCacheRequest;
   
+  -- this set of buffers used by memDriver to tell cacheDriver what and where he has to update the
+  -- cache.
   signal buffer_cacheFromMem_addr : std_logic_vector(7 downto 0) := (others => '0');
   signal buffer_cacheFromMem_data : std_logic_vector(7 downto 0) := (others => '0');
   signal buffer_cacheFromMem_d    : std_logic := '0';
   signal buffer_cacheFromMem_v    : std_logic := '0';
   
+  -- this set of buffers used by main to tell cacheDriver what and where he has to update the
+  -- cache.
   signal buffer_cacheFromMain_addr : std_logic_vector(7 downto 0) := (others => '0');
   signal buffer_cacheFromMain_data : std_logic_vector(7 downto 0) := (others => '0');
   signal buffer_cacheFromMain_d    : std_logic := '0';
   signal buffer_cacheFromMain_v    : std_logic := '0';
   
+  -- these signals are directly connected to the cache's outputs ack and output. They are set in
+  -- main.
   signal bufferAck : STD_LOGIC := '0';
   signal bufferOut : STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
   
@@ -128,6 +169,7 @@ architecture Behavioral of CachedMemory is
 begin
 
   -- Clock process definitions
+  -- generates a clock signal in buffer_mem_clk with 1/8 the frequency of clk
   mem_clk_process :process (clk)
     variable clkCnt : integer := 0;
     constant clkDiv : integer := 8; -- muss groeßer 1 und durch 2 teilbar sein.
@@ -141,7 +183,6 @@ begin
       end if;
     end if;
   end process;
-  
   
 
   mem: Memory PORT MAP (
@@ -157,18 +198,29 @@ begin
   );
   
   
-  
+  -- ====================
+  -- Controlls access to the memory mem.
+  -- ====================
   memDriver: process (buffer_mem_clk)
+    -- holds the last value of memRequest and is set in idle-mode. It is used in busy-mode to
+    -- determine what was done.
     variable lastMemRequest : memRequests := noMemRequest;
+    -- holds the last value of the cache address. It is also set in idle-mode and used in busy-mode
+    -- to tell the cacheDrive which cacheline he has to update.
     variable lastMemAddr : std_logic_vector(7 downto 0) := (others => '0');
   begin
     -- preset cacheDriver request. Located here to make sure the signal is reset between mem_clks,
-    -- since the cacheDriver only reacts on changing of the signal and other states than noCacheRequest.
+    -- since the cacheDriver only reacts on changing of the signal and other states than
+    -- noCacheRequest.
     cacheRequestFromMem <= noCacheRequest;
-      
+    
+    -- reacts to the slower clock to ensure that the slow mem has enough time to process
     if rising_edge(buffer_mem_clk) then
+      -- if the memDriver is not busy it will check whether an request from main is pending.
+      -- the inputs of mem are then set to process the request.
       if(memState = memIdle) then
         -- preset mem inputs. if an request is pending, it will set its needed inputs
+        -- initialized here to ensure that if no request is pending nothing is done in mem.
         mem_init    <= '0';
         mem_dump    <= '0';
         mem_reset   <= '0';
@@ -247,7 +299,8 @@ begin
         -- tell main process that mem is idle again.
         memState <= memIdle;
         
-        -- check last request (maybe as variable?)
+        -- check last request to call the cacheDriver to update the cache if necessary and to tell
+        -- main that it has finished the request
         -- *** Last request: Init ***
         if(lastMemRequest = memRequestInit) then
           -- tell the main process that the content of mem is now initialized.
@@ -273,7 +326,8 @@ begin
             -- tell cacheDriver to write data to cache
             cacheRequestFromMem <= cacheRequestWrite;
           end if;
-          -- tell the main process that the content of mem is now read (not yet used, just here for consistency).
+          -- tell the main process that the content of mem is now read (not yet used, just here for
+          -- consistency).
           memContentState <= memContentRead;
         
         -- *** Last request: WB ***
@@ -283,7 +337,8 @@ begin
           buffer_cacheFromMem_addr  <= lastMemAddr;
           -- tell cacheDriver to update data in cache
           cacheRequestFromMem <= cacheRequestCleanLine;
-          -- tell the main process that the content of mem is now wb (not yet used, just here for consistency).
+          -- tell the main process that the content of mem is now wb (not yet used, just here for
+          -- consistency).
           memContentState <= memContentWB;
         
         -- *** Last request: WB ***
@@ -293,7 +348,8 @@ begin
           buffer_cacheFromMem_addr  <= lastMemAddr;
           -- tell cacheDriver to update data in cache
           cacheRequestFromMem <= cacheRequestCleanLine;
-          -- tell the main process that the content of mem is now wb (not yet used, just here for consistency).
+          -- tell the main process that the content of mem is now wb (not yet used, just here for
+          -- consistency).
           memContentState <= memContentWB;
         
         -- *** Last request: Dump ***
@@ -310,12 +366,21 @@ begin
   end process;
   
   
-  
+  -- ====================
+  -- Controlls access to the cache.
+  -- ====================
   cacheDriver: process(cacheRequestFromMem, cacheRequestFromMain)
+    -- variable to temporarily save the index of the addressed cache line to reduce the conversion-
+    -- calls from std_logic_vector to integer.
     variable tmpCacheIndex : integer := 0;
+    -- holds the last value of cacheRequestFromMem and cacheRequestFromMain and is set if a
+    -- different request comes in. They are used to determine whether memDriver or main has
+    -- triggered the process. If both processes have pending requests, the request from main will
+    -- be prioritized.
     variable prevRequestFromMem  : cacheRequests := noCacheRequest;
     variable prevRequestFromMain : cacheRequests := noCacheRequest;
   begin
+    -- make sure it was cacheRequestFromMem that triggered the process
     if( cacheRequestFromMem /= prevRequestFromMem) then
       -- save this request as previous
       prevRequestFromMem := cacheRequestFromMem;
@@ -338,6 +403,7 @@ begin
     end if;
     
     
+    -- make sure it was cacheRequestFromMain that triggered the process
     if( cacheRequestFromMain /= prevRequestFromMain) then
       -- save this request as previous
       prevRequestFromMain := cacheRequestFromMain;
@@ -346,6 +412,9 @@ begin
       
       -- *** Request from main: Init ***
       if( cacheRequestFromMain = cacheRequestInit ) then
+        -- no need to write back cache, since all values in memory may change.
+        -- no need to set all cacheline values (e.g. tag, d), valid ensures that cache access will
+        -- query to mem
         -- invalidate cache for init
         for i in 0 to cache'length-1 loop
           cache(i).v <= '0';
@@ -353,6 +422,9 @@ begin
         
       -- *** Request from main: Reset ***
       elsif( cacheRequestFromMain = cacheRequestReset ) then
+        -- no need to write back cache, since all values in memory change
+        -- no need to set all cacheline values (e.g. tag, d), valid ensures that cache access will
+        -- query to mem
         -- invalidate cache for reset
         for i in 0 to cache'length-1 loop
           cache(i).v <= '0';
@@ -371,19 +443,25 @@ begin
   
   
   
-  
-  
+  -- ====================
+  -- Controlls access to the cache.
+  -- ====================
   execute: process (clk)
+    -- variable to temporarily save the index and tag of the addressed cache line to reduce the
+    -- conversion calls from std_logic_vector to integer and to make code lines shorter.
     variable tmpTag   : STD_LOGIC_VECTOR (3 downto 0) := (others => '0');
     variable tmpIndex : STD_LOGIC_VECTOR (3 downto 0) := (others => '0');
     variable tmpIntTag   : integer := 0;
     variable tmpIntIndex : integer := 0;
     
+    -- help variable used to dump mem and cache. It is set to '0' if not all cache lines are
+    -- written back to ensure that mem is only dumped with clean cache
     variable readyForDump : STD_LOGIC := '1';
     
   begin
     -- preset cacheDriver request. Located here to make sure the signal is reset between clks,
-    -- since the cacheDriver only reacts on changing of the signal and other states than noCacheRequest.
+    -- since the cacheDriver only reacts on changing of the signal and other states than
+    -- noCacheRequest.
     cacheRequestFromMain <= noCacheRequest;
   
     if rising_edge(clk) then
@@ -393,7 +471,7 @@ begin
       tmpIntTag   := to_integer(unsigned(tmpTag));
       tmpIntIndex := to_integer(unsigned(tmpIndex));
       
-      -- buffer vorbelegen, so nicht jeder if-fall auf das zuruecksetzen aufpassen muss
+      -- buffer vorbelegen
       bufferAck <= '0';
       bufferOut <= "XXXXXXXX";
       
@@ -483,7 +561,8 @@ begin
               -- wait until mem has finished its things
               if(memState = memIdle) then
                 -- no need to save the addr to ensure that only the value at rising clk is
-                -- used, since the mem_clk has its rising edge at the same time (disregarding gate latency).
+                -- used, since the mem_clk has its rising edge at the same time (disregarding gate
+                -- latency).
                 -- send request to memDriver to wb mem
                 memRequest <= memRequestWB;
               end if;
@@ -492,7 +571,8 @@ begin
               -- wait until mem has finished its things
               if(memState = memIdle) then
                 -- no need to save the addr to ensure that only the value at rising clk is
-                -- used, since the mem_clk has its rising edge at the same time (disregarding gate latency).
+                -- used, since the mem_clk has its rising edge at the same time (disregarding gate
+                -- latency).
                 -- send request to memDriver to read mem
                 memRequest <= memRequestRead;
               end if;
@@ -507,7 +587,8 @@ begin
           -- wait until mem has finished its things
           if(memState = memIdle) then
             -- no need to save the addr to ensure that only the value at rising clk is
-            -- used, since the mem_clk has its rising edge at the same time (disregarding gate latency).
+            -- used, since the mem_clk has its rising edge at the same time (disregarding gate
+            -- latency).
             -- send request to memDriver to read mem
             memRequest <= memRequestRead;
           end if;
@@ -525,7 +606,8 @@ begin
               -- wait until mem has finished its things
               if(memState = memIdle) then
                 -- no need to save the addr to ensure that only the value at rising clk is
-                -- used, since the mem_clk has its rising edge at the same time (disregarding gate latency).
+                -- used, since the mem_clk has its rising edge at the same time (disregarding gate
+                -- latency).
                 -- send request to memDriver to wb mem
                 memRequest <= memRequestWB;
               end if;
@@ -584,7 +666,7 @@ begin
       
       -- *** Nothing ***
       elsif(init = '0' AND dump = '0' AND reset = '0' AND re = '0' AND we = '0') then
-        -- same outputs if no request to cache is forwarded
+        -- same outputs if no request to cache is forwarded to hold the current state
         bufferAck <= bufferAck;
         bufferOut <= bufferOut;
       
