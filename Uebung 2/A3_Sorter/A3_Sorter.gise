@@ -80,20 +80,15 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447799104" xil_pn:in_ck="2918557350967137133" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447799066">
-      <status xil_pn:value="SuccessfullyRun"/>
+    <transform xil_pn:end_ts="1447852631" xil_pn:in_ck="2967026527128918074" xil_pn:name="TRANEXT_xstsynthesize_virtex6" xil_pn:prop_ck="6022735713403983087" xil_pn:start_ts="1447852622">
+      <status xil_pn:value="FailedRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="InputChanged"/>
-      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="CachedMemory.ngr"/>
       <outfile xil_pn:name="Sorter.lso"/>
       <outfile xil_pn:name="Sorter.ngc"/>
       <outfile xil_pn:name="Sorter.ngr"/>
       <outfile xil_pn:name="Sorter.prj"/>
-      <outfile xil_pn:name="Sorter.stx"/>
       <outfile xil_pn:name="Sorter.syr"/>
       <outfile xil_pn:name="Sorter.xst"/>
       <outfile xil_pn:name="Sorter_xst.xrpt"/>
