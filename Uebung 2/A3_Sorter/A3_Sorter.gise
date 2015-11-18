@@ -52,7 +52,6 @@
     <file xil_pn:fileType="FILE_LOG" xil_pn:name="fuse.log"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="isim"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_CMD" xil_pn:name="isim.cmd"/>
-    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_LOG" xil_pn:name="isim.log"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="netgen"/>
     <file xil_pn:fileType="FILE_NETGEN_REPORT" xil_pn:name="netgen/synthesis/Sorter_synthesis.nlf"/>
     <file xil_pn:fileType="FILE_VHDL" xil_pn:name="netgen/synthesis/Sorter_synthesis.vhd"/>
@@ -66,7 +65,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447875298" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447875298">
+    <transform xil_pn:end_ts="1447876530" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447876530">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="../A1_Memory/memory.vhd"/>
@@ -86,7 +85,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447875298" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447875298">
+    <transform xil_pn:end_ts="1447876530" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447876530">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="../A1_Memory/memory.vhd"/>
@@ -94,7 +93,7 @@
       <outfile xil_pn:name="Sorter.vhd"/>
       <outfile xil_pn:name="SorterTB.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1447875350" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-2316700847790464762" xil_pn:start_ts="1447875347">
+    <transform xil_pn:end_ts="1447876536" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-2316700847790464762" xil_pn:start_ts="1447876530">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
@@ -103,17 +102,15 @@
       <outfile xil_pn:name="SorterTB_isim_beh.exe"/>
       <outfile xil_pn:name="fuse.log"/>
       <outfile xil_pn:name="isim"/>
-      <outfile xil_pn:name="isim.log"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1447875351" xil_pn:in_ck="-658994715074456206" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-3526484624112704141" xil_pn:start_ts="1447875350">
+    <transform xil_pn:end_ts="1447876537" xil_pn:in_ck="-658994715074456206" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-3526484624112704141" xil_pn:start_ts="1447876536">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="SorterTB_isim_beh.wdb"/>
       <outfile xil_pn:name="isim.cmd"/>
-      <outfile xil_pn:name="isim.log"/>
     </transform>
     <transform xil_pn:end_ts="1447531854" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1447531854">
       <status xil_pn:value="SuccessfullyRun"/>

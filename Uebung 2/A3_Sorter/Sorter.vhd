@@ -138,7 +138,7 @@ begin
                   getOutput := '0';
                end if;
             end if;
-         else report "firstValueValid = '1'";
+         else report "  firstValueValid = '1'";
          
          --Dies ist eine if-Abfrage statt eines else, da die
          --Anweisung in demselben Schritt erfolgen darf.
@@ -148,7 +148,7 @@ begin
             currentValue := firstValue;
             currentValueValid := '1';
          else
-            report "currentValueValid= '1'";
+            report "   currentValueValid= '1'";
          end if;
 
          if(currentValueValid = '1' AND nextValueValid = '0')
@@ -156,7 +156,7 @@ begin
             if (getOutput = '0')
             then
                report "nextValue ist ungültig. Fordere Inhalt der nächsten Adresse an...";
-               mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8)); --so richtig?
+               mem_addr <= std_logic_vector(unsigned(pointer) + 1); --so richtig?
                mem_we <= '0';
                mem_re   <= '1';
                getOutput := '1';
@@ -173,7 +173,7 @@ begin
                end if;
             end if;
          else 
-            report "nextValueValid = '1'";
+            report "   nextValueValid = '1'";
          end if;
          
          --Im folgenden Codeblock wird festgestellt, was sortiert wird.
@@ -193,7 +193,8 @@ begin
          --Wenn der erste Fall bei der Sortierung bisher nicht auftrat, geschieht hier nichts.
          if(firstValueValid = '1' AND currentValueValid = '1' AND nextValueValid = '1')
          then
-            mem_re <= '0'; --Auf keinen Fall lesen!
+            report "--Zwischenspeicher OK. Sortiere!--";
+            mem_re <= '0'; --Auf keinen Fall etwas lesen!
             nextValueValid := '0';
             
             if (currentValue>nextValue)
@@ -266,6 +267,7 @@ begin
                   end if;
                   mem_dump <= '1';
                   done <= '1';
+                  isRunning := '0';
                end if;
               end if;
             end if;

@@ -110,17 +110,17 @@ BEGIN
       addr_end    <= "00000011";
       start       <= '1';
       
+      wait for clk_period * 3;
+      
+      start <= '0';
+      
       report "Sortierung gestartet. Warte auf done-Leitung..";
 
       wait until done = '1';
       
       wait for clk_period * 30;
       
-      report "Hier würde der dump überprüft werden.";
-      
-      start <= '1';
-      
-      wait for clk_period * 9999;
+      report "Testbench fertig.";
       
       wait;
       
