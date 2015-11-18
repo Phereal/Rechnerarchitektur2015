@@ -71,7 +71,6 @@ begin
    variable pointer     : std_logic_vector(7 downto 0):= addr_start;
    
    variable currentValue: std_logic_vector(7 downto 0);
-   
    variable nextValue   : std_logic_vector(7 downto 0);
    variable currentValueValid: STD_LOGIC              := '0';
    variable nextValueValid: STD_LOGIC                 := '0';
@@ -82,7 +81,11 @@ begin
    variable sortAgain: STD_LOGIC                      := '0'; --Durchlauf ohne Sortierung?
    variable replaceCurrentValue: STD_LOGIC            := '0';
    
+   variable saveValue    : std_logic_vector(7 downto 0);
+   variable saveAddress   : std_logic_vector(7 downto 0);
+   variable saveLastValuePreviousSort : std_logic     := '0';
    
+   variable internalDone : std_logic                  := '0'; --zur Verzögerung der Umstellung von done
  
 begin
  if rising_edge(clk)
@@ -94,6 +97,8 @@ begin
       isRunning := '1';
       initDelay := 500;
       done <= '0';
+      saveLastValuePreviousSort := '0';
+      internalDone := '0';
    end if;
   
    if(isRunning = '1')
@@ -125,7 +130,6 @@ begin
          then 
             if (getOutput = '0')
             then
-               report "currentValue about to be read.";
                mem_addr <= std_logic_vector(unsigned(pointer) );
                mem_we <= '0';
                mem_re   <= '1';
@@ -145,7 +149,6 @@ begin
          then 
             if (getOutput = '0')
             then
-               report "nextValue about to be read.";
                mem_addr <= std_logic_vector(unsigned(pointer) + 1);
                mem_we <= '0';
                mem_re   <= '1';
@@ -160,6 +163,31 @@ begin
                end if;
             end if;
          end if;
+         
+         --Wenn im vorherigen Durchlauf als letzter Schritt eine Sortierung statt fand,
+         --wird der 'gerettete' letzte Wert nun noch kurz gespeichert.
+         --Dies ist vonnöten, da in einem solchen Fall 2 writes im gleichen Clock cycle
+         --ausgeführt werden würden. 
+         if(saveLastValuePreviousSort='1' AND currentValueValid = '1' AND nextValueValid = '1')
+         then
+            report "Saving last value.";
+            report "#Write " &integer'image(to_integer(unsigned(saveValue))) & " to " &integer'image(amountCorrectLastDigits)&". last digit.";
+            mem_addr <= saveAddress;
+            mem_data_in<= saveValue;
+            mem_re <= '0';
+            mem_we <= '1';
+            saveLastValuePreviousSort:='0';
+            initDelay := 100;
+         end if;
+         
+         if (internalDone = '1' AND saveLastValuePreviousSort='0')
+         then
+            initDelay := 5;
+            mem_dump <= '1';
+            done <= '1';
+            isRunning := '0';
+         end if;
+            
          
          --Im folgenden Codeblock wird festgestellt, was sortiert wird.
          --Allerdings wird bei jedem Durchlauf nur 1 Schreibvorgang durchgeführt!
@@ -176,10 +204,11 @@ begin
          --mit dem zwischengespeicherten aktuellen Wert überschrieben,
          --
          --Wenn der erste Fall bei der Sortierung bisher nicht auftrat, geschieht hier nichts.
-         if(currentValueValid = '1' AND nextValueValid = '1')
+         if(currentValueValid = '1' AND nextValueValid = '1' AND saveLastValuePreviousSort = '0' AND internalDone = '0')
          then
             --In jedem Fall muss der nächste Wert gleich neu geladen werden.
             nextValueValid := '0';
+            report "pointer: " & integer'image(to_integer(unsigned(pointer)));
             report "currentValue: " &integer'image(to_integer(unsigned(currentValue)))& ", nextValue: " &integer'image(to_integer(unsigned(nextValue)));
             mem_re <= '0'; --Auf keinen Fall etwas lesen!
             
@@ -189,10 +218,12 @@ begin
                report "#Tausche currentValue und nextValue, weil nextValue kleiner war.";
                report "#Write " &integer'image(to_integer(unsigned(nextValue)))& " (next) to adress" &integer'image(to_integer(unsigned(pointer)));
                
+               initDelay := 100;
                mem_addr <= pointer;
                mem_data_in <= nextValue;
                mem_we <= '1';
                sortAgain := '1';
+               replaceCurrentValue := '1';
                --currentValue bleibt gleich, da es nach vorne verschoben wurde!
                --Daher wird currentValue kein neuer Wert zugewiesen.
                
@@ -201,7 +232,9 @@ begin
                report "#Die Werte waren bereits in korrekter Reihenfolge.";
                report "#Write " &integer'image(to_integer(unsigned(currentValue)))
                       & " (curr) to adress " &integer'image(to_integer(unsigned(pointer)))
-                      & "(just in case.)";
+                      & " (just in case.)";
+               initDelay := 100;
+               replaceCurrentValue := '0';
                mem_addr <= pointer;
                mem_data_in <= currentValue;
                mem_we <= '1';
@@ -211,13 +244,27 @@ begin
                
             end if;
             
+            pointer := std_logic_vector(unsigned(pointer)+1 );
             
             --Suchdurchlauf beenden?
-            if (to_integer(unsigned(pointer) +2 ) > to_integer(unsigned(addr_end))  - amountCorrectLastDigits)
+            if (to_integer(unsigned(pointer) +1 ) > to_integer(unsigned(addr_end))  - amountCorrectLastDigits)
             then
                report "Ende des Sortierbereiches erreicht.";
                --Wir sparen uns einen Vergleich pro Suchdurchlauf.
                amountCorrectLastDigits := amountCorrectLastDigits +1;
+               
+               --Wenn der Sortiervorgang fertig ist, ist currentValue für die nächste
+               --Adresse noch nicht gespeichert worden, wenn replaceCurrentValue wahr ist.
+               --Das muss allerdings geschehen, bevor weitersortiert werden kann, #
+               --da der Speicher sonst falsch ist.
+               if (replaceCurrentValue = '1')
+               then
+                  report "Scheduled to save last value edit.";
+                  replaceCurrentValue := '0';
+                  saveLastValuePreviousSort := '1';
+                  saveAddress := std_logic_vector(unsigned(pointer));
+                  saveValue := std_logic_vector(unsigned(currentValue));
+               end if;
                
                --Für erneute Sortierung vorbereiten:
                if (sortAgain = '1')
@@ -226,19 +273,6 @@ begin
                   sortAgain := '0';
                   currentValueValid:= '0';
                   nextValueValid := '0';
-                  --Zwischengespeicherten Wert schreiben
-                  if (replaceCurrentValue = '1')
-                  then
-                     report "Ersetze zuvor aber noch pointer-Wert durch currentValue.";
-                     report "#Write " &integer'image(to_integer(unsigned(nextValue)))
-                      & " (curr) to adress " &integer'image(to_integer(unsigned(pointer)))
-                      & "(just in case.)";
-                     replaceCurrentValue := '0';
-                     mem_addr <= pointer;
-                     mem_data_in <= currentValue;
-                     mem_we <= '1';
-                     mem_re <= '0';
-                  end if;
                   
                   report "--------------";
                   pointer := addr_start; --Wichtig!
@@ -246,21 +280,11 @@ begin
                --FERTIG SORTIERT!
                else
                   report "Heureka! Sortierung ist fertig.";
-                  if (replaceCurrentValue = '1')
-                  then
-                     replaceCurrentValue := '0';
-                     mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) - 1, 8));
-                     mem_data_in <= currentValue;
-                     mem_we <= '1';
-                     mem_re <= '0';
-                  end if;
-                  mem_dump <= '1';
-                  done <= '1';
-                  isRunning := '0';
+                  nextValueValid := '1';
+                  currentValueValid := '1';
+                  
+                  internalDone := '1';
                end if;
-              
-            else 
-               pointer := std_logic_vector(unsigned(pointer)+1 );
             end if;
          end if;
       end if;

@@ -107,7 +107,7 @@ BEGIN
       report "Input auf gesamten Speicherbereich setzen und Sortierung starten...";
       
       addr_start  <= "00000000";
-      addr_end    <= "00000011";
+      addr_end    <= "00000100";
       start       <= '1';
       
       wait for clk_period * 3;
