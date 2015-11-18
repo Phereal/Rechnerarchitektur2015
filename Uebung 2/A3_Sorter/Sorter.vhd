@@ -69,12 +69,13 @@ begin
    --Gibt an, ob Sortierungg läuft.
    variable isRunning   : STD_LOGIC                   := '0';
    variable pointer     : std_logic_vector(7 downto 0):= addr_start;
+   
    variable currentValue: std_logic_vector(7 downto 0);
+   
    variable nextValue   : std_logic_vector(7 downto 0);
-   variable firstValue  : std_logic_vector(7 downto 0);
    variable currentValueValid: STD_LOGIC              := '0';
    variable nextValueValid: STD_LOGIC                 := '0';
-   variable firstValueValid: STD_LOGIC                := '0';
+   
    variable getOutput: STD_LOGIC                      := '0';
    variable waitForOutput: STD_LOGIC                  := '0';   
    variable amountCorrectLastDigits: Integer          := 0; --Anzahl korrekte Endziffern
@@ -133,23 +134,17 @@ begin
             else 
                if (getOutput = '1' AND mem_ack = '1')
                then
-                  report "currentValue wurde geladen.";
                   currentValue := mem_output;
                   currentValueValid := '1';
                   getOutput := '0';
-               else
-                  report "Warte auf mem_ack = '1'...";
                end if;
             end if;
-         else 
-            report "   currentValueValid = '1'";
          end if;
 
          if(currentValueValid = '1' AND nextValueValid = '0')
          then 
             if (getOutput = '0')
             then
-               report "nextValue ist ungültig. Fordere Inhalt der nächsten Adresse an...";
                mem_addr <= std_logic_vector(unsigned(pointer) + 1);
                mem_we <= '0';
                mem_re   <= '1';
@@ -162,12 +157,8 @@ begin
                   nextValue := mem_output;
                   nextValueValid := '1';
                   getOutput := '0';
-               else
-                  report "Warte auf mem_ack = '1'...";
                end if;
             end if;
-         else 
-            report "   nextValueValid = '1'";
          end if;
          
          --Im folgenden Codeblock wird festgestellt, was sortiert wird.
@@ -187,40 +178,40 @@ begin
          --Wenn der erste Fall bei der Sortierung bisher nicht auftrat, geschieht hier nichts.
          if(currentValueValid = '1' AND nextValueValid = '1')
          then
-            report "--Zwischenspeicher OK. Sortiere!--";
-            mem_re <= '0'; --Auf keinen Fall etwas lesen!
+            --In jedem Fall muss der nächste Wert gleich neu geladen werden.
             nextValueValid := '0';
+            report "currentValue: " &integer'image(to_integer(unsigned(currentValue)))& ", nextValue: " &integer'image(to_integer(unsigned(nextValue)));
+            mem_re <= '0'; --Auf keinen Fall etwas lesen!
             
             if (currentValue>nextValue)
             then
             --Werte tauschen
-               report "Tausche currentValue und nextValue, weil nextValue kleiner war.";
+               report "#Tausche currentValue und nextValue, weil nextValue kleiner war.";
+               report "#Write " &integer'image(to_integer(unsigned(pointer)))& " <= " &integer'image(to_integer(unsigned(nextValue)));
+               
                mem_addr <= pointer;
                mem_data_in <= nextValue;
                mem_we <= '1';
-               --currentValue bleibt gleich, da es nach vorne verschoben wurde!
-               replaceCurrentValue := '1';
                sortAgain := '1';
+               --currentValue bleibt gleich, da es nach vorne verschoben wurde!
+               --Daher wird currentValue kein neuer Wert zugewiesen.
+               
             else
-            --Werte bereits in richtiger Reihefolge
-            report "Die Werte waren bereits in korrekter Reihenfolge.";
-               if (replaceCurrentValue = '1')
-               then
-                  report "Ueberschreibe Wert am Pointer mit currenValue.";
-                  replaceCurrentValue := '0';
-                  mem_addr <= pointer;
-                  mem_data_in <= currentValue;
-                  mem_we <= '1';
-                  mem_re <= '0';
-               end if;
-            
-            currentValue := nextValue;
+               --Werte bereits in richtiger Reihefolge
+               report "#Die Werte waren bereits in korrekter Reihenfolge.";
+               report "#Write " &integer'image(to_integer(unsigned(pointer)))& " <= " &integer'image(to_integer(unsigned(currentValue)));
+               mem_addr <= pointer;
+               mem_data_in <= currentValue;
+               mem_we <= '1';
+               mem_re <= '0';
+               
+               currentValue := nextValue;
+               
             end if;
             
-            pointer := std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) + 1, 8));
             
             --Suchdurchlauf beenden?
-            if (to_integer(unsigned(pointer)) > to_integer(unsigned(addr_end)) - amountCorrectLastDigits)
+            if (to_integer(unsigned(pointer) +1 ) > to_integer(unsigned(addr_end))  - amountCorrectLastDigits)
             then
                report "Ende des Sortierbereiches erreicht.";
                --Wir sparen uns einen Vergleich pro Suchdurchlauf.
@@ -238,7 +229,7 @@ begin
                   then
                      report "Ersetze zuvor aber noch pointer-Wert durch currentValue.";
                      replaceCurrentValue := '0';
-                     mem_addr <= std_logic_vector(to_unsigned(to_integer(unsigned(pointer)) - 1, 8));
+                     mem_addr <= pointer;
                      mem_data_in <= currentValue;
                      mem_we <= '1';
                      mem_re <= '0';
@@ -263,6 +254,8 @@ begin
                   isRunning := '0';
                end if;
               
+            else 
+               pointer := std_logic_vector(unsigned(pointer)+1 );
             end if;
          end if;
       end if;
