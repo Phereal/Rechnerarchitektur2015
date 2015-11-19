@@ -40,7 +40,7 @@
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_STX" xil_pn:name="Sorter.stx"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_REPORT" xil_pn:name="Sorter.syr"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST" xil_pn:name="Sorter.xst"/>
-    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="SorterTB_beh.prj"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="SorterTB_beh.prj"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="SorterTB_isim_beh.exe"/>
     <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="SorterTB_isim_beh.wdb"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="SorterTB_stx_beh.prj"/>
@@ -67,7 +67,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447891510" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447891510">
+    <transform xil_pn:end_ts="1447897205" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1447897205">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
@@ -79,11 +79,11 @@
       <outfile xil_pn:name="Sorter.vhd"/>
       <outfile xil_pn:name="SorterTB.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1447890685" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="4798324724495685483" xil_pn:start_ts="1447890685">
+    <transform xil_pn:end_ts="1447897270" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="4798324724495685483" xil_pn:start_ts="1447897270">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447890685" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="5194661619949411785" xil_pn:start_ts="1447890685">
+    <transform xil_pn:end_ts="1447897270" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="5194661619949411785" xil_pn:start_ts="1447897270">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
@@ -91,7 +91,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1447891510" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447891510">
+    <transform xil_pn:end_ts="1447897205" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1447897205">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
@@ -104,11 +104,10 @@
       <outfile xil_pn:name="Sorter.vhd"/>
       <outfile xil_pn:name="SorterTB.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1447891513" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-2316700847790464762" xil_pn:start_ts="1447891510">
+    <transform xil_pn:end_ts="1447897274" xil_pn:in_ck="-8487256028836339713" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-2316700847790464762" xil_pn:start_ts="1447897270">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForProperties"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="InputChanged"/>
@@ -120,10 +119,9 @@
       <outfile xil_pn:name="isim.log"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1447892762" xil_pn:in_ck="-658994715074456206" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-3526484624112704141" xil_pn:start_ts="1447892761">
+    <transform xil_pn:end_ts="1447897274" xil_pn:in_ck="-658994715074456206" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-8058820737704298491" xil_pn:start_ts="1447897274">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForProperties"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="OutputChanged"/>
@@ -163,6 +161,11 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
+      <status xil_pn:value="OutputRemoved"/>
       <outfile xil_pn:name="CachedMemory.ngr"/>
       <outfile xil_pn:name="Sorter.lso"/>
       <outfile xil_pn:name="Sorter.ngc"/>
@@ -171,9 +174,6 @@
       <outfile xil_pn:name="Sorter.stx"/>
       <outfile xil_pn:name="Sorter.syr"/>
       <outfile xil_pn:name="Sorter.xst"/>
-      <outfile xil_pn:name="SorterTB_beh.prj"/>
-      <outfile xil_pn:name="SorterTB_stx_beh.prj"/>
-      <outfile xil_pn:name="Sorter_stx_beh.prj"/>
       <outfile xil_pn:name="Sorter_xst.xrpt"/>
       <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="webtalk_pn.xml"/>
@@ -187,6 +187,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="InputRemoved"/>

@@ -201,6 +201,10 @@ begin
          then
             report "Set done to true.";
             initDelay := 5;
+            mem_re <= '0';
+            mem_we <= '0';
+            mem_reset <= '0';
+            mem_init <= '0';
             mem_dump <= '1';
             done <= '1';
             isRunning := '0';
