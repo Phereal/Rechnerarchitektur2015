@@ -131,7 +131,7 @@ begin
          then 
             if (getOutput = '0')
             then
-               mem_addr <= std_logic_vector(unsigned(pointer) );
+               mem_addr <= pointer;
                mem_we <= '0';
                mem_re   <= '1';
                getOutput := '1';
@@ -139,6 +139,7 @@ begin
             else 
                if (getOutput = '1' AND mem_ack = '1')
                then
+                  report "currentValue: " &integer'image(to_integer(unsigned(mem_output)));
                   currentValue := mem_output;
                   currentValueValid := '1';
                   getOutput := '0';
@@ -158,6 +159,7 @@ begin
             else 
                if (getOutput = '1' AND mem_ack = '1')
                then
+                  report "nextValue: " &integer'image(to_integer(unsigned(mem_output)));
                   nextValue := mem_output;
                   nextValueValid := '1';
                   getOutput := '0';
@@ -172,7 +174,7 @@ begin
          if(saveLastValuePreviousSort='1' AND currentValueValid = '1' AND nextValueValid = '1')
          then
             report "Saving last value.";
-            report "#Write " &integer'image(to_integer(unsigned(saveValue))) & " to " &integer'image(amountCorrectLastDigits)&". last digit.";
+            report "#Write " &integer'image(to_integer(unsigned(saveValue))) & " to address" &integer'image(to_integer(unsigned(saveAddress)));
             mem_addr <= saveAddress;
             mem_data_in<= saveValue;
             mem_re <= '0';
