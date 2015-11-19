@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2015-11-18T21:40:49</DateModified>
+  <DateModified>2015-11-19T01:27:35</DateModified>
   <ModuleName>CachedMemory</ModuleName>
   <SummaryTimeStamp>2015-11-18T00:11:32</SummaryTimeStamp>
-  <SavedFilePath>/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/iseconfig/CachedMemory.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/home/steffen/Dokumente/Git/GitHub/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/</ImplementationReportsDirectory>
+  <SavedFilePath>/home/daalta/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/iseconfig/CachedMemory.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>/home/daalta/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/</ImplementationReportsDirectory>
   <DateInitialized>2015-11-13T18:11:21</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

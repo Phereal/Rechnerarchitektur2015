@@ -1,4 +1,7 @@
 ----------------------------------------------------------------------------------
+--Aufgabe 3 konnten wir nicht rechtzeitig in eine funktionierende Form bringen.
+--Unsere Testbench demonstriert in der Konsole recht gut die Idee unseres Lösungsansatzes,
+--zeigt allerdings die zahlreichen Fehler, die beim Schreiben in den Speicher auftreten.
 -- Company: 
 -- Engineer: 
 -- 
@@ -66,24 +69,26 @@ begin
    --Verzögert Sortierung, damit init den Speicher füllen kann.
    --Erinnerung: Muss bei dump wieder auch Ursprungswert gestellt werden!
    variable initDelay : Integer := 500;
-   --Gibt an, ob Sortierungg läuft.
-   variable isRunning   : STD_LOGIC                   := '0';
-   variable pointer     : std_logic_vector(7 downto 0):= addr_start;
    
-   variable currentValue: std_logic_vector(7 downto 0);
-   variable nextValue   : std_logic_vector(7 downto 0);
-   variable currentValueValid: STD_LOGIC              := '0';
-   variable nextValueValid: STD_LOGIC                 := '0';
+   variable isRunning   : STD_LOGIC                   := '0';--Gibt an, ob Sortierungg läuft.
+   variable pointer     : std_logic_vector(7 downto 0):= addr_start;--Speicheradresse für Vergleiche im Speicher.
    
-   variable getOutput: STD_LOGIC                      := '0';
-   variable waitForOutput: STD_LOGIC                  := '0';   
-   variable amountCorrectLastDigits: Integer          := 0; --Anzahl korrekte Endziffern
-   variable sortAgain: STD_LOGIC                      := '0'; --Durchlauf ohne Sortierung?
-   variable replaceCurrentValue: STD_LOGIC            := '0';
+   variable currentValue: std_logic_vector(7 downto 0);--Aktueller zwischengespeicherter Vergleichswert
+   variable nextValue   : std_logic_vector(7 downto 0);--Nächster zwischengespeicherter Vergleichswert (zwischengespeichert)
+   variable currentValueValid: STD_LOGIC              := '0';--Gibt an, ob currentValue aktualisiert werden muss.
+   variable nextValueValid: STD_LOGIC                 := '0';--Gibt an, ob nextValue aktualisiert werden muss.
    
-   variable saveValue    : std_logic_vector(7 downto 0);
-   variable saveAddress   : std_logic_vector(7 downto 0);
-   variable saveLastValuePreviousSort : std_logic     := '0';
+   variable getOutput: STD_LOGIC                      := '0';--Gibt an, ob der Output des Speichers bereit zum auslesen ist.
+   variable waitForOutput: STD_LOGIC                  := '0';--Gibt an, ob auf den Output des Speichers überhaupt zu warten ist.
+   variable amountCorrectLastDigits: Integer          := 0; --Anzahl korrekter Adressen am Ende des Adressraums. Erhöht sich nach und nach.
+   variable sortAgain: STD_LOGIC                      := '0';--Gibt an, ob im aktuellen Sortierdurchlauf zwei Werte getauscht wurden.
+   variable replaceCurrentValue: STD_LOGIC            := '0';--Gibt an, ob currentValue einen Wert enthält, der noch in den Speicher geschrieben werden muss.
+   
+   variable saveValue    : std_logic_vector(7 downto 0);--Gibt den zu rettenden Wert (ehemals in currentValue) an.
+   variable saveAddress   : std_logic_vector(7 downto 0);--Gibt die Adresse des zu rettenden Wertes an.
+   variable saveLastValuePreviousSort : std_logic     := '0';--Gibt an, ob currentValue am Ende des letztes Sortierdurchlaufes
+                                                             --*nicht* in den Speicher geschrieben konnte und daher anschließend
+                                                             --noch gespeichert werden muss.
    
    variable internalDone : std_logic                  := '0'; --zur Verzögerung der Umstellung von done
  
@@ -93,6 +98,7 @@ begin
   
    if(start = '1' AND isRunning = '0')
    then
+      --Initialisiere zahlreiche Werte.
       mem_dump <= '0';
       pointer := addr_start;
       isRunning := '1';
@@ -104,7 +110,7 @@ begin
   
    if(isRunning = '1')
    then
-      --Load init values.
+      --initDelay wird genutzt, um dem Speicher genug Zeit zu geben, init auszuführen.
       if (initDelay = 500)
       then
          report "Habe mem_init auf 1 gesetzt und warte jetzt einen Takt.";
@@ -118,15 +124,20 @@ begin
          mem_init <= '0';
       end if;
       
-      --Count down the delay.
+      --delay runerzählen.
       if (initDelay > 0)
       then
          initDelay := initDelay-1;
       end if;      
    
+      --Nach Verzögerung:
       if(isRunning ='1' AND initDelay = 0)
       then
 
+         --Wir laden, wenn nötig, den aktuellen Wert aus dem Speicher.
+         --currentValue wird nur zu Beginn eines Suchdurchlaufes abgerufen,
+         --da nextValue genügt, um currentValue für den jeweils nächsten Schritt
+         --festzulegen.
          if(currentValueValid = '0')
          then 
             if (getOutput = '0')
@@ -139,6 +150,7 @@ begin
             else 
                if (getOutput = '1' AND mem_ack = '1')
                then
+                  --Speicher hat ack auf 1 gesetzt, daher ist der Wert nun abrufbar.
                   report "currentValue: " &integer'image(to_integer(unsigned(mem_output)));
                   currentValue := mem_output;
                   currentValueValid := '1';
@@ -147,6 +159,7 @@ begin
             end if;
          end if;
 
+         --Ähnlich wie für currentValue wird der benötigte Wert aus dem Speicher geladen.
          if(currentValueValid = '1' AND nextValueValid = '0')
          then 
             if (getOutput = '0')
@@ -170,7 +183,7 @@ begin
          --Wenn im vorherigen Durchlauf als letzter Schritt eine Sortierung statt fand,
          --wird der 'gerettete' letzte Wert nun noch kurz gespeichert.
          --Dies ist vonnöten, da in einem solchen Fall 2 writes im gleichen Clock cycle
-         --ausgeführt werden würden. 
+         --ausgeführt werden würden. Das wird so vermieden.
          if(saveLastValuePreviousSort='1' AND currentValueValid = '1' AND nextValueValid = '1')
          then
             report "Saving last value.";
@@ -183,6 +196,7 @@ begin
             initDelay := 100;
          end if;
          
+         --Wenn wir 'intern* fertig sind und kein Wert mehr zu retten ist, können wir den Wert dumpen.
          if (internalDone = '1' AND saveLastValuePreviousSort='0')
          then
             report "Set done to true.";
@@ -200,14 +214,14 @@ begin
          --1. Fall
          --Wenn der aktuelle Wert größer ist als der nächste Wert, wird der aktuelle Wert
          --durch den nächsten ersetzt. 
-         --Der zweite Wert wird allerdings nocht nicht verändert und liegt daher doppelt vor.
-         --Er wird zwischengespeichert und im nächsten Schritt als aktueller Wert behandelt
+         --currentValue wird nicht verändert. Somit hat der Speicher zu diesem Zeitpunkt
+         --einen doppelten Eintrag! Der 2. Fall oder das Erreichen des Endes des Adressraumes
+         --behebt diese Inkonsistenz.
          --
          --2. Fall
-         --Wenn die beiden Werte in der korrekten Reihenfolge sind, wird der aktuelle Wert
-         --mit dem zwischengespeicherten aktuellen Wert überschrieben,
-         --
-         --Wenn der erste Fall bei der Sortierung bisher nicht auftrat, geschieht hier nichts.
+         --Wenn die beiden Werte in der korrekten Reihenfolge sind, wird die aktuelle Adresse
+         --mit dem zwischengespeicherten aktuellen Wert überschrieben, wenn der 1. Fall unmittel-
+         --bar zuvor auftrat.
          if(currentValueValid = '1' AND nextValueValid = '1' AND saveLastValuePreviousSort = '0' AND internalDone = '0')
          then
             --In jedem Fall muss der nächste Wert gleich neu geladen werden.
@@ -217,7 +231,7 @@ begin
             mem_re <= '0'; --Auf keinen Fall etwas lesen!
             
             if (currentValue>nextValue)
-            then
+            then  --1. Fall
             --Werte tauschen
                report "#Tausche currentValue und nextValue, weil nextValue kleiner war.";
                report "#Write " &integer'image(to_integer(unsigned(nextValue)))& " (next) to adress" &integer'image(to_integer(unsigned(pointer)));
@@ -231,7 +245,7 @@ begin
                --currentValue bleibt gleich, da es nach vorne verschoben wurde!
                --Daher wird currentValue kein neuer Wert zugewiesen.
                
-            else
+            else --2. Fall
                --Werte bereits in richtiger Reihefolge
                report "#Die Werte waren bereits in korrekter Reihenfolge.";
                report "#Write " &integer'image(to_integer(unsigned(currentValue)))
@@ -248,9 +262,13 @@ begin
                
             end if;
             
+            --Pointer für nächsten Schritt vorbereiten.
             pointer := std_logic_vector(unsigned(pointer)+1 );
             
-            --Suchdurchlauf beenden?
+            --Wir überprüfen, ob der Pointer den Adressraum verlassen würde.
+            --Wir berücksichtigen, dass mit jedem Durchlauf des Bubble Sort der Suchlauf
+            --eine Adresse früher beendet werden kann, da pro Durchlauf ein hoher Wert
+            --das Ende des Adressraums füllt-
             if (to_integer(unsigned(pointer) +1 ) > to_integer(unsigned(addr_end))  - amountCorrectLastDigits)
             then
                report "Ende des Sortierbereiches erreicht.";
