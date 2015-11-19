@@ -1,29 +1,21 @@
 --------------------------------------------------------------------------------
--- Company: 
--- Engineer:
+-- Diese Testbench versucht die Sortierung einer Memory.dat datei durchzuführen.
+-- Sortiert werden sollen die zweite bis zur fünften Adresse.
+-- Der Inhalt der Adressen ist:
+-- 4 3 2 1 (dezimale Darstellung)
+-- Sortert_
+-- 1 2 3 4 (dezimale Darstellung)
+--
+-- Unser Test führt die notwendigen Kommandos aus, um die dump.dat-Datei zu erzeugen.
+-- Das Ergebnis muss manuell überprüft werden.
+--
+-- 
 --
 -- Create Date:   14:54:35 11/18/2015
 -- Design Name:   
 -- Module Name:   /home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/SorterTB.vhd
 -- Project Name:  A3_Sorter
--- Target Device:  
--- Tool versions:  
--- Description:   
--- 
--- VHDL Test Bench Created by ISE for module: Sorter
--- 
--- Dependencies:
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
---
--- Notes: 
--- This testbench has been automatically generated using types std_logic and
--- std_logic_vector for the ports of the unit under test.  Xilinx recommends
--- that these types always be used for the top-level I/O of a design in order
--- to guarantee that the testbench will bind correctly to the post-implementation 
--- simulation model.
+
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
@@ -120,7 +112,7 @@ BEGIN
       
       wait for clk_period * 30;
       
-      report "Testbench fertig.";
+      report "Testbench fertig. Manuell überprüfen?";
       
       wait;
       

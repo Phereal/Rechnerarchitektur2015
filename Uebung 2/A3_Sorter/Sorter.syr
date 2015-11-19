@@ -5,14 +5,14 @@ Parameter TMPDIR set to xst/projnav.tmp
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.10 secs
+Total CPU time to Xst completion: 0.11 secs
  
 --> 
 Parameter xsthdpdir set to xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.10 secs
+Total CPU time to Xst completion: 0.11 secs
  
 --> 
 Reading design: Sorter.prj
@@ -123,7 +123,7 @@ Parsing architecture <Behavioral> of entity <sorter>.
 =========================================================================
 
 Elaborating entity <Sorter> (architecture <Behavioral>) from library <work>.
-WARNING:HDLCompiler:871 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/Sorter.vhd" Line 44: Using initial value '0' for mem_reset since it is never assigned
+WARNING:HDLCompiler:871 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/Sorter.vhd" Line 47: Using initial value '0' for mem_reset since it is never assigned
 
 Elaborating entity <CachedMemory> (architecture <Behavioral>) from library <work>.
 
@@ -138,7 +138,7 @@ WARNING:HDLCompiler:92 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A2_Cached
 WARNING:HDLCompiler:92 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 437: buffer_cachefrommain_data should be on the sensitivity list of the process
 WARNING:HDLCompiler:92 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 438: buffer_cachefrommain_d should be on the sensitivity list of the process
 WARNING:HDLCompiler:92 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A2_CachedMemory/CachedMemory.vhd" Line 439: buffer_cachefrommain_v should be on the sensitivity list of the process
-WARNING:HDLCompiler:92 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/Sorter.vhd" Line 71: addr_start should be on the sensitivity list of the process
+WARNING:HDLCompiler:92 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/Sorter.vhd" Line 74: addr_start should be on the sensitivity list of the process
 
 =========================================================================
 *                           HDL Synthesis                               *
@@ -146,9 +146,12 @@ WARNING:HDLCompiler:92 - "/home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter
 
 Synthesizing Unit <Sorter>.
     Related source file is "/home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/Sorter.vhd".
+    Found 8-bit register for signal <execute.pointer>.
     Found 1-bit register for signal <execute.isRunning>.
     Found 32-bit register for signal <execute.initDelay>.
     Found 1-bit register for signal <done>.
+    Found 1-bit register for signal <execute.saveLastValuePreviousSort>.
+    Found 1-bit register for signal <execute.internalDone>.
     Found 1-bit register for signal <mem_init>.
     Found 8-bit register for signal <mem_addr>.
     Found 1-bit register for signal <mem_we>.
@@ -159,28 +162,24 @@ Synthesizing Unit <Sorter>.
     Found 8-bit register for signal <execute.nextValue>.
     Found 1-bit register for signal <execute.nextValueValid>.
     Found 8-bit register for signal <mem_data_in>.
-    Found 1-bit register for signal <mem_dump>.
     Found 1-bit register for signal <execute.sortAgain>.
     Found 32-bit register for signal <execute.amountCorrectLastDigits>.
-    Found 1-bit register for signal <execute.replaceCurrentValue>.
-    Found 1-bit register for signal <execute.saveLastValuePreviousSort>.
     Found 8-bit register for signal <execute.saveAddress>.
     Found 8-bit register for signal <execute.saveValue>.
-    Found 1-bit register for signal <execute.internalDone>.
-    Found 8-bit register for signal <execute.pointer>.
-    Found 33-bit subtractor for signal <n0204> created at line 243.
-    Found 8-bit adder for signal <n0247> created at line 1241.
-    Found 8-bit adder for signal <execute.pointer[7]_GND_6_o_add_26_OUT> created at line 1241.
-    Found 32-bit adder for signal <execute.amountCorrectLastDigits[31]_GND_6_o_add_29_OUT> created at line 247.
-    Found 32-bit subtractor for signal <execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>> created at line 123.
-    Found 32-bit comparator greater for signal <execute.initDelay[31]_GND_6_o_LessThan_5_o> created at line 121
-    Found 8-bit comparator greater for signal <execute.nextValue[7]_execute.currentValue[7]_LessThan_23_o> created at line 212
-    Found 32-bit comparator greater for signal <GND_6_o_GND_6_o_LessThan_29_o> created at line 243
+    Found 1-bit register for signal <mem_dump>.
+    Found 33-bit subtractor for signal <n0209> created at line 272.
+    Found 8-bit adder for signal <n0253> created at line 1241.
+    Found 8-bit adder for signal <execute.pointer[7]_GND_6_o_add_27_OUT> created at line 1241.
+    Found 32-bit adder for signal <execute.amountCorrectLastDigits[31]_GND_6_o_add_30_OUT> created at line 276.
+    Found 32-bit subtractor for signal <execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>> created at line 130.
+    Found 32-bit comparator greater for signal <execute.initDelay[31]_GND_6_o_LessThan_5_o> created at line 128
+    Found 8-bit comparator greater for signal <execute.nextValue[7]_execute.currentValue[7]_LessThan_24_o> created at line 233
+    Found 32-bit comparator greater for signal <GND_6_o_GND_6_o_LessThan_30_o> created at line 272
     Summary:
 	inferred   5 Adder/Subtractor(s).
-	inferred 133 D-type flip-flop(s).
+	inferred 132 D-type flip-flop(s).
 	inferred   3 Comparator(s).
-	inferred  34 Multiplexer(s).
+	inferred  45 Multiplexer(s).
 Unit <Sorter> synthesized.
 
 Synthesizing Unit <CachedMemory>.
@@ -468,7 +467,7 @@ WARNING:Xst:737 - Found 1-bit latch for signal <cacheDriver.prevRequestFromMain<
 WARNING:Xst:737 - Found 1-bit latch for signal <cacheDriver.prevRequestFromMain<0>>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
     Found 3-bit comparator equal for signal <n0121> created at line 384
     Found 3-bit comparator equal for signal <n0222> created at line 407
-    Found 4-bit comparator equal for signal <addr[7]_INV_86_o> created at line 558
+    Found 4-bit comparator equal for signal <addr[7]_INV_92_o> created at line 558
     Summary:
 	inferred   1 RAM(s).
 	inferred   1 Adder/Subtractor(s).
@@ -560,15 +559,15 @@ Synthesizing Unit <Memory>.
     Found 8-bit register for signal <reg<78>>.
     Found 8-bit register for signal <reg<79>>.
     Found 8-bit register for signal <reg<80>>.
-    Found 8-bit register for signal <output>.
+    Found 8-bit register for signal <bufferOut>.
     Found 8-bit register for signal <reg<0>>.
 INFO:Xst:3019 - HDL ADVISOR - 1024 flip-flops were inferred for signal <reg>. You may be trying to describe a RAM in a way that is incompatible with block and distributed RAM resources available on Xilinx devices, or with a specific template that is not supported. Please review the Xilinx resources documentation and the XST user manual for coding guidelines. Taking advantage of RAM resources will lead to improved device usage and reduced synthesis time.
-    Found 8-bit 81-to-1 multiplexer for signal <addr[7]_X_10_o_wide_mux_2_OUT> created at line 158.
-    Found 8-bit comparator lessequal for signal <n0000> created at line 99
+    Found 8-bit 81-to-1 multiplexer for signal <addr[7]_X_10_o_wide_mux_2_OUT> created at line 160.
+    Found 8-bit comparator lessequal for signal <n0000> created at line 101
     Summary:
 	inferred 656 D-type flip-flop(s).
 	inferred   1 Comparator(s).
-	inferred   2 Multiplexer(s).
+	inferred   3 Multiplexer(s).
 Unit <Memory> synthesized.
 
 =========================================================================
@@ -582,8 +581,8 @@ Macro Statistics
  32-bit subtractor                                     : 1
  33-bit subtractor                                     : 1
  8-bit adder                                           : 2
-# Registers                                            : 130
- 1-bit register                                        : 24
+# Registers                                            : 129
+ 1-bit register                                        : 23
  3-bit register                                        : 5
  32-bit register                                       : 3
  8-bit register                                        : 98
@@ -595,16 +594,16 @@ Macro Statistics
  4-bit comparator equal                                : 1
  8-bit comparator greater                              : 1
  8-bit comparator lessequal                            : 1
-# Multiplexers                                         : 1393
+# Multiplexers                                         : 1405
  1-bit 16-to-1 multiplexer                             : 2
- 1-bit 2-to-1 multiplexer                              : 1224
+ 1-bit 2-to-1 multiplexer                              : 1232
  1-bit 4-to-1 multiplexer                              : 16
  3-bit 2-to-1 multiplexer                              : 47
- 32-bit 2-to-1 multiplexer                             : 3
+ 32-bit 2-to-1 multiplexer                             : 6
  4-bit 16-to-1 multiplexer                             : 2
  4-bit 2-to-1 multiplexer                              : 16
  8-bit 16-to-1 multiplexer                             : 2
- 8-bit 2-to-1 multiplexer                              : 80
+ 8-bit 2-to-1 multiplexer                              : 81
  8-bit 81-to-1 multiplexer                             : 1
 
 =========================================================================
@@ -618,24 +617,6 @@ WARNING:Xst:1426 - The value init of the FF/Latch buffer_cacheFromMem_v hinder t
    You should achieve better results by setting this init to 1.
 WARNING:Xst:1426 - The value init of the FF/Latch buffer_cacheFromMain_v hinder the constant cleaning in the block mem.
    You should achieve better results by setting this init to 1.
-WARNING:Xst:1293 - FF/Latch <execute.replaceCurrentValue> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <execute.saveLastValuePreviousSort> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <execute.saveAddress_0> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_1> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_2> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_3> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_4> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_5> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_6> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_7> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_0> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_1> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_2> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_3> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_4> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_5> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_6> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_7> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
 
 Synthesizing (advanced) Unit <CachedMemory>.
 The following registers are absorbed into counter <mem_clk_process.clkCnt>: 1 register on signal <mem_clk_process.clkCnt>.
@@ -667,20 +648,20 @@ Macro Statistics
  8-bit adder                                           : 2
 # Counters                                             : 2
  32-bit up counter                                     : 2
-# Registers                                            : 855
- Flip-Flops                                            : 855
+# Registers                                            : 854
+ Flip-Flops                                            : 854
 # Comparators                                          : 7
  3-bit comparator equal                                : 2
  32-bit comparator greater                             : 2
  4-bit comparator equal                                : 1
  8-bit comparator greater                              : 1
  8-bit comparator lessequal                            : 1
-# Multiplexers                                         : 1393
+# Multiplexers                                         : 1412
  1-bit 16-to-1 multiplexer                             : 2
- 1-bit 2-to-1 multiplexer                              : 1224
+ 1-bit 2-to-1 multiplexer                              : 1240
  1-bit 4-to-1 multiplexer                              : 16
  3-bit 2-to-1 multiplexer                              : 47
- 32-bit 2-to-1 multiplexer                             : 3
+ 32-bit 2-to-1 multiplexer                             : 6
  4-bit 16-to-1 multiplexer                             : 2
  4-bit 2-to-1 multiplexer                              : 16
  8-bit 16-to-1 multiplexer                             : 2
@@ -698,25 +679,8 @@ WARNING:Xst:1426 - The value init of the FF/Latch buffer_cacheFromMain_v hinder 
    You should achieve better results by setting this init to 1.
 WARNING:Xst:1426 - The value init of the FF/Latch buffer_cacheFromMain_d hinder the constant cleaning in the block CachedMemory.
    You should achieve better results by setting this init to 1.
-WARNING:Xst:1293 - FF/Latch <execute.replaceCurrentValue> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <execute.saveLastValuePreviousSort> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <execute.saveValue_0> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_1> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_2> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_3> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_4> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_5> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_6> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveValue_7> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_0> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_1> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_2> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_3> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_4> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_5> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_6> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <execute.saveAddress_7> (without init value) has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
 INFO:Xst:2261 - The FF/Latch <buffer_cacheFromMain_d> in Unit <CachedMemory> is equivalent to the following FF/Latch, which will be removed : <buffer_cacheFromMain_v> 
+INFO:Xst:2261 - The FF/Latch <mem_dump> in Unit <Sorter> is equivalent to the following FF/Latch, which will be removed : <done> 
 WARNING:Xst:1293 - FF/Latch <cacheRequestFromMain_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <cacheDriver.prevRequestFromMain_2> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
 INFO:Xst:2261 - The FF/Latch <cacheRequestFromMem_0> in Unit <CachedMemory> is equivalent to the following FF/Latch, which will be removed : <cacheRequestFromMem_1> 
@@ -731,6 +695,14 @@ WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <buffer_mem_addr_6> 
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <buffer_mem_addr_7> has a constant value of 0 in block <CachedMemory>. This FF/Latch will be trimmed during the optimization process.
 
 Optimizing unit <Memory> ...
+WARNING:Xst:1710 - FF/Latch <reg_80_0> (without init value) has a constant value of 0 in block <Memory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <reg_80_1> (without init value) has a constant value of 0 in block <Memory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <reg_80_2> (without init value) has a constant value of 0 in block <Memory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <reg_80_3> (without init value) has a constant value of 0 in block <Memory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <reg_80_4> (without init value) has a constant value of 0 in block <Memory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <reg_80_5> (without init value) has a constant value of 0 in block <Memory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <reg_80_6> (without init value) has a constant value of 0 in block <Memory>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <reg_80_7> (without init value) has a constant value of 0 in block <Memory>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1293 - FF/Latch <mem/mem_clk_process.clkCnt_27> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem/mem_clk_process.clkCnt_26> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem/mem_clk_process.clkCnt_25> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
@@ -784,11 +756,11 @@ WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem/mem_clk_process
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem/mem_clk_process.clkCnt_30> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem/mem_clk_process.clkCnt_29> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <mem/mem_clk_process.clkCnt_28> has a constant value of 0 in block <Sorter>. This FF/Latch will be trimmed during the optimization process.
-INFO:Xst:3203 - The FF/Latch <execute.isRunning> in Unit <Sorter> is the opposite to the following FF/Latch, which will be removed : <done> 
 
 Mapping all equations...
 Building and optimizing final netlist ...
 Found area constraint ratio of 100 (+ 5) on block Sorter, actual ratio is 3.
+FlipFlop execute.isRunning has been replicated 1 time(s)
 
 Final Macro Processing ...
 
@@ -796,8 +768,8 @@ Final Macro Processing ...
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 840
- Flip-Flops                                            : 840
+# Registers                                            : 850
+ Flip-Flops                                            : 850
 
 =========================================================================
 
@@ -820,25 +792,26 @@ Top Level Output File Name         : Sorter.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 1696
+# BELS                             : 1729
 #      GND                         : 1
-#      INV                         : 28
+#      INV                         : 27
 #      LUT1                        : 32
 #      LUT2                        : 34
-#      LUT3                        : 60
-#      LUT4                        : 111
-#      LUT5                        : 348
-#      LUT6                        : 781
-#      MUXCY                       : 113
-#      MUXF7                       : 63
+#      LUT3                        : 58
+#      LUT4                        : 132
+#      LUT5                        : 353
+#      LUT6                        : 799
+#      MUXCY                       : 114
+#      MUXF7                       : 54
 #      MUXF8                       : 26
 #      VCC                         : 1
 #      XORCY                       : 98
-# FlipFlops/Latches                : 1068
-#      FD                          : 48
-#      FDE                         : 103
-#      FDR                         : 39
-#      FDRE                        : 650
+# FlipFlops/Latches                : 1078
+#      FD                          : 50
+#      FDE                         : 117
+#      FDR                         : 47
+#      FDRE                        : 634
+#      FDS                         : 2
 #      LD                          : 224
 #      LD_1                        : 4
 # Clock Buffers                    : 2
@@ -855,15 +828,15 @@ Selected Device : 7a100tcsg324-3
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:            1068  out of  126800     0%  
- Number of Slice LUTs:                 1394  out of  63400     2%  
-    Number used as Logic:              1394  out of  63400     2%  
+ Number of Slice Registers:            1078  out of  126800     0%  
+ Number of Slice LUTs:                 1435  out of  63400     2%  
+    Number used as Logic:              1435  out of  63400     2%  
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:   1938
-   Number with an unused Flip Flop:     870  out of   1938    44%  
-   Number with an unused LUT:           544  out of   1938    28%  
-   Number of fully used LUT-FF pairs:   524  out of   1938    27%  
+ Number of LUT Flip Flop pairs used:   1974
+   Number with an unused Flip Flop:     896  out of   1974    45%  
+   Number with an unused LUT:           539  out of   1974    27%  
+   Number of fully used LUT-FF pairs:   539  out of   1974    27%  
    Number of unique control sets:       155
 
 IO Utilization: 
@@ -894,9 +867,9 @@ Clock Information:
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------+-------+
 Clock Signal                                                                                                                                                                   | Clock buffer(FF name)                         | Load  |
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------+-------+
-clk                                                                                                                                                                            | BUFGP                                         | 129   |
+clk                                                                                                                                                                            | BUFGP                                         | 147   |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_606_o(mem/Mmux_cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_606_o11:O)  | NONE(*)(mem/cache[0]_data_0)                  | 12    |
-mem/buffer_mem_clk                                                                                                                                                             | BUFG                                          | 711   |
+mem/buffer_mem_clk                                                                                                                                                             | BUFG                                          | 703   |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_3093_o(mem/Mmux_cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_3093_o11:O)| NONE(*)(mem/cache[15]_tag_1)                  | 12    |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2924_o(mem/Mmux_cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2924_o11:O)| NONE(*)(mem/cache[14]_tag_0)                  | 12    |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2755_o(mem/Mmux_cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2755_o11:O)| NONE(*)(mem/cache[13]_tag_0)                  | 12    |
@@ -960,9 +933,9 @@ Timing Summary:
 ---------------
 Speed Grade: -3
 
-   Minimum period: 4.712ns (Maximum Frequency: 212.227MHz)
-   Minimum input arrival time before clock: 4.568ns
-   Maximum output required time after clock: 1.151ns
+   Minimum period: 4.438ns (Maximum Frequency: 225.342MHz)
+   Minimum input arrival time before clock: 4.304ns
+   Maximum output required time after clock: 0.700ns
    Maximum combinational path delay: No path found
 
 Timing Details:
@@ -971,21 +944,21 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clk'
-  Clock period: 4.712ns (frequency: 212.227MHz)
-  Total number of paths / destination ports: 128696 / 219
+  Clock period: 4.438ns (frequency: 225.342MHz)
+  Total number of paths / destination ports: 146835 / 253
 -------------------------------------------------------------------------
-Delay:               4.712ns (Levels of Logic = 31)
-  Source:            execute.isRunning (FF)
-  Destination:       execute.pointer_2 (FF)
+Delay:               4.438ns (Levels of Logic = 31)
+  Source:            execute.initDelay_0 (FF)
+  Destination:       execute.initDelay_5 (FF)
   Source Clock:      clk rising
   Destination Clock: clk rising
 
-  Data Path: execute.isRunning to execute.pointer_2
+  Data Path: execute.initDelay_0 to execute.initDelay_5
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q             106   0.361   0.413  execute.isRunning (execute.isRunning)
-     LUT3:I2->O            1   0.097   0.000  Mmux_execute.initDelay[31]_GND_6_o_mux_1_OUT111 (Mmux_execute.initDelay[31]_GND_6_o_mux_1_OUT11)
+     FD:C->Q               6   0.361   0.402  execute.initDelay_0 (execute.initDelay_0)
+     LUT3:I1->O            1   0.097   0.000  Mmux_execute.initDelay[31]_GND_6_o_mux_1_OUT111 (Mmux_execute.initDelay[31]_GND_6_o_mux_1_OUT11)
      MUXCY:S->O            1   0.353   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<0> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<0>)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<1> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<1>)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<2> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<2>)
@@ -1011,15 +984,15 @@ Delay:               4.712ns (Levels of Logic = 31)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<22> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<22>)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<23> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<23>)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<24> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<24>)
-     XORCY:CI->O           3   0.370   0.521  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_xor<25> (execute.initDelay[31]_GND_6_o_sub_6_OUT<25>)
-     LUT3:I0->O            1   0.097   0.683  execute.isRunning_GND_6_o_AND_802_o10 (execute.isRunning_GND_6_o_AND_802_o11)
-     LUT6:I1->O           76   0.097   0.409  execute.isRunning_GND_6_o_AND_802_o12 (execute.isRunning_GND_6_o_AND_802_o)
-     LUT6:I5->O            1   0.097   0.556  Mmux_execute.pointer[7]_execute.pointer[7]_mux_58_OUT1091_SW2 (N94)
-     LUT6:I2->O            1   0.097   0.000  Mmux_execute.pointer[7]_execute.pointer[7]_mux_58_OUT61 (execute.pointer[7]_execute.pointer[7]_mux_58_OUT<2>)
-     FD:D                      0.008          execute.pointer_2
+     XORCY:CI->O           5   0.370   0.530  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_xor<25> (execute.initDelay[31]_GND_6_o_sub_6_OUT<25>)
+     LUT3:I0->O            3   0.097   0.693  execute.isRunning_GND_6_o_AND_806_o10 (execute.isRunning_GND_6_o_AND_806_o11)
+     LUT6:I1->O            2   0.097   0.299  execute.isRunning_GND_6_o_AND_806_o12_1 (execute.isRunning_GND_6_o_AND_806_o12)
+     LUT6:I5->O            2   0.097   0.383  Mmux_execute.initDelay[31]_execute.initDelay[31]_mux_55_OUT283 (Mmux_execute.initDelay[31]_execute.initDelay[31]_mux_55_OUT283)
+     LUT5:I3->O            1   0.097   0.000  Mmux_execute.initDelay[31]_execute.initDelay[31]_mux_55_OUT284 (execute.initDelay[31]_execute.initDelay[31]_mux_55_OUT<5>)
+     FDS:D                     0.008          execute.initDelay_5
     ----------------------------------------
-    Total                      4.712ns (2.129ns logic, 2.583ns route)
-                                       (45.2% logic, 54.8% route)
+    Total                      4.438ns (2.129ns logic, 2.309ns route)
+                                       (48.0% logic, 52.0% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_606_o'
@@ -1046,29 +1019,30 @@ Delay:               1.915ns (Levels of Logic = 2)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'mem/buffer_mem_clk'
-  Clock period: 3.613ns (frequency: 276.788MHz)
-  Total number of paths / destination ports: 29233 / 2030
+  Clock period: 3.855ns (frequency: 259.383MHz)
+  Total number of paths / destination ports: 30530 / 1998
 -------------------------------------------------------------------------
-Delay:               3.613ns (Levels of Logic = 5)
-  Source:            mem/mem_addr_1 (FF)
-  Destination:       mem/mem/output_7 (FF)
+Delay:               3.855ns (Levels of Logic = 6)
+  Source:            mem/mem_addr_0 (FF)
+  Destination:       mem/mem/bufferOut_7 (FF)
   Source Clock:      mem/buffer_mem_clk rising
   Destination Clock: mem/buffer_mem_clk rising
 
-  Data Path: mem/mem_addr_1 to mem/mem/output_7
+  Data Path: mem/mem_addr_0 to mem/mem/bufferOut_7
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDR:C->Q              1   0.361   0.683  mem/mem_addr_1 (mem/mem_addr_1)
-     LUT5:I0->O          201   0.097   0.826  mem/mem/Mmux_n068721 (mem/mem/n0687<1>)
-     LUT6:I0->O            1   0.097   0.556  mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_142 (mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_142)
-     LUT6:I2->O            1   0.097   0.511  mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_9 (mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_9)
-     LUT6:I3->O            1   0.097   0.000  mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_2_f7_G (N118)
-     MUXF7:I1->O           1   0.279   0.000  mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_2_f7 (mem/mem/addr[7]_X_10_o_wide_mux_2_OUT<0>)
-     FDRE:D                    0.008          mem/mem/output_0
+     FDR:C->Q              1   0.361   0.683  mem/mem_addr_0 (mem/mem_addr_0)
+     LUT5:I0->O          239   0.097   0.518  mem/mem/Mmux_addr[7]_GND_10_o_mux_1_OUT11 (mem/mem/addr[7]_GND_10_o_mux_1_OUT<0>)
+     LUT6:I4->O            1   0.097   0.556  mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_144 (mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_144)
+     LUT6:I2->O            1   0.097   0.556  mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_91 (mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_91)
+     LUT6:I2->O            1   0.097   0.295  mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_4 (mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_4)
+     LUT6:I5->O            1   0.097   0.295  mem/mem/Mmux_addr[7]_X_10_o_wide_mux_2_OUT_2_f7 (mem/mem/addr[7]_X_10_o_wide_mux_2_OUT<0>)
+     LUT4:I3->O            1   0.097   0.000  mem/mem/bufferOut_0_glue_set (mem/mem/bufferOut_0_glue_set)
+     FDR:D                     0.008          mem/mem/bufferOut_0
     ----------------------------------------
-    Total                      3.613ns (1.036ns logic, 2.577ns route)
-                                       (28.7% logic, 71.3% route)
+    Total                      3.855ns (0.951ns logic, 2.904ns route)
+                                       (24.7% logic, 75.3% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_3093_o'
@@ -1417,18 +1391,18 @@ Delay:               1.915ns (Levels of Logic = 2)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clk'
-  Total number of paths / destination ports: 84148 / 147
+  Total number of paths / destination ports: 93286 / 181
 -------------------------------------------------------------------------
-Offset:              4.568ns (Levels of Logic = 32)
+Offset:              4.304ns (Levels of Logic = 32)
   Source:            start (PAD)
-  Destination:       execute.pointer_2 (FF)
+  Destination:       execute.initDelay_5 (FF)
   Destination Clock: clk rising
 
-  Data Path: start to execute.pointer_2
+  Data Path: start to execute.initDelay_5
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O           106   0.001   0.629  start_IBUF (start_IBUF)
+     IBUF:I->O           102   0.001   0.629  start_IBUF (start_IBUF)
      LUT3:I0->O            1   0.097   0.000  Mmux_execute.initDelay[31]_GND_6_o_mux_1_OUT111 (Mmux_execute.initDelay[31]_GND_6_o_mux_1_OUT11)
      MUXCY:S->O            1   0.353   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<0> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<0>)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<1> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<1>)
@@ -1455,35 +1429,34 @@ Offset:              4.568ns (Levels of Logic = 32)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<22> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<22>)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<23> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<23>)
      MUXCY:CI->O           1   0.023   0.000  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<24> (Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_cy<24>)
-     XORCY:CI->O           3   0.370   0.521  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_xor<25> (execute.initDelay[31]_GND_6_o_sub_6_OUT<25>)
-     LUT3:I0->O            1   0.097   0.683  execute.isRunning_GND_6_o_AND_802_o10 (execute.isRunning_GND_6_o_AND_802_o11)
-     LUT6:I1->O           76   0.097   0.409  execute.isRunning_GND_6_o_AND_802_o12 (execute.isRunning_GND_6_o_AND_802_o)
-     LUT6:I5->O            1   0.097   0.556  Mmux_execute.pointer[7]_execute.pointer[7]_mux_58_OUT1091_SW2 (N94)
-     LUT6:I2->O            1   0.097   0.000  Mmux_execute.pointer[7]_execute.pointer[7]_mux_58_OUT61 (execute.pointer[7]_execute.pointer[7]_mux_58_OUT<2>)
-     FD:D                      0.008          execute.pointer_2
+     XORCY:CI->O           5   0.370   0.530  Msub_execute.initDelay[31]_GND_6_o_sub_6_OUT<31:0>_xor<25> (execute.initDelay[31]_GND_6_o_sub_6_OUT<25>)
+     LUT3:I0->O            3   0.097   0.693  execute.isRunning_GND_6_o_AND_806_o10 (execute.isRunning_GND_6_o_AND_806_o11)
+     LUT6:I1->O            2   0.097   0.299  execute.isRunning_GND_6_o_AND_806_o12_1 (execute.isRunning_GND_6_o_AND_806_o12)
+     LUT6:I5->O            2   0.097   0.383  Mmux_execute.initDelay[31]_execute.initDelay[31]_mux_55_OUT283 (Mmux_execute.initDelay[31]_execute.initDelay[31]_mux_55_OUT283)
+     LUT5:I3->O            1   0.097   0.000  Mmux_execute.initDelay[31]_execute.initDelay[31]_mux_55_OUT284 (execute.initDelay[31]_execute.initDelay[31]_mux_55_OUT<5>)
+     FDS:D                     0.008          execute.initDelay_5
     ----------------------------------------
-    Total                      4.568ns (1.769ns logic, 2.799ns route)
-                                       (38.7% logic, 61.3% route)
+    Total                      4.304ns (1.769ns logic, 2.535ns route)
+                                       (41.1% logic, 58.9% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clk'
   Total number of paths / destination ports: 1 / 1
 -------------------------------------------------------------------------
-Offset:              1.151ns (Levels of Logic = 2)
-  Source:            execute.isRunning (FF)
+Offset:              0.700ns (Levels of Logic = 1)
+  Source:            mem_dump (FF)
   Destination:       done (PAD)
   Source Clock:      clk rising
 
-  Data Path: execute.isRunning to done
+  Data Path: mem_dump to done
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q             106   0.361   0.397  execute.isRunning (execute.isRunning)
-     INV:I->O              1   0.113   0.279  execute.isRunning_inv1_INV_0 (done_OBUF)
+     FD:C->Q              14   0.361   0.339  mem_dump (mem_dump)
      OBUF:I->O                 0.000          done_OBUF (done)
     ----------------------------------------
-    Total                      1.151ns (0.474ns logic, 0.677ns route)
-                                       (41.2% logic, 58.8% route)
+    Total                      0.700ns (0.361ns logic, 0.339ns route)
+                                       (51.6% logic, 48.4% route)
 
 =========================================================================
 
@@ -1495,7 +1468,7 @@ Clock to Setup on destination clock clk
                                                                                   | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock                                                                      |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ----------------------------------------------------------------------------------+---------+---------+---------+---------+
-clk                                                                               |    4.712|         |         |         |
+clk                                                                               |    4.438|         |         |         |
 mem/buffer_mem_clk                                                                |    2.917|         |         |         |
 mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_1038_o                          |         |    3.930|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_1207_o                          |         |    4.213|         |         |
@@ -1508,7 +1481,7 @@ mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_2221_o                        
 mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_2390_o                          |         |    2.900|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_2559_o                          |         |    3.596|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_2728_o                          |         |    2.766|         |         |
-mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_2897_o                          |         |    3.591|         |         |
+mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_2897_o                          |         |    3.414|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_3066_o                          |         |    3.308|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_531_o                           |         |    3.330|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_GND_7_o_MUX_700_o                           |         |    3.709|         |         |
@@ -1535,7 +1508,7 @@ mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2574
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2586_o|         |    3.860|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2743_o|         |    2.844|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2755_o|         |    3.850|         |         |
-mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2912_o|         |    3.507|         |         |
+mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2912_o|         |    3.330|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2924_o|         |    3.678|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_3081_o|         |    3.224|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_3093_o|         |    3.723|         |         |
@@ -1553,7 +1526,7 @@ Clock to Setup on destination clock mem/buffer_mem_clk
 Source Clock                                                                      |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ----------------------------------------------------------------------------------+---------+---------+---------+---------+
 clk                                                                               |    2.242|         |         |         |
-mem/buffer_mem_clk                                                                |    3.613|         |         |         |
+mem/buffer_mem_clk                                                                |    3.855|         |         |         |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_1065_o|         |    2.119|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_1234_o|         |    2.258|         |         |
 mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_1403_o|         |    2.248|         |         |
@@ -1737,8 +1710,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_1065_o
@@ -1779,8 +1752,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_1403_o
@@ -1800,8 +1773,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_1572_o
@@ -1821,8 +1794,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_1741_o
@@ -1863,8 +1836,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2079_o
@@ -1884,8 +1857,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2248_o
@@ -1905,8 +1878,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2417_o
@@ -1926,8 +1899,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2586_o
@@ -1947,8 +1920,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2755_o
@@ -1968,8 +1941,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_2924_o
@@ -2010,8 +1983,8 @@ Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheD
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk            |         |         |    1.681|         |
-mem/n0222      |         |         |    1.477|         |
+clk            |         |         |    2.069|         |
+mem/n0222      |         |         |    1.865|         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock mem/cacheDriver.prevRequestFromMem[2]_cacheDriver.prevRequestFromMem[2]_MUX_606_o
@@ -2087,15 +2060,15 @@ clk            |    0.752|         |         |         |
 =========================================================================
 
 
-Total REAL time to Xst completion: 60.00 secs
-Total CPU time to Xst completion: 58.22 secs
+Total REAL time to Xst completion: 64.00 secs
+Total CPU time to Xst completion: 62.21 secs
  
 --> 
 
 
-Total memory usage is 526760 kilobytes
+Total memory usage is 527156 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :  342 (   0 filtered)
+Number of warnings :  314 (   0 filtered)
 Number of infos    :    8 (   0 filtered)
 
