@@ -1,3 +1,0 @@
-vhdl work "full_adder.vhd"
-vhdl work "eight_bit_adder.vhd"
-vhdl work "memory.vhd"

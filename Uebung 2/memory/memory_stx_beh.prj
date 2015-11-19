@@ -1,3 +1,0 @@
-vhdl isim_temp "full_adder.vhd"
-vhdl isim_temp "eight_bit_adder.vhd"
-vhdl isim_temp "memory.vhd"
