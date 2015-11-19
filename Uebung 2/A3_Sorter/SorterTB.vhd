@@ -1,22 +1,3 @@
---------------------------------------------------------------------------------
--- Diese Testbench versucht die Sortierung einer Memory.dat datei durchzuführen.
--- Sortiert werden sollen die zweite bis zur fünften Adresse.
--- Der Inhalt der Adressen ist:
--- 4 3 2 1 (dezimale Darstellung)
--- Sortert_
--- 1 2 3 4 (dezimale Darstellung)
---
--- Unser Test führt die notwendigen Kommandos aus, um die dump.dat-Datei zu erzeugen.
--- Das Ergebnis muss manuell überprüft werden.
---
--- 
---
--- Create Date:   14:54:35 11/18/2015
--- Design Name:   
--- Module Name:   /home/daalta/Rechnerarchitektur2015/Uebung 2/A3_Sorter/SorterTB.vhd
--- Project Name:  A3_Sorter
-
---------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_unsigned.all;
@@ -98,23 +79,26 @@ BEGIN
       
       report "Input auf gesamten Speicherbereich setzen und Sortierung starten...";
       
-      addr_start  <= "00000001";
-      addr_end    <= "00000100";
-      start       <= '1';
-      
-      wait for clk_period * 3;
-      
-      start <= '0';
+      addr_start  <= "00000000";
+      addr_end    <= "00010000";
+		
+		wait until rising_edge(clk);
+		wait for clk_period*10;
+		
+      start       <= '1';		
+
+		wait until rising_edge(clk);
+		wait for clk_period*10;
       
       report "Sortierung gestartet. Warte auf done-Leitung..";
+		
+		start       <= '0';
 
       wait until done = '1';
-      
-      wait for clk_period * 30;
-      
-      report "Testbench fertig. Manuell überprüfen?";
-      
-      wait;
+		
+		wait for clk_period*1000;
+
+		report "Done erhalten! Damit ist die Testbench abgeschlossen, bitte überprüfen Sie anhand der der Eingabe ==> memory.dat und dump.dat ob der Sortiervorgang funktioniert hat!" severity failure;
       
    end process;
 
