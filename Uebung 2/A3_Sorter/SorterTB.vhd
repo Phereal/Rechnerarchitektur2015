@@ -1,3 +1,9 @@
+-- Diese Test ist eine einfache Möglichkeit um zu überprüfen, ob die eingabe memory.dat im vergleich zu
+-- dump.dat sortiert wurde. Die Überprüfung muss händisch durchgeführt werden, ist aber auch relativ einfach
+-- da dass erste eleemnt von memory.dat dass größte ist und an der 32. Stelle in dujmp.dat stehen muss, wenn die
+-- Sortierung erfolgreich war! Ein testdurchlauf ist genügend, auf Grenzwerte wird hier nicht getestet,
+-- da dies die Leisutngsmöglichkeiten des Testgerätes überschreitet!
+
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_unsigned.all;
