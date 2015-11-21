@@ -1,3 +1,6 @@
 /Register.class
 /WriteMem.class
 /IllegalOperator.class
+/Mnemonic.class
+/Parser.class
+/Memory.class
