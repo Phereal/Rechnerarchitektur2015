@@ -1,0 +1,37 @@
+eax := eax + edi
+ecx := ecx + edx
+eax := eax - edi
+ecx := ecx - edx
+if !ZF then IP := IP + 3
+if !ZF then IP := IP + -16
+eex := ecx
+MEM[edi + 64] := eex
+esi := MEM[esi + 4]
+Prozessor anhalten
+Error
+eax := eax + edi
+ecx := ecx + edx
+eax := eax - edi
+ecx := ecx - edx
+if !ZF then IP := IP + 3
+if !ZF then IP := IP + -16
+eex := ecx
+MEM[edi + 64] := eex
+esi := MEM[esi + 4]
+MEM[edi + 64] := eex
+esi := MEM[esi + 4]
+MEM[edi + 64] := eex
+esi := MEM[esi + 4]
+MEM[edi + 64] := eex
+esi := MEM[esi + 4]
+Prozessor anhalten
+Error
+eax := eax + edi
+ecx := ecx + edx
+eax := eax - edi
+ecx := ecx - edx
+if !ZF then IP := IP + 3
+if !ZF then IP := IP + -16
+eex := ecx
+MEM[edi + -16] := eex
+Error
