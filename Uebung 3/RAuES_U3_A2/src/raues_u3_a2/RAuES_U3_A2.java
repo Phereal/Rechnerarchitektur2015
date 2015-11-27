@@ -39,6 +39,8 @@ public class RAuES_U3_A2 {
     try
     {
       processor = new Processor(memBuffer);
+      
+      System.out.println("\n\nExecute:");
       processor.execute();
     }
     catch(Exception e)

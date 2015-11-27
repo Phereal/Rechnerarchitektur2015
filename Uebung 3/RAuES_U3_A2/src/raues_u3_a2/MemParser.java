@@ -147,20 +147,20 @@ public class MemParser
     return result;
   }
 
-  private static void printError()
+  public static void printError()
   {
     System.out.println("Error");
   }
 
-  private static void printInstruction(Instruction inst, RegisterSet registerSet) throws Exception
+  public static void printInstruction(Instruction inst, RegisterSet registerSet) throws Exception
   {
     String s;
     
-    s = inst.getInstructionString(registerSet);
+    s = inst.getInstructionString(registerSet, false);
 
     if (s == null)
     {
-      throw new Exception("Fehler");
+      throw new Exception("Fehler in MemParser.printInstruction(): instruction String ist null");
     }
     else
     {
