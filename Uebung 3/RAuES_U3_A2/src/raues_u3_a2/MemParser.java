@@ -12,11 +12,7 @@ public class MemParser
     ERROR, OPCODE, MIDDLE, DISPLACEMENT
   }
 
-  //private enum Instruction
-  //{
-  //  ADD, SUB, JNZ, RRMOV, RMMOV, MRMOV, HLT, ERROR
-  //}
-  public static boolean parse(byte memBuffer[] ,RegisterSet registerSet)
+  public static boolean parse(byte memBuffer[], RegisterSet registerSet)
   {
     ParseStates parseState = ParseStates.OPCODE;
     Instruction instruction = new Instruction();
@@ -34,8 +30,6 @@ public class MemParser
       {
         throw new Exception("Fehler in MemParser.parse(): memBuffer ist leer");
       }
-      
-      
 
       while (currentByte < memBuffer.length)
       {
@@ -107,7 +101,7 @@ public class MemParser
               else
               {
                 // should not be possible
-                throw new Exception("Instruction Parsing error");
+                throw new Exception("Fehler in MemParser.parse(): Instruction Parsing error");
               }
             }
             else
@@ -127,23 +121,23 @@ public class MemParser
             break;
         }
       }
-      
-      if(parseState != ParseStates.OPCODE)
+
+      if (parseState != ParseStates.OPCODE)
       {
-        if(parseState != ParseStates.ERROR)
+        if (parseState != ParseStates.ERROR)
         {
           throw new Exception("Fehler in MemParser.parse(): Parsing-Schleife wurde mit ungueltigem Zustand beendet.");
         }
         printError();
       }
-      
+
       result = true;
     }
     catch (Exception e)
     {
       System.out.println(e);
     }
-    
+
     return result;
   }
 
@@ -155,7 +149,7 @@ public class MemParser
   public static void printInstruction(Instruction inst, RegisterSet registerSet) throws Exception
   {
     String s;
-    
+
     s = inst.getInstructionString(registerSet, false);
 
     if (s == null)

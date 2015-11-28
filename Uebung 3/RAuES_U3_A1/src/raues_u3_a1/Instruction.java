@@ -452,7 +452,5 @@ public class Instruction
     }
     return result;
   }
-
-
   
 }

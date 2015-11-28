@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Entwicklung/Projects/RAuES_U3_A1/src/raues_u3_a1/Processor.java</file>
+            <file>file:/C:/Entwicklung/Projects/RAuES_U3_A1/src/raues_u3_a1/MemParser.java</file>
+            <file>file:/C:/Entwicklung/Projects/RAuES_U3_A1/src/raues_u3_a1/RAuES_U3_A1.java</file>
+            <file>file:/C:/Entwicklung/Projects/RAuES_U3_A1/src/raues_u3_a1/MemReader.java</file>
+            <file>file:/C:/Entwicklung/Projects/RAuES_U3_A1/src/raues_u3_a1/RegisterSet.java</file>
+            <file>file:/C:/Entwicklung/Projects/RAuES_U3_A1/src/raues_u3_a1/Register.java</file>
+            <file>file:/C:/Entwicklung/Projects/RAuES_U3_A1/src/raues_u3_a1/Instruction.java</file>
+        </group>
     </open-files>
 </project-private>

@@ -56,11 +56,11 @@ public class Processor
   {
     int result;
     this.init();
-    
+
     do
     {
       result = executeStep();
-    } while(result > 0);
+    } while (result > 0);
 
     return result;
   }
@@ -74,9 +74,9 @@ public class Processor
     if (inst.isComplete())
     {
       dumpMem();
-      
+
       result = inst.execute(m_IP, m_ZF, m_RegisterSet, m_Memory);
-      
+
       printInstruction(inst);
       printIP();
       printRegisterSet();
@@ -183,10 +183,10 @@ public class Processor
     m_ZF.write((byte) 0x00);
     m_RegisterSet.init((byte) 0x00);
   }
-  
+
   private void dumpMem()
   {
-    for(int i = 0; i < m_MemoryDump.length; ++i)
+    for (int i = 0; i < m_MemoryDump.length; ++i)
     {
       m_MemoryDump[i] = m_Memory[i];
     }

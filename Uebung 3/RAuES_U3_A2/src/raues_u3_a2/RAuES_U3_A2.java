@@ -1,66 +1,53 @@
 package raues_u3_a2;
 
-
-
-
 /**
  *
  * @author Steffen
  */
-public class RAuES_U3_A2 {
+public class RAuES_U3_A2
+{
 
   /**
    * @param args the command line arguments
    */
-  public static void main(String[] args) {
-    
-    if (args.length != 1) {
+  public static void main(String[] args)
+  {
+    Processor processor;
+    byte memBuffer[];
+
+    if ((args == null) || (args.length != 1))
+    {
       System.out.println("Fehler: Kein memFile angegeben.");
       System.out.println("Richtiger Programmaufruf: java programm dateiname");
       System.exit(1);
     }
-    
-    
-    Processor processor;
-    byte memBuffer[];
-    
+
     memBuffer = MemReader.readMemFile(args[0]);
-    if ( memBuffer.length <= 0) {
+    if ((memBuffer == null) || (memBuffer.length <= 0))
+    {
       System.out.println("Fehler: Konnte memFile nicht lesen.");
       System.exit(1);
     }
-    
-//    for(int i=0; i < memBuffer.length; ++i)
-//    {
-//      System.out.println(i + ":0x" + String.format("%2X", memBuffer[i]).replace(' ', '0') );
-//    }
-    
-    
     try
     {
+      System.out.println("==================================================");
+      System.out.println(" Lese Speicherdatei ein:");
+      System.out.println("==================================================");
       processor = new Processor(memBuffer);
-      
-      System.out.println("\n\nExecute:");
+      System.out.println("==================================================");
+
+      System.out.println("\n\n==================================================");
+      System.out.println(" Starte Simulation:");
+      System.out.println("==================================================");
       int res = processor.execute();
-      System.out.println("Prozessor returned " + res);
+      System.out.println("Simulation endete mit " + res + ".");
     }
-    catch(Exception e)
+    catch (Exception e)
     {
       System.out.println(e);
       System.exit(1);
     }
-    
-
-    
-    
-    
-    
-    
-    
-    
 
     System.exit(0);
   }
-
-  
 }

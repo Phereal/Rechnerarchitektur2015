@@ -28,7 +28,7 @@ public final class MemReader
   public static byte[] readMemFile(String fileName)
   {
     byte memBuffer[];
-    
+
     try
     {
       memFile = new File(fileName);
@@ -43,7 +43,7 @@ public final class MemReader
 
       if (memSize <= 0)
       {
-        throw new Exception("Fehler in MemReader.readMemFile(): MemFile ist leer.");
+        throw new Exception("MemFile ist leer.");
       }
 
       memBuffer = new byte[(int) memSize];
@@ -51,7 +51,7 @@ public final class MemReader
       {
         if (memBIS.available() < 1)
         {
-          throw new Exception("Fehler: Lesen von memFile Buffer fehlgeschlagen");
+          throw new Exception("Lesen von memFile Buffer fehlgeschlagen");
         }
         memBuffer[byteRead] = (byte) memBIS.read();
       }
@@ -61,25 +61,33 @@ public final class MemReader
     {
       byteRead = 0;
       memBuffer = null;
-      System.out.println(e);
+      System.out.print("Fehler in MemReader.readMemFile():");
+      System.out.print(e);
+      System.out.println();
     }
     catch (FileNotFoundException e)
     {
       byteRead = 0;
       memBuffer = null;
-      System.out.println(e);
+      System.out.print("Fehler in MemReader.readMemFile():");
+      System.out.print(e);
+      System.out.println();
     }
     catch (IOException e)
     {
       byteRead = 0;
       memBuffer = null;
-      System.out.println(e);
+      System.out.print("Fehler in MemReader.readMemFile():");
+      System.out.print(e);
+      System.out.println();
     }
     catch (Exception e)
     {
       byteRead = 0;
       memBuffer = null;
-      System.out.println(e);
+      System.out.print("Fehler in MemReader.readMemFile():");
+      System.out.print(e);
+      System.out.println();
     }
     finally
     {

@@ -109,8 +109,7 @@ public class Instruction
 
     return result;
   }
-  
-  
+
   public String getInstructionString(RegisterSet registerSet, boolean useHex)
   {
     String result;
@@ -135,7 +134,7 @@ public class Instruction
 
       case JNZ:
         result = "if !ZF then IP := IP + ";
-        if(useHex)
+        if (useHex)
         {
           result += String.format("%2x", m_Dist);
         }
@@ -155,7 +154,7 @@ public class Instruction
         result = "MEM[";
         result += registerSet.getRegisterName(m_RD);
         result += " + ";
-        if(useHex)
+        if (useHex)
         {
           result += String.format("%2x", m_Displacement);
         }
@@ -172,7 +171,7 @@ public class Instruction
         result += " := MEM[";
         result += registerSet.getRegisterName(m_RS);
         result += " + ";
-        if(useHex)
+        if (useHex)
         {
           result += String.format("%2x", m_Displacement);
         }
@@ -230,8 +229,7 @@ public class Instruction
     {
       result = 1;
     }
-    
-    
+
     if ((result == 0) && (argCnt == 2))
     {
       result = -1;
@@ -248,11 +246,11 @@ public class Instruction
     }
 
     // cleanup
-    if(result == -1)
+    if (result == -1)
     {
       this.clear();
     }
-    
+
     return result;
   }
 
@@ -423,8 +421,6 @@ public class Instruction
     return valid;
   }
 
-
-
   public static boolean opCodeValid(byte opCode)
   {
     boolean valid;
@@ -593,7 +589,6 @@ public class Instruction
     return result;
   }
 
-  
   public int execute(Register ip, Register zf, RegisterSet regs, byte[] mem) throws Exception
   {
     // todo: ZF nach redem befehl zuruecksetzen?
@@ -601,88 +596,88 @@ public class Instruction
     int tmpEa;
     int tmpIp = ip.read();
     int tmpIpJnz;
-    
-    if(this.isComplete())
+
+    if (this.isComplete())
     {
       tmpIp += this.getInstructionSize();
-      switch(m_Instruction)
+      switch (m_Instruction)
       {
         case ADD:
-          regs.write(m_RD, (byte)(regs.read(m_RD) + regs.read(m_RS)));
-          if(regs.read(m_RD) == 0)
+          regs.write(m_RD, (byte) (regs.read(m_RD) + regs.read(m_RS)));
+          if (regs.read(m_RD) == 0)
           {
-            zf.write((byte)1);
+            zf.write((byte) 1);
           }
           else
           {
-            zf.write((byte)0);
+            zf.write((byte) 0);
           }
           result = 1;
           break;
-          
+
         case SUB:
-          regs.write(m_RD, (byte)(regs.read(m_RD) - regs.read(m_RS)));
-          if(regs.read(m_RD) == 0)
+          regs.write(m_RD, (byte) (regs.read(m_RD) - regs.read(m_RS)));
+          if (regs.read(m_RD) == 0)
           {
-            zf.write((byte)1);
+            zf.write((byte) 1);
           }
           else
           {
-            zf.write((byte)0);
+            zf.write((byte) 0);
           }
           result = 1;
           break;
-          
+
         case JNZ:
-          tmpIpJnz = (int)ip.read() + (int)m_Dist;
-          if((tmpIpJnz >= 0) && (tmpIpJnz < mem.length))
+          tmpIpJnz = (int) ip.read() + (int) m_Dist;
+          if ((tmpIpJnz >= 0) && (tmpIpJnz < mem.length))
           {
-            if(zf.read() == (byte)0)
+            if (zf.read() == (byte) 0)
             {
               tmpIp = tmpIpJnz;
             }
             result = 1;
           }
           break;
-          
+
         case RRMOV:
           regs.write(m_RD, regs.read(m_RS));
           result = 1;
           break;
-          
+
         case RMMOV:
-          tmpEa = (int)regs.read(m_RD) + m_Displacement;
-          if((tmpEa >= 0) && (tmpEa < mem.length))
+          tmpEa = (int) regs.read(m_RD) + m_Displacement;
+          if ((tmpEa >= 0) && (tmpEa < mem.length))
           {
             mem[tmpEa] = regs.read(m_RS);
             result = 1;
           }
           break;
-          
+
         case MRMOV:
-          tmpEa = (int)regs.read(m_RS) + m_Displacement;
-          if((tmpEa >= 0) && (tmpEa < mem.length))
+          tmpEa = (int) regs.read(m_RS) + m_Displacement;
+          if ((tmpEa >= 0) && (tmpEa < mem.length))
           {
             regs.write(m_RD, mem[tmpEa]);
             result = 1;
           }
           break;
-          
+
         case HLT:
           result = 0;
           break;
-          
+
         default:
           break;
       }
     }
-    
-    if(result >= 0)
+
+    if (result >= 0)
     {
-      ip.write((byte)tmpIp);
+      ip.write((byte) tmpIp);
     }
-    
+
     return result;
   }
-  
+
 }

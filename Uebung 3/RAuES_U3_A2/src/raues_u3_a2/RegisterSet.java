@@ -29,10 +29,10 @@ public class RegisterSet
       throw e;
     }
   }
-  
+
   public String getRegisterName(byte register)
   {
-    if(register >= 0 && register < K_REGISTER_COUNT)
+    if (register >= 0 && register < K_REGISTER_COUNT)
     {
       return m_RegisterSet[register].getName();
     }
@@ -41,10 +41,10 @@ public class RegisterSet
       return null;
     }
   }
-  
+
   public byte read(byte register) throws Exception
   {
-    if(register >= 0 && register < K_REGISTER_COUNT)
+    if (register >= 0 && register < K_REGISTER_COUNT)
     {
       return m_RegisterSet[register].read();
     }
@@ -53,10 +53,10 @@ public class RegisterSet
       throw new Exception("Fehler in RegisterSet.read(): Ungueltige Register Adresse.");
     }
   }
-  
+
   public void write(byte register, byte value) throws Exception
   {
-    if(register >= 0 && register < K_REGISTER_COUNT)
+    if (register >= 0 && register < K_REGISTER_COUNT)
     {
       m_RegisterSet[register].write(value);
     }
@@ -65,10 +65,10 @@ public class RegisterSet
       throw new Exception("Fehler in RegisterSet.write(): Ungueltige Register Adresse.");
     }
   }
-  
+
   public void init(byte value)
   {
-    for(int i = 0; i < m_RegisterSet.length; ++i)
+    for (int i = 0; i < m_RegisterSet.length; ++i)
     {
       m_RegisterSet[i].write(value);
     }
