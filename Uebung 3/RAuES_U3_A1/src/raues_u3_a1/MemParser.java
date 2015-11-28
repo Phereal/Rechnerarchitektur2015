@@ -7,16 +7,14 @@ package raues_u3_a1;
 public class MemParser
 {
 
+  private static final boolean K_DEBUG = false;
+
   private enum ParseStates
   {
     ERROR, OPCODE, MIDDLE, DISPLACEMENT
   }
 
-  //private enum Instruction
-  //{
-  //  ADD, SUB, JNZ, RRMOV, RMMOV, MRMOV, HLT, ERROR
-  //}
-  public static boolean parse(byte memBuffer[] ,RegisterSet registerSet)
+  public static boolean parse(byte memBuffer[], RegisterSet registerSet)
   {
     ParseStates parseState = ParseStates.OPCODE;
     Instruction instruction = new Instruction();
@@ -34,8 +32,6 @@ public class MemParser
       {
         throw new Exception("Fehler in MemParser.parse(): memBuffer ist leer");
       }
-      
-      
 
       while (currentByte < memBuffer.length)
       {
@@ -50,6 +46,7 @@ public class MemParser
               {
                 if ((currentByte + 1) >= memBuffer.length)
                 {
+                  currentByte--; // make sure we dont leave the loop yet
                   parseState = ParseStates.ERROR;
                 }
                 else
@@ -59,6 +56,7 @@ public class MemParser
               }
               else
               {
+                printDebug(lastInstruction);
                 printInstruction(instruction, registerSet);
               }
             }
@@ -76,6 +74,7 @@ public class MemParser
               {
                 if ((currentByte + 1) >= memBuffer.length)
                 {
+                  currentByte--; // make sure we dont leave the loop yet
                   parseState = ParseStates.ERROR;
                 }
                 else
@@ -85,6 +84,7 @@ public class MemParser
               }
               else
               {
+                printDebug(lastInstruction);
                 printInstruction(instruction, registerSet);
                 parseState = ParseStates.OPCODE;
               }
@@ -101,13 +101,14 @@ public class MemParser
             {
               if (instruction.isComplete())
               {
+                printDebug(lastInstruction);
                 printInstruction(instruction, registerSet);
                 parseState = ParseStates.OPCODE;
               }
               else
               {
                 // should not be possible
-                throw new Exception("Instruction Parsing error");
+                throw new Exception("Fehler in MemParser.parse(): Instruction Parsing error");
               }
             }
             else
@@ -118,6 +119,7 @@ public class MemParser
             break;
 
           case ERROR:
+            printDebug(lastInstruction);
             printError();
             currentByte = lastInstruction + 1;
             parseState = ParseStates.OPCODE;
@@ -127,24 +129,33 @@ public class MemParser
             break;
         }
       }
-      
-      if(parseState != ParseStates.OPCODE)
+
+      if (parseState != ParseStates.OPCODE)
       {
-        if(parseState != ParseStates.ERROR)
+        if (parseState != ParseStates.ERROR)
         {
           throw new Exception("Fehler in MemParser.parse(): Parsing-Schleife wurde mit ungueltigem Zustand beendet.");
         }
+        printDebug(lastInstruction);
         printError();
       }
-      
+
       result = true;
     }
     catch (Exception e)
     {
       System.out.println(e);
     }
-    
+
     return result;
+  }
+
+  private static void printDebug(int line)
+  {
+    if (K_DEBUG)
+    {
+      System.out.print(String.format("%2d:", line).replace(' ', '0') + " ");
+    }
   }
 
   private static void printError()
@@ -155,12 +166,12 @@ public class MemParser
   private static void printInstruction(Instruction inst, RegisterSet registerSet) throws Exception
   {
     String s;
-    
+
     s = inst.getInstructionString(registerSet);
 
     if (s == null)
     {
-      throw new Exception("Fehler");
+      throw new Exception("Fehler in MemParser.printInstruction(): Ungueltiger Instruction String.");
     }
     else
     {

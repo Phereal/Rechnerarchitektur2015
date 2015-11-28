@@ -12,11 +12,6 @@ public class Instruction
     ERROR, ADD, SUB, JNZ, RRMOV, RMMOV, MRMOV, HLT
   }
 
-  private enum InstructionTypes
-  {
-    ERROR, REGISTER, PSEUDODIRECT, BASE, SPECIAL
-  }
-
   private static final byte K_OP_CODE_ADD = (byte) 0x01;
   private static final byte K_OP_CODE_SUB = (byte) 0x29;
   private static final byte K_OP_CODE_JNZ = (byte) 0x75;
@@ -38,10 +33,6 @@ public class Instruction
   private byte m_Dist = 0;
 
   private InstructionSet m_Instruction = InstructionSet.ERROR;
-
-  Instruction()
-  {
-  }
 
   public InstructionSet getInstruction()
   {
@@ -396,29 +387,8 @@ public class Instruction
     this.m_RS = 0;
     this.m_RD = 0;
     this.m_Dist = 0;
-  }
-
-  public boolean opCodeValid()
-  {
-    boolean valid;
-
-    switch (m_OpCode)
-    {
-      case K_OP_CODE_ADD:
-      case K_OP_CODE_SUB:
-      case K_OP_CODE_JNZ:
-      case K_OP_CODE_RRM_RMM:
-      case K_OP_CODE_MRM:
-      case K_OP_CODE_HLT:
-        valid = true;
-        break;
-
-      default:
-        valid = false;
-        break;
-    }
-
-    return valid;
+    
+    this.m_Instruction = InstructionSet.ERROR;
   }
 
   public static boolean opCodeValid(byte opCode)
@@ -439,51 +409,6 @@ public class Instruction
       default:
         valid = false;
         break;
-    }
-
-    return valid;
-  }
-
-  public static boolean middleValid(byte opCode, byte middle)
-  {
-    boolean valid = false;
-
-    switch (opCode)
-    {
-      case K_OP_CODE_ADD:
-      case K_OP_CODE_SUB:
-        break;
-
-      case K_OP_CODE_JNZ:
-        break;
-
-      case K_OP_CODE_RRM_RMM:
-        break;
-
-      case K_OP_CODE_MRM:
-        break;
-
-      case K_OP_CODE_HLT:
-        valid = true;
-        break;
-
-      default:
-        valid = false;
-        break;
-    }
-
-    return valid;
-  }
-
-  public static boolean isValid(byte opCode, byte middle, byte displacement)
-  {
-    boolean valid;
-
-    valid = opCodeValid(opCode);
-
-    if (valid == true)
-    {
-      valid = true;
     }
 
     return valid;

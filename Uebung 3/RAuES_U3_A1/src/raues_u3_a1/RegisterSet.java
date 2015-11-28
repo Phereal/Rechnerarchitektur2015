@@ -41,13 +41,5 @@ public class RegisterSet
       return null;
     }
   }
-  
-  public void init(byte value)
-  {
-    for(int i = 0; i < m_RegisterSet.length; ++i)
-    {
-      m_RegisterSet[i].write(value);
-    }
-  }
 
 }

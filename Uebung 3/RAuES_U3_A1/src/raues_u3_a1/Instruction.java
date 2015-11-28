@@ -11,11 +11,6 @@ public class Instruction
   {
     ERROR, ADD, SUB, JNZ, RRMOV, RMMOV, MRMOV, HLT
   }
-  
-  private enum InstructionTypes
-  {
-    ERROR, REGISTER, PSEUDODIRECT, BASE, SPECIAL
-  }
 
   private static final byte K_OP_CODE_ADD = (byte) 0x01;
   private static final byte K_OP_CODE_SUB = (byte) 0x29;
@@ -36,23 +31,14 @@ public class Instruction
   private byte m_RS = 0;
   private byte m_RD = 0;
   private byte m_Dist = 0;
-  
+
   private InstructionSet m_Instruction = InstructionSet.ERROR;
 
-  Instruction()
-  {
-  }
-  
-  public InstructionSet getInstruction()
-  {
-    return m_Instruction;
-  }
-  
   public String getInstructionString(RegisterSet registerSet)
   {
     String result;
-    
-    switch(this.m_Instruction)
+
+    switch (this.m_Instruction)
     {
       case ADD:
         result = registerSet.getRegisterName(this.m_RD);
@@ -61,7 +47,7 @@ public class Instruction
         result += " + ";
         result += registerSet.getRegisterName(this.m_RS);
         break;
-        
+
       case SUB:
         result = registerSet.getRegisterName(this.m_RD);
         result += " := ";
@@ -69,18 +55,18 @@ public class Instruction
         result += " - ";
         result += registerSet.getRegisterName(this.m_RS);
         break;
-        
+
       case JNZ:
         result = "if !ZF then IP := IP + ";
         result += this.m_Dist;
         break;
-        
+
       case RRMOV:
         result = registerSet.getRegisterName(this.m_RD);
         result += " := ";
         result += registerSet.getRegisterName(this.m_RS);
         break;
-        
+
       case RMMOV:
         result = "MEM[";
         result += registerSet.getRegisterName(this.m_RD);
@@ -89,7 +75,7 @@ public class Instruction
         result += "] := ";
         result += registerSet.getRegisterName(this.m_RS);
         break;
-        
+
       case MRMOV:
         result = registerSet.getRegisterName(this.m_RD);
         result += " := MEM[";
@@ -98,17 +84,17 @@ public class Instruction
         result += this.m_Displacement;
         result += "]";
         break;
-        
+
       case HLT:
         result = "Prozessor anhalten";
         break;
-        
+
       case ERROR:
       default:
         result = null;
         break;
     }
-    
+
     return result;
   }
 
@@ -121,7 +107,7 @@ public class Instruction
       this.clear();
       this.m_OpCode = opCode;
       this.m_OpCodeOk = true;
-      if(this.isComplete())
+      if (this.isComplete())
       {
         this.m_Instruction = InstructionSet.HLT;
       }
@@ -151,7 +137,7 @@ public class Instruction
             result = true;
           }
           break;
-          
+
         case K_OP_CODE_SUB:
           if ((middle & 0xC0) == 0xC0)
           {
@@ -187,7 +173,7 @@ public class Instruction
           {
             instruction = InstructionSet.RMMOV;
             this.m_RD = (byte) (7); // edi
-            this.m_RS = (byte)((middle >> 3) & 0x07);
+            this.m_RS = (byte) ((middle >> 3) & 0x07);
             this.m_Dist = 0;
 
             result = true;
@@ -198,7 +184,7 @@ public class Instruction
           if (((middle & 0xC0) == 0x40) && ((middle & 0x07) == 0x06)) // MRMOV
           {
             instruction = InstructionSet.MRMOV;
-            this.m_RD = (byte)((middle >> 3) & 0x07);
+            this.m_RD = (byte) ((middle >> 3) & 0x07);
             this.m_RS = (byte) (6); // esi
             this.m_Dist = 0;
 
@@ -211,8 +197,8 @@ public class Instruction
           break;
       }
     }
-    
-    if(result)
+
+    if (result)
     {
       this.m_Instruction = instruction;
       this.m_2ndByte = middle;
@@ -227,17 +213,17 @@ public class Instruction
   public boolean setDisplacement(byte displacement)
   {
     boolean result = false;
-    
+
     if (this.m_OpCodeOk && this.m_2ndByteOk)
     {
-      if( !this.isComplete() )
+      if (!this.isComplete())
       {
         this.m_Displacement = displacement;
         this.m_DisplacementOk = true;
         result = true;
       }
     }
-    
+
     return result;
   }
 
@@ -254,35 +240,8 @@ public class Instruction
     this.m_RS = 0;
     this.m_RD = 0;
     this.m_Dist = 0;
-  }
 
-  public boolean opCodeValid()
-  {
-    boolean valid;
-
-    switch (m_OpCode)
-    {
-      case K_OP_CODE_ADD:
-      case K_OP_CODE_SUB:
-      case K_OP_CODE_JNZ:
-      case K_OP_CODE_RRM_RMM:
-      case K_OP_CODE_MRM:
-      case K_OP_CODE_HLT:
-        valid = true;
-        break;
-
-      default:
-        valid = false;
-        break;
-    }
-
-    return valid;
-  }
-
-  public boolean isValid()
-  {
-    boolean valid = false;
-    return valid;
+    m_Instruction = InstructionSet.ERROR;
   }
 
   public static boolean opCodeValid(byte opCode)
@@ -306,99 +265,6 @@ public class Instruction
     }
 
     return valid;
-  }
-
-  public static boolean middleValid(byte opCode, byte middle)
-  {
-    boolean valid = false;
-
-    switch (opCode)
-    {
-      case K_OP_CODE_ADD:
-      case K_OP_CODE_SUB:
-        break;
-
-      case K_OP_CODE_JNZ:
-        break;
-
-      case K_OP_CODE_RRM_RMM:
-        break;
-
-      case K_OP_CODE_MRM:
-        break;
-
-      case K_OP_CODE_HLT:
-        valid = true;
-        break;
-
-      default:
-        valid = false;
-        break;
-    }
-
-    return valid;
-  }
-
-  public static boolean isValid(byte opCode, byte middle, byte displacement)
-  {
-    boolean valid;
-
-    valid = opCodeValid(opCode);
-
-    if (valid == true)
-    {
-      valid = true;
-    }
-
-    return valid;
-  }
-
-  public int getInstructionSize()
-  {
-    int result = -1;
-
-    if (m_OpCodeOk)
-    {
-      switch (m_OpCode)
-      {
-        case K_OP_CODE_ADD:
-        case K_OP_CODE_SUB:
-        case K_OP_CODE_JNZ:
-          result = 2;
-          break;
-
-        case K_OP_CODE_RRM_RMM:
-          if (m_2ndByteOk)
-          {
-            if ((m_2ndByte & 0x80) == 0x80)
-            {
-              result = 2;
-            }
-            else
-            {
-              result = 3;
-            }
-          }
-          else
-          {
-            result = 0;
-          }
-          break;
-
-        case K_OP_CODE_MRM:
-          result = 3;
-          break;
-
-        case K_OP_CODE_HLT:
-          result = 1;
-          break;
-
-        default:
-          break;
-      }
-    }
-
-    return result;
   }
 
   public boolean isComplete()
@@ -443,7 +309,7 @@ public class Instruction
           break;
 
         case K_OP_CODE_HLT:
-            result = true;
+          result = true;
           break;
 
         default:
@@ -452,5 +318,5 @@ public class Instruction
     }
     return result;
   }
-  
+
 }

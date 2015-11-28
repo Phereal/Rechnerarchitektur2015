@@ -28,7 +28,7 @@ public final class MemReader
   public static byte[] readMemFile(String fileName)
   {
     byte memBuffer[];
-    
+
     try
     {
       memFile = new File(fileName);
