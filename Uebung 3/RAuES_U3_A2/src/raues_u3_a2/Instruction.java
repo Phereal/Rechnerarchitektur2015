@@ -637,7 +637,7 @@ public class Instruction
           tmpIpJnz = (int)ip.read() + (int)m_Dist;
           if((tmpIpJnz >= 0) && (tmpIpJnz < mem.length))
           {
-            if(zf.read() != (byte)0)
+            if(zf.read() == (byte)0)
             {
               tmpIp = tmpIpJnz;
             }

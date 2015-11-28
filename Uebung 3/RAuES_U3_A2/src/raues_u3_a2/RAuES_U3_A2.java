@@ -41,7 +41,8 @@ public class RAuES_U3_A2 {
       processor = new Processor(memBuffer);
       
       System.out.println("\n\nExecute:");
-      processor.execute();
+      int res = processor.execute();
+      System.out.println("Prozessor returned " + res);
     }
     catch(Exception e)
     {
