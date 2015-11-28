@@ -66,7 +66,7 @@ public class Instruction
         break;
 
       case RRMOV:
-        result = "RMmov ";
+        result = "RRmov ";
         result += registerSet.getRegisterName(m_RD);
         result += ", ";
         result += registerSet.getRegisterName(m_RS);
@@ -226,7 +226,7 @@ public class Instruction
       result = -1;
     }
 
-    if ((result == 0) && (!this.setDisplacement(middle)))
+    if ((result == 0) && (!this.setDisplacement(displacement)))
     {
       result = -1;
     }

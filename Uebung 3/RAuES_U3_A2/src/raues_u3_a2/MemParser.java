@@ -167,7 +167,7 @@ public class MemParser
   {
     String s;
 
-    s = inst.getInstructionString(registerSet);
+    s = inst.getInstructionString(registerSet, false);
 
     if (s == null)
     {
