@@ -141,10 +141,7 @@ public class Processor
 
   /**
    * Reads the memory pointed at by m_IP and tries to parse the instruction.
-   * @return result of execution.
-   * -1 = execution was canceled due to an error.
-   * 0 = execution was orderly haltet via hlt instruction.
-   * 1 = step was successfully executed, no hlt instruction detected.
+   * @return parsed instruction (empty instruction if parsing failed).
    */
   private Instruction parseSingleInstruction()
   {
@@ -184,7 +181,7 @@ public class Processor
     }
 
     // cleanup the returned instruction if something went wrong.
-    if (result == -1)
+    if (result != 1)
     {
       inst.clear();
     }
