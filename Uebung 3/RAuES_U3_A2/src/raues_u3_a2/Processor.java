@@ -150,6 +150,11 @@ public class Processor
   {
     int result;
     Instruction inst = new Instruction();
+    
+    // Contrary to Aufgabe 1 MemParser.parse() we use the newly implemented
+    // method inst.set(), which expects up to all three bytes of an instruction.
+    // Thus we dont have to copy and edit the state machine of MemParser.parse()
+    // and reduce the necessary code in Processor to execute the memory.
 
     // make sure m_IP doesnt point outside of our memory range
     if (m_IP.read() >= m_Memory.length)
