@@ -35,7 +35,7 @@ public class RAuES_U3_A2
       System.exit(1);
     }
     
-    // mem file is read, try to parse and execute it
+    // mem file is read, try to parse and execute it.
     try
     {
       // Instanciate Processor to parse the mem buffer

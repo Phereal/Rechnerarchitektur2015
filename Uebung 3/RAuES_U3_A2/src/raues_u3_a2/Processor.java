@@ -23,7 +23,8 @@ public class Processor
 
   /**
    * Constructor.
-   * @param memBuffer byte array containing the initial memory of Processor (max. length = 80).
+   * @param memBuffer byte array containing the initial memory of Processor
+   * (max. length = 80).
    * @throws Exception when memBuffer couldnt be parsed.
    */
   Processor(byte memBuffer[]) throws Exception
