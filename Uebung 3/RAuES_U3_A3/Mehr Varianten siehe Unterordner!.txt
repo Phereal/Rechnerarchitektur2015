@@ -1,0 +1,12 @@
+In den Unterordnern befinden sich Beispiele für weitere Fibonacci-Zahlen, sogar im Negativen Zahlenbereich.
+
+Folgende Bytes können angepasst werden, um beliebige Fib-Rechnungen durchzuführen:
+
+0x07 = n
+n muss hierbei größer oder gleich 1 sein!
+
+0x04 = f1
+Die vorherige Fib-Zahl. Muss für ein korrektes Ergebnis Teil der Fib-Folge sein!
+
+0x05 = f2
+Vor-vorherige Fib-Zahl. Muss für ein korrektes Ergebnis Teil der Fib-Folge sein!
