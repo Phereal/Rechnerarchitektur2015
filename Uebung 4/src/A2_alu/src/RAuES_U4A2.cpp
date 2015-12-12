@@ -1,7 +1,15 @@
 #include <iostream>
+#include <string>
+#include <cstdint>
 #include <systemc.h>
 using namespace std;
 
+#define K_DEBUG
+#ifdef K_DEBUG
+  #define PRINT_DEBUG(a, b, c, d) { cout << (a) << to_string((int64_t)(b)) << ", " << to_string((int64_t)(c)) << " = " << to_string((int64_t)(d)) << endl; }
+#else
+  #define PRINT_DEBUG(a, b, c, d) {}
+#endif
 
 // InstructionSet
 #define IS_ADD  (0x01)
@@ -14,7 +22,6 @@ using namespace std;
 #define IS_BAND (0x12)
 #define IS_BXOR (0x13)
 #define IS_COMP (0x14)
-
 
 SC_MODULE(waiter)
 {
@@ -74,64 +81,79 @@ SC_MODULE(alu)
 
     void inst()
     {
-      switch( instruction.read() )
+      switch(instruction.read())
       {
         // Addition
         case IS_ADD:
           result.write(dataA.read() + dataB.read());
+          PRINT_DEBUG("Add: ", dataA.read(), dataB.read(), result.read());
           break;
 
           // Substraktion
         case IS_SUB:
           result.write(dataA.read() - dataB.read());
+          PRINT_DEBUG("Sub: ", dataA.read(), dataB.read(), result.read());
           break;
 
           // Multiplikation
         case IS_MUL:
           result.write(dataA.read() * dataB.read());
+          PRINT_DEBUG("Mul: ", dataA.read(), dataB.read(), result.read());
           break;
 
           // Division
         case IS_DIV:
-          if( dataB.read() )
+          // check for division through 0
+          if(dataB.read())
           {
             result.write(dataA.read() / dataB.read());
+            PRINT_DEBUG("Div: ", dataA.read(), dataB.read(), result.read());
           }
-          // todo
-          // else
+          else
+          {
+            // todo
+            PRINT_DEBUG("Div Error: ", dataA.read(), dataB.read(), result.read());
+          }
           break;
 
           // Modulo
         case IS_MOD:
           result.write(dataA.read() % dataB.read());
+          PRINT_DEBUG("Mod: ", dataA.read(), dataB.read(), result.read());
           break;
 
           // Bit Shifting
         case IS_BS:
           result.write(dataA.read() << dataB.read());
+          PRINT_DEBUG("Shift: ", dataA.read(), dataB.read(), result.read());
           break;
 
           // Bit Or
         case IS_BOR:
           result.write((dataA.read() | dataB.read()));
+          PRINT_DEBUG("Or: ", dataA.read(), dataB.read(), result.read());
           break;
 
           // Bit And
         case IS_BAND:
           result.write((dataA.read() & dataB.read()));
+          PRINT_DEBUG("And: ", dataA.read(), dataB.read(), result.read());
           break;
 
           // Bit Xor
         case IS_BXOR:
           result.write((dataA.read() ^ dataB.read()));
+          PRINT_DEBUG("Xor: ", dataA.read(), dataB.read(), result.read());
           break;
 
           // Vergleich
         case IS_COMP:
+          // return 0 if the same
           if(dataA.read() == dataB.read())
           {
             result.write(0);
           }
+          //
           else if(dataA.read() > dataB.read())
           {
             result.write(-1);
@@ -140,11 +162,13 @@ SC_MODULE(alu)
           {
             result.write(1);
           }
+          PRINT_DEBUG("Comp: ", dataA.read(), dataB.read(), result.read());
           break;
 
         default:
           // todo
           //result.write(0);
+          PRINT_DEBUG("Default: ", dataA.read(), dataB.read(), result.read());
           break;
       }
     }
@@ -207,4 +231,3 @@ int sc_main(int, char *[])
   return 0;
 
 }
-
