@@ -8,7 +8,7 @@ SC_MODULE (producer)
     sc_out<packet> out; //gesendete Pakete
 
     //Bringe genSpeed in den Bereich von 0 bis 100
-    void outputGen()
+    int genSpeedRoundToPercent()
 	{
 	int tempGenSpeed = genSpeed.read();
 	if (tempGenSpeed < 0)
@@ -19,8 +19,18 @@ SC_MODULE (producer)
 	    {
 	    tempGenSpeed = 100;
 	    }
+	return tempGenSpeed;
 	}
 
-    //und nun zufällig pakete generieren:
+    //Und nun zufällig pakete generieren:
+    void randomlySendPacket()
+	{
+	if((rand() % 100) < genSpeedRoundToPercent())
+	    {
+	    //out = packet(...)
+	    }
+
+
+	}
 
     };
