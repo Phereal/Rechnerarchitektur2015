@@ -256,6 +256,8 @@ SC_MODULE(tester)
 
 SC_MODULE(alu)
 {
+    int64_t tmpResult = 0;
+
     sc_in<bool> clk;
     sc_in<sc_uint<8> > instruction;
     sc_in<sc_int<64> > dataA;
@@ -269,20 +271,23 @@ SC_MODULE(alu)
       {
         // Addition
         case IS_ADD:
-          result.write(dataA.read() + dataB.read());
-          PRINT_DEBUG("Add: ", dataA.read(), dataB.read(), result.read());
+          tmpResult = dataA.read() + dataB.read();
+          result.write(tmpResult);
+          PRINT_DEBUG("Add: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
           // Substraktion
         case IS_SUB:
-          result.write(dataA.read() - dataB.read());
-          PRINT_DEBUG("Sub: ", dataA.read(), dataB.read(), result.read());
+          tmpResult = dataA.read() - dataB.read();
+          result.write(tmpResult);
+          PRINT_DEBUG("Sub: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
           // Multiplikation
         case IS_MUL:
-          result.write(dataA.read() * dataB.read());
-          PRINT_DEBUG("Mul: ", dataA.read(), dataB.read(), result.read());
+          tmpResult = dataA.read() * dataB.read();
+          result.write(tmpResult);
+          PRINT_DEBUG("Mul: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
           // Division
@@ -290,13 +295,15 @@ SC_MODULE(alu)
           // check for division through 0
           if(dataB.read())
           {
-            result.write(dataA.read() / dataB.read());
-            PRINT_DEBUG("Div: ", dataA.read(), dataB.read(), result.read());
+            tmpResult = dataA.read() / dataB.read();
+            result.write(tmpResult);
+            PRINT_DEBUG("Div: ", dataA.read(), dataB.read(), tmpResult);
           }
           else
           {
-            result.write(0x00);
-            PRINT_DEBUG("Div Error: ", dataA.read(), dataB.read(), result.read());
+            tmpResult = 0x00;
+            result.write(tmpResult);
+            PRINT_DEBUG("Div Error: ", dataA.read(), dataB.read(), tmpResult);
           }
           break;
 
@@ -304,38 +311,44 @@ SC_MODULE(alu)
         case IS_MOD:
           if(dataB.read())
           {
-            result.write(dataA.read() % dataB.read());
-            PRINT_DEBUG("Div: ", dataA.read(), dataB.read(), result.read());
+            tmpResult = dataA.read() % dataB.read();
+            result.write(tmpResult);
+            PRINT_DEBUG("Mod: ", dataA.read(), dataB.read(), tmpResult);
           }
           else
           {
-            result.write(0x00);
-            PRINT_DEBUG("Div Error: ", dataA.read(), dataB.read(), result.read());
+            tmpResult = 0x00;
+            result.write(tmpResult);
+            PRINT_DEBUG("Mod Error: ", dataA.read(), dataB.read(), tmpResult);
           }
           break;
 
           // Bit Shifting
         case IS_BS:
-          result.write(dataA.read() << dataB.read());
-          PRINT_DEBUG("Shift: ", dataA.read(), dataB.read(), result.read());
+          tmpResult = dataA.read() << dataB.read();
+          result.write(tmpResult);
+          PRINT_DEBUG("Shift: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
           // Bit Or
         case IS_BOR:
-          result.write((dataA.read() | dataB.read()));
-          PRINT_DEBUG("Or: ", dataA.read(), dataB.read(), result.read());
+          tmpResult = (dataA.read() | dataB.read());
+          result.write(tmpResult);
+          PRINT_DEBUG("Or: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
           // Bit And
         case IS_BAND:
-          result.write((dataA.read() & dataB.read()));
-          PRINT_DEBUG("And: ", dataA.read(), dataB.read(), result.read());
+          tmpResult = (dataA.read() & dataB.read());
+          result.write(tmpResult);
+          PRINT_DEBUG("And: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
           // Bit Xor
         case IS_BXOR:
-          result.write((dataA.read() ^ dataB.read()));
-          PRINT_DEBUG("Xor: ", dataA.read(), dataB.read(), result.read());
+          tmpResult = (dataA.read() ^ dataB.read());
+          result.write(tmpResult);
+          PRINT_DEBUG("Xor: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
           // Vergleich
@@ -343,24 +356,27 @@ SC_MODULE(alu)
           // return 0 if the same
           if(dataA.read() == dataB.read())
           {
-            result.write(0);
+            tmpResult = 0;
           }
           //
           else if(dataA.read() > dataB.read())
           {
-            result.write(-1);
+            tmpResult = -1;
           }
           else
           {
-            result.write(1);
+            tmpResult = 1;
           }
-          PRINT_DEBUG("Comp: ", dataA.read(), dataB.read(), result.read());
+          result.write(tmpResult);
+          PRINT_DEBUG("Comp: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
         default:
           // todo
           //result.write(0);
-          PRINT_DEBUG("Default: ", dataA.read(), dataB.read(), result.read());
+          tmpResult = 0;
+          result.write(tmpResult);
+          PRINT_DEBUG("Default: ", dataA.read(), dataB.read(), tmpResult);
           break;
       }
     }
