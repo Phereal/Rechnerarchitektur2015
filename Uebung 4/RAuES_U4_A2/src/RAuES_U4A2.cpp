@@ -395,6 +395,111 @@ SC_MODULE(tester)
           }
         }
         cout << " End testing the Bitwise AND! " << endl;
+
+        // Testing the Bitwise XOR
+        // #INPUTS
+        testInputA[0] = 0x00;
+        testInputA[1] = 0xFFFFFF;
+        testInputA[2] = 0xFFFFFF;
+        testInputA[3] = 0xFFFFFF;
+        testInputA[4] = 0xFFFFFF;
+        testInputA[5] = 0xFFFFFF;
+        testInputA[6] = 0xFFFFFF;
+        testInputA[7] = 0xFFFFFF;
+        testInputA[8] = 0xFFFFFF;
+        testInputA[9] = 0xFFFFFF;
+
+        testInputB[0] = 0x00;
+        testInputB[1] = 0x01;
+        testInputB[2] = 0x10;
+        testInputB[3] = 0x100;
+        testInputB[4] = 0x1000;
+        testInputB[5] = 0x1001;
+        testInputB[6] = 0x1010;
+        testInputB[7] = 0x1011;
+        testInputB[8] = 0x1100;
+        testInputB[9] = 0x1101;
+
+        // #OUTPUT
+        testOutput[0] = 0x00;
+        testOutput[1] = 0xFFFFFE;
+        testOutput[2] = 0xFFFFEF;
+        testOutput[3] = 0xFFFEFF;
+        testOutput[4] = 0xFFEFFF;
+        testOutput[5] = 0xFFEFFE;
+        testOutput[6] = 0xFFEFEF;
+        testOutput[7] = 0xFFEFEE;
+        testOutput[8] = 0xFFEEFF;
+        testOutput[9] = 0xFFEEFE;
+        cout << " Begin testing the Bitwise XOR! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_BXOR;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          if( result != testOutput[i] )
+          {
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
+          }
+        }
+        cout << " End testing the Bitwise XOR! " << endl;
+
+        // Testing the Comparator
+        // #INPUTS
+        testInputA[0] = 0x00;
+        testInputA[1] = 0x01;
+        testInputA[2] = 0x10;
+        testInputA[3] = 0x100;
+        testInputA[4] = 0x1000;
+        testInputA[5] = 0x10000;
+        testInputA[6] = 0x10000;
+        testInputA[7] = 0x10000;
+        testInputA[8] = 0x10000;
+        testInputA[9] = 0x10000;
+
+        testInputB[0] = 0x00;
+        testInputB[1] = 0x01;
+        testInputB[2] = 0x10;
+        testInputB[3] = 0x100;
+        testInputB[4] = 0x1000;
+        testInputB[5] = 0x10001;
+        testInputB[6] = 0x10010;
+        testInputB[7] = 0x00011;
+        testInputB[8] = 0x00100;
+        testInputB[9] = 0x00101;
+
+        // #OUTPUT
+        testOutput[0] = 0x00;
+        testOutput[1] = 0x00;
+        testOutput[2] = 0x00;
+        testOutput[3] = 0x00;
+        testOutput[4] = 0x00;
+        testOutput[5] = 0x01;
+        testOutput[6] = 0x01;
+        testOutput[7] = -0x01;
+        testOutput[8] = -0x01;
+        testOutput[9] = -0x01;
+        cout << " Begin testing the Comparator! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_COMP;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          if( result != testOutput[i] )
+          {
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
+          }
+        }
+        cout << " End testing the  Comparator! \n" << endl;
+        cout << " ############################ \n" << endl;
+        cout << " End of the Testbench!  \n" << endl;
+        assert(false);
       }
 
       SC_CTOR(tester)
