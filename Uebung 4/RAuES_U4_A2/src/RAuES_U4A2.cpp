@@ -499,7 +499,7 @@ SC_MODULE(tester)
         cout << " End testing the  Comparator! \n" << endl;
         cout << " ############################ \n" << endl;
         cout << " End of the Testbench!  \n" << endl;
-        assert(false);
+        sc_stop();
       }
 
       SC_CTOR(tester)
