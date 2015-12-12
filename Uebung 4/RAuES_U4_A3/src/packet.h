@@ -6,7 +6,7 @@ using namespace std;
 
 
 //Tutoriums-Datei dist.ccp entnommen
-struct msg
+struct packet
     {
     int addr;
     int payload;
@@ -14,36 +14,36 @@ struct msg
 
     // must implement '=' '==' and '<<' (nice would be 'sc_trace')
 
-    msg(int a, int p) :
+    packet(int a, int p) :
 	addr(a), payload(p)
 	{
 	}
 
-    msg() :
+    packet() :
 	addr(0), payload(0)
 	{
 	}
 
-    inline bool operator==(const msg &rhs) const
+    inline bool operator==(const packet &rhs) const
 	{
 	return (rhs.addr == addr && rhs.payload == payload);
 	}
 
-    inline msg &operator=(const msg &rhs)
+    inline packet &operator=(const packet &rhs)
 	{
 	addr = rhs.addr;
 	payload = rhs.payload;
 	return *this;
 	}
 
-    inline friend void sc_trace(sc_trace_file *tf, const msg &v,
+    inline friend void sc_trace(sc_trace_file *tf, const packet &v,
 	    const std::string &NAME)
 	{
 	sc_trace(tf, v.addr, NAME + ".addr");
 	sc_trace(tf, v.payload, NAME + ".payload");
 	}
 
-    inline friend ostream &operator<<(ostream &os, msg const &v)
+    inline friend ostream &operator<<(ostream &os, packet const &v)
 	{
 	os << "(" << v.addr << "," << v.payload << ")";
 	return os;
