@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstdint>
+#include <exception>
 #include <systemc.h>
 using namespace std;
 
@@ -49,6 +50,8 @@ SC_MODULE(tester)
 
       void testing()
       {
+        string out;
+
         // Initialisierung der Testarrays
         sc_int<64> testInputA[10] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09};
         sc_int<64> testInputB[10] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09};
@@ -75,7 +78,11 @@ SC_MODULE(tester)
           dataB = testInputB[i];
           wait(10, SC_NS);
           cout << testInputA[i] << " + " << testInputB[i] << " = " <<  testOutput[i] << " = " << result << endl;
-          assert (result == testOutput[i]);
+          if( result != testOutput[i] )
+          {
+            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
+            throw exception();
+          }
         }
         cout << " End testing the addition! " << endl;
 
@@ -99,7 +106,11 @@ SC_MODULE(tester)
           dataA = testInputA[i];
           dataB = testInputB[i];
           wait(10, SC_NS);
-          assert (result == testOutput[i]);
+          if( result != testOutput[i] )
+          {
+            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
+            throw exception();
+          }
         }
         cout << " End testing the substraction! " << endl;
 
@@ -123,7 +134,11 @@ SC_MODULE(tester)
           dataA = testInputA[i];
           dataB = testInputB[i];
           wait(10, SC_NS);
-          assert (result == testOutput[i]);
+          if( result != testOutput[i] )
+          {
+            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
+            throw exception();
+          }
         }
         cout << " End testing the multiplication! " << endl;
 
@@ -147,7 +162,11 @@ SC_MODULE(tester)
           dataA = testInputA[i];
           dataB = testInputB[i];
           wait(10, SC_NS);
-          assert (result == testOutput[i]);
+          if( result != testOutput[i] )
+          {
+            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
+            throw exception();
+          }
         }
         cout << " End testing the division! " << endl;
 
@@ -171,7 +190,11 @@ SC_MODULE(tester)
           dataA = testInputA[i];
           dataB = testInputB[i];
           wait(10, SC_NS);
-          assert (result == testOutput[i]);
+          if( result != testOutput[i] )
+          {
+            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
+            throw exception();
+          }
         }
         cout << " End testing the modulo! " << endl;
 
@@ -202,15 +225,15 @@ SC_MODULE(tester)
 
         // #OUTPUT
         testOutput[0] = 0x00;
-        testOutput[1] = 0x01;
+        testOutput[1] = 0x02;
         testOutput[2] = 0x04;
         testOutput[3] = 0x08;
         testOutput[4] = 0x10;
         testOutput[5] = 0x20;
         testOutput[6] = 0x40;
         testOutput[7] = 0x80;
-        testOutput[8] = 0x00;
-        testOutput[9] = 0x00;
+        testOutput[8] = 0x100;
+        testOutput[9] = 0x200;
         cout << " Begin testing the BITSHIFT! " << endl;
         for (int i = 0; i < 10; ++i)
         {
@@ -220,9 +243,16 @@ SC_MODULE(tester)
           dataA = testInputA[i];
           dataB = testInputB[i];
           wait(20, SC_NS);
-          assert (result == testOutput[i]);
+          if( result != testOutput[i] )
+          {
+            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
+            throw "Bla";
+          }
         }
         cout << " End testing the BITSHIFT! " << endl;
+
+        sc_stop();
+
       }
 
       SC_CTOR(tester)
