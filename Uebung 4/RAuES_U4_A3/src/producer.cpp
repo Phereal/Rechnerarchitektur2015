@@ -4,13 +4,13 @@
 SC_MODULE (producer)
     {
     sc_in_clk clock; // Clock input of the design
-    sv_in<int> genSpeed
+    sc_in<int> genSpeed;
     sc_out<packet> out; //gesendete Pakete
 
     //Bringe genSpeed in den Bereich von 0 bis 100
     void outputGen()
 	{
-	int tempGenSpeed = genSpeed;
+	int tempGenSpeed = genSpeed.read();
 	if (tempGenSpeed < 0)
 	    {
 	    tempGenSpeed = 0;
