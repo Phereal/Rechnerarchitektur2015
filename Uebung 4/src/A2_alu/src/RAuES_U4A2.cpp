@@ -50,7 +50,6 @@ SC_MODULE(tester)
 
       void testing()
       {
-        string out;
 
         // Initialisierung der Testarrays
         sc_int<64> testInputA[10] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09};
@@ -80,8 +79,7 @@ SC_MODULE(tester)
           cout << testInputA[i] << " + " << testInputB[i] << " = " <<  testOutput[i] << " = " << result << endl;
           if( result != testOutput[i] )
           {
-            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
-            throw exception();
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
           }
         }
         cout << " End testing the addition! " << endl;
@@ -108,8 +106,7 @@ SC_MODULE(tester)
           wait(10, SC_NS);
           if( result != testOutput[i] )
           {
-            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
-            throw exception();
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
           }
         }
         cout << " End testing the substraction! " << endl;
@@ -136,8 +133,7 @@ SC_MODULE(tester)
           wait(10, SC_NS);
           if( result != testOutput[i] )
           {
-            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
-            throw exception();
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
           }
         }
         cout << " End testing the multiplication! " << endl;
@@ -164,8 +160,7 @@ SC_MODULE(tester)
           wait(10, SC_NS);
           if( result != testOutput[i] )
           {
-            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
-            throw exception();
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
           }
         }
         cout << " End testing the division! " << endl;
@@ -192,8 +187,7 @@ SC_MODULE(tester)
           wait(10, SC_NS);
           if( result != testOutput[i] )
           {
-            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
-            throw exception();
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
           }
         }
         cout << " End testing the modulo! " << endl;
@@ -245,8 +239,7 @@ SC_MODULE(tester)
           wait(20, SC_NS);
           if( result != testOutput[i] )
           {
-            cout << "ERROR: " << to_string((int64_t)result.read()) << " != " << to_string((int64_t)testOutput[i]) << " at i=" << to_string(i) << endl;
-            throw "Bla";
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
           }
         }
         cout << " End testing the BITSHIFT! " << endl;
