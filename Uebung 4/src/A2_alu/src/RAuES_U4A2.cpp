@@ -55,6 +55,11 @@ SC_MODULE(tester)
       dataA = 0x10;
       dataB = 0x00;
       wait(10, SC_NS);
+      instruction = IS_DIV;
+      dataA = 0x10;
+      dataB = 0x20;
+      wait(10, SC_NS);
+      sc_stop();
     }
 
     void read_result()
