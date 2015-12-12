@@ -47,32 +47,188 @@ SC_MODULE(tester)
     sc_in<bool> clk;
     sc_in<sc_int<64> > result;
 
-    void send_values()
-    {
-      instruction = 0x00;
-      wait(10, SC_NS);
-      instruction = IS_DIV;
-      dataA = 0x10;
-      dataB = 0x00;
-      wait(10, SC_NS);
-      instruction = IS_DIV;
-      dataA = 0x10;
-      dataB = 0x20;
-      wait(10, SC_NS);
-      sc_stop();
-    }
+      void testing()
+      {
+        // Initialisierung der Testarrays
+        sc_int<64> testInputA[10] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09};
+        sc_int<64> testInputB[10] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09};
+        sc_int<64> testOutput[10];
 
-    void read_result()
-    {
-      cout << result << endl;
-    }
+        // Testing the addition
+        testOutput[0] = 0x00;
+        testOutput[1] = 0x02;
+        testOutput[2] = 0x04;
+        testOutput[3] = 0x06;
+        testOutput[4] = 0x08;
+        testOutput[5] = 0x0A;
+        testOutput[6] = 0x0C;
+        testOutput[7] = 0x0E;
+        testOutput[8] = 0x10;
+        testOutput[9] = 0x12;
+        cout << " Begin testing the addition! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_ADD;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          cout << testInputA[i] << " + " << testInputB[i] << " = " <<  testOutput[i] << " = " << result << endl;
+          assert (result == testOutput[i]);
+        }
+        cout << " End testing the addition! " << endl;
 
-    SC_CTOR(tester)
-    {
+        // Testing the substraction
+        testOutput[0] = 0x00;
+        testOutput[1] = 0x00;
+        testOutput[2] = 0x00;
+        testOutput[3] = 0x00;
+        testOutput[4] = 0x00;
+        testOutput[5] = 0x00;
+        testOutput[6] = 0x00;
+        testOutput[7] = 0x00;
+        testOutput[8] = 0x00;
+        testOutput[9] = 0x00;
+        cout << " Begin testing the substraction! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_SUB;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          assert (result == testOutput[i]);
+        }
+        cout << " End testing the substraction! " << endl;
 
-      SC_THREAD(send_values);
-      SC_METHOD(read_result);
-    }
+        // Testing the multiplication
+        testOutput[0] = 0x00;
+        testOutput[1] = 0x01;
+        testOutput[2] = 0x04;
+        testOutput[3] = 0x09;
+        testOutput[4] = 0x10;
+        testOutput[5] = 0x19;
+        testOutput[6] = 0x24;
+        testOutput[7] = 0x31;
+        testOutput[8] = 0x40;
+        testOutput[9] = 0x51;
+        cout << " Begin testing the multiplication! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_MUL;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          assert (result == testOutput[i]);
+        }
+        cout << " End testing the multiplication! " << endl;
+
+        // Testing the division
+        testOutput[0] = 0x00;
+        testOutput[1] = 0x01;
+        testOutput[2] = 0x01;
+        testOutput[3] = 0x01;
+        testOutput[4] = 0x01;
+        testOutput[5] = 0x01;
+        testOutput[6] = 0x01;
+        testOutput[7] = 0x01;
+        testOutput[8] = 0x01;
+        testOutput[9] = 0x01;
+        cout << " Begin testing the division! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_DIV;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          assert (result == testOutput[i]);
+        }
+        cout << " End testing the division! " << endl;
+
+        // Testing the MOD
+        testOutput[0] = 0x00;
+        testOutput[1] = 0x00;
+        testOutput[2] = 0x00;
+        testOutput[3] = 0x00;
+        testOutput[4] = 0x00;
+        testOutput[5] = 0x00;
+        testOutput[6] = 0x00;
+        testOutput[7] = 0x00;
+        testOutput[8] = 0x00;
+        testOutput[9] = 0x00;
+        cout << " Begin testing the modulo! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_MOD;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          assert (result == testOutput[i]);
+        }
+        cout << " End testing the modulo! " << endl;
+
+        // Testing the BITSHIFT
+
+        // #INPUTS
+        testInputA[0] = 0x00;
+        testInputA[1] = 0x01;
+        testInputA[2] = 0x01;
+        testInputA[3] = 0x01;
+        testInputA[4] = 0x01;
+        testInputA[5] = 0x01;
+        testInputA[6] = 0x01;
+        testInputA[7] = 0x01;
+        testInputA[8] = 0x01;
+        testInputA[9] = 0x01;
+
+        testInputB[0] = 0x00;
+        testInputB[1] = 0x01;
+        testInputB[2] = 0x02;
+        testInputB[3] = 0x03;
+        testInputB[4] = 0x04;
+        testInputB[5] = 0x05;
+        testInputB[6] = 0x06;
+        testInputB[7] = 0x07;
+        testInputB[8] = 0x08;
+        testInputB[9] = 0x09;
+
+        // #OUTPUT
+        testOutput[0] = 0x00;
+        testOutput[1] = 0x01;
+        testOutput[2] = 0x04;
+        testOutput[3] = 0x08;
+        testOutput[4] = 0x10;
+        testOutput[5] = 0x20;
+        testOutput[6] = 0x40;
+        testOutput[7] = 0x80;
+        testOutput[8] = 0x00;
+        testOutput[9] = 0x00;
+        cout << " Begin testing the BITSHIFT! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_BS;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(20, SC_NS);
+          assert (result == testOutput[i]);
+        }
+        cout << " End testing the BITSHIFT! " << endl;
+      }
+
+      SC_CTOR(tester)
+      {
+        SC_THREAD(testing);
+      }
 };
 
 SC_MODULE(alu)
@@ -116,15 +272,23 @@ SC_MODULE(alu)
           }
           else
           {
-            // todo
+            result.write(0x00);
             PRINT_DEBUG("Div Error: ", dataA.read(), dataB.read(), result.read());
           }
           break;
 
           // Modulo
         case IS_MOD:
-          result.write(dataA.read() % dataB.read());
-          PRINT_DEBUG("Mod: ", dataA.read(), dataB.read(), result.read());
+          if(dataB.read())
+          {
+            result.write(dataA.read() % dataB.read());
+            PRINT_DEBUG("Div: ", dataA.read(), dataB.read(), result.read());
+          }
+          else
+          {
+            result.write(0x00);
+            PRINT_DEBUG("Div Error: ", dataA.read(), dataB.read(), result.read());
+          }
           break;
 
           // Bit Shifting
