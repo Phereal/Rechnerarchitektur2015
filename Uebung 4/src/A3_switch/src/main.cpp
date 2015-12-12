@@ -4,6 +4,5 @@ using namespace std;
 
 int sc_main(int, char *[])
     {
-    producer producer ("PRODUCER");
     return 0;
     }
