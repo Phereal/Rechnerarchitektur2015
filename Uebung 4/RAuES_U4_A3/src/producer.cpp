@@ -1,3 +1,6 @@
+//producer erstellt abhängig von addressRange pro Clock-cycle zufällig packets.
+//Die packets haben zufällige Werte und haben zufällig eine Flag.
+//Die höchste Adresse wird dem Producer über ein Signal geliefert.
 #include "packet.h"
 #include <systemc.h>
 
@@ -29,7 +32,7 @@ SC_MODULE (producer)
 	return rand() %2 == 1;
 	}
 
-    //Und nun zufällig pakete generieren:
+    //Generiere ein Paket.
     void randomlySendPacket()
 	{
 	if((rand() % 100) < genSpeedRoundToPercent())
@@ -38,4 +41,10 @@ SC_MODULE (producer)
 	    out = packet(randomAddress, rand(), getRandomBool());
 	    }
 	}
+
+    //KONSTRUKTUR
+    SC_CTOR(producer) {
+            SC_METHOD(randomlySendPacket);
+            sensitive << clock;
+        }
     };
