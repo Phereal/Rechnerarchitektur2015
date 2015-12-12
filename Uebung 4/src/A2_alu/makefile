@@ -3,7 +3,7 @@ CC = g++
 CFLAGS = -std=c++11 -O0 -g3 -Wall -Wextra -Wconversion -pedantic
 INCLUDE = -isystem ../systemc/include
 LIB_INCL = -L../systemc/lib-linux64
-LIB = -lsystemc
+LIB = -Wl,-rpath,../systemc/lib-linux64 -lsystemc
 
 SRC_PATH = ./src
 
