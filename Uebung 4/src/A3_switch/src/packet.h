@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 //Tutoriums-Datei dist.ccp entnommen
 struct msg
     {
