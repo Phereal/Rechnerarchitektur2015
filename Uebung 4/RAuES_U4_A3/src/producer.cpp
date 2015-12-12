@@ -4,7 +4,8 @@
 SC_MODULE (producer)
     {
     sc_in_clk clock; // Clock input of the design
-    sc_in<int> genSpeed;
+    sc_in<int> genSpeed; //%-Chance, dass ein Paket generiert wird.
+    sc_in<int> addressRange; //Höchste Adresse, die zur Generierung gewählt werden darf.
     sc_out<packet> out; //gesendete Pakete
 
     //Bringe genSpeed in den Bereich von 0 bis 100
@@ -22,15 +23,19 @@ SC_MODULE (producer)
 	return tempGenSpeed;
 	}
 
+    //Gibt true oder false zurück
+    bool getRandomBool()
+	{
+	return rand() %2 == 1;
+	}
+
     //Und nun zufällig pakete generieren:
     void randomlySendPacket()
 	{
 	if((rand() % 100) < genSpeedRoundToPercent())
 	    {
-	    //out = packet(...)
+	    int randomAddress = rand() % addressRange;
+	    out = packet(randomAddress, rand(), getRandomBool());
 	    }
-
-
 	}
-
     };
