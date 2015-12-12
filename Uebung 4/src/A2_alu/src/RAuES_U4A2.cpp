@@ -50,7 +50,6 @@ SC_MODULE(tester)
 
       void testing()
       {
-
         // Initialisierung der Testarrays
         sc_int<64> testInputA[10] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09};
         sc_int<64> testInputB[10] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09};
@@ -76,7 +75,6 @@ SC_MODULE(tester)
           dataA = testInputA[i];
           dataB = testInputB[i];
           wait(10, SC_NS);
-          cout << testInputA[i] << " + " << testInputB[i] << " = " <<  testOutput[i] << " = " << result << endl;
           if( result != testOutput[i] )
           {
             throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
@@ -192,7 +190,7 @@ SC_MODULE(tester)
         }
         cout << " End testing the modulo! " << endl;
 
-        // Testing the BITSHIFT
+        // Testing the BITSHIFT with left shifting
 
         // #INPUTS
         testInputA[0] = 0x00;
@@ -228,7 +226,7 @@ SC_MODULE(tester)
         testOutput[7] = 0x80;
         testOutput[8] = 0x100;
         testOutput[9] = 0x200;
-        cout << " Begin testing the BITSHIFT! " << endl;
+        cout << " Begin testing the BITSHIFT left shift! " << endl;
         for (int i = 0; i < 10; ++i)
         {
           instruction = 0x00;
@@ -236,16 +234,167 @@ SC_MODULE(tester)
           instruction = IS_BS;
           dataA = testInputA[i];
           dataB = testInputB[i];
-          wait(20, SC_NS);
+          wait(10, SC_NS);
           if( result != testOutput[i] )
           {
             throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
           }
         }
-        cout << " End testing the BITSHIFT! " << endl;
+        cout << " End testing the BITSHIFT left shift! " << endl;
+        // Testing the BITSHIFT with right shifting
 
-        sc_stop();
+        // #INPUTS
+        testInputA[0] = 0x00;
+        testInputA[1] = 0x01;
+        testInputA[2] = 0x01;
+        testInputA[3] = 0x01;
+        testInputA[4] = 0x01;
+        testInputA[5] = 0x01;
+        testInputA[6] = 0x01;
+        testInputA[7] = 0x01;
+        testInputA[8] = 0x01;
+        testInputA[9] = 0x01;
 
+        testInputB[0] = 0x00;
+        testInputB[1] = -0x01;
+        testInputB[2] = -0x02;
+        testInputB[3] = -0x03;
+        testInputB[4] = -0x04;
+        testInputB[5] = -0x05;
+        testInputB[6] = -0x06;
+        testInputB[7] = -0x07;
+        testInputB[8] = -0x08;
+        testInputB[9] = -0x09;
+
+        // #OUTPUT
+        testOutput[0] = 0x00;
+        testOutput[1] = -0x8000000000000000;
+        testOutput[2] = 0x4000000000000000;
+        testOutput[3] = 0x2000000000000000;
+        testOutput[4] = 0x1000000000000000;
+        testOutput[5] = 0x800000000000000;
+        testOutput[6] = 0x400000000000000;
+        testOutput[7] = 0x200000000000000;
+        testOutput[8] = 0x100000000000000;
+        testOutput[9] = 0x80000000000000;
+        cout << " Begin testing the BITSHIFT right shift! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_BS;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          if( result != testOutput[i] )
+          {
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
+          }
+        }
+        cout << " End testing the BITSHIFT right shift! " << endl;
+
+        // Testing the Bitwise OR
+
+        // #INPUTS
+        testInputA[0] = 0x00;
+        testInputA[1] = 0xAAAAAA;
+        testInputA[2] = 0xAAAAAA;
+        testInputA[3] = 0xAAAAAA;
+        testInputA[4] = 0xAAAAAA;
+        testInputA[5] = 0xAAAAAA;
+        testInputA[6] = 0xAAAAAA;
+        testInputA[7] = 0xAAAAAA;
+        testInputA[8] = 0xAAAAAA;
+        testInputA[9] = 0xAAAAAA;
+
+        testInputB[0] = 0x00;
+        testInputB[1] = 0x01;
+        testInputB[2] = 0x02;
+        testInputB[3] = 0x03;
+        testInputB[4] = 0x04;
+        testInputB[5] = 0x05;
+        testInputB[6] = 0x06;
+        testInputB[7] = 0x07;
+        testInputB[8] = 0x08;
+        testInputB[9] = 0x09;
+
+        // #OUTPUT
+        testOutput[0] = 0x00;
+        testOutput[1] = 0xAAAAAB;
+        testOutput[2] = 0xAAAAAA;
+        testOutput[3] = 0xAAAAAB;
+        testOutput[4] = 0xAAAAAE;
+        testOutput[5] = 0xAAAAAF;
+        testOutput[6] = 0xAAAAAE;
+        testOutput[7] = 0xAAAAAF;
+        testOutput[8] = 0xAAAAAA;
+        testOutput[9] = 0xAAAAAB;
+        cout << " Begin testing the Bitwise OR! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_BOR;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          if( result != testOutput[i] )
+          {
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
+          }
+        }
+        cout << " End testing the Bitwise OR! " << endl;
+
+        // Testing the Bitwise AND
+        // #INPUTS
+        testInputA[0] = 0x00;
+        testInputA[1] = 0xFFFFFF;
+        testInputA[2] = 0xFFFFFF;
+        testInputA[3] = 0xFFFFFF;
+        testInputA[4] = 0xFFFFFF;
+        testInputA[5] = 0xFFFFFF;
+        testInputA[6] = 0xFFFFFF;
+        testInputA[7] = 0xFFFFFF;
+        testInputA[8] = 0xFFFFFF;
+        testInputA[9] = 0xFFFFFF;
+
+        testInputB[0] = 0x00;
+        testInputB[1] = 0x01;
+        testInputB[2] = 0x10;
+        testInputB[3] = 0x100;
+        testInputB[4] = 0x1000;
+        testInputB[5] = 0x1001;
+        testInputB[6] = 0x1010;
+        testInputB[7] = 0x1011;
+        testInputB[8] = 0x1100;
+        testInputB[9] = 0x1101;
+
+        // #OUTPUT
+        testOutput[0] = 0x00;
+        testOutput[1] = 0x01;
+        testOutput[2] = 0x10;
+        testOutput[3] = 0x100;
+        testOutput[4] = 0x1000;
+        testOutput[5] = 0x1001;
+        testOutput[6] = 0x1010;
+        testOutput[7] = 0x1011;
+        testOutput[8] = 0x1100;
+        testOutput[9] = 0x1101;
+        cout << " Begin testing the Bitwise AND! " << endl;
+        for (int i = 0; i < 10; ++i)
+        {
+          instruction = 0x00;
+          wait(10, SC_NS);
+          instruction = IS_BAND;
+          dataA = testInputA[i];
+          dataB = testInputB[i];
+          wait(10, SC_NS);
+          if( result != testOutput[i] )
+          {
+            throw string("ERROR: " + to_string((int64_t)result.read()) + " != " + to_string((int64_t)testOutput[i]) + " at i=" + to_string(i)).c_str();
+          }
+        }
+        cout << " End testing the Bitwise AND! " << endl;
       }
 
       SC_CTOR(tester)
