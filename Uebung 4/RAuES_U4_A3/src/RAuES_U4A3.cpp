@@ -114,6 +114,11 @@ int sc_main(int argc, char *argv[])
   sc_signal<packet> inList[numIn];
   sc_signal<packet> outList[numOut];
 
+  //sc_signal<bool> pReceived[numIn];
+  sc_signal<bool> pPending[numIn];
+
+  sc_signal<bool> cBusy[numOut];
+
 
   // ------------------------------
   // Erstellen der Objekte der Klassen
@@ -129,7 +134,7 @@ int sc_main(int argc, char *argv[])
   {
     string name = "Producer";
     name.append(to_string(i));
-    pList[i] = new producer(name.c_str(), genSpeed);
+    pList[i] = new producer(name.c_str(), genSpeed, numOut);
   }
 
   for(int i = 0; i < numOut; ++i)
@@ -150,14 +155,21 @@ int sc_main(int argc, char *argv[])
   {
     pList[i]->clk(clkIn);
     pList[i]->out(inList[i]);
+    //pList[i]->dataReceived(pReceived[i]);
+    pList[i]->dataPending(pPending[i]);
+
     sw.in[i](inList[i]);
+    //sw.pReceived[i](pReceived[i]);
+    sw.pPending[i](pPending[i]);
   }
-  // connect signals to producer and switch outputs
+  // connect signals to consumer and switch outputs
   for(int i = 0; i < numOut; ++i)
   {
     cList[i]->clk(clkOut);
     cList[i]->in(outList[i]);
+    cList[i]->busy(cBusy[i]);
     sw.out[i](outList[i]);
+    sw.cBusy[i](cBusy[i]);
   }
 
 

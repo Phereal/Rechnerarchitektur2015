@@ -18,16 +18,20 @@
 SC_MODULE(producer)
 {
     sc_in<bool> clk;
+    //sc_in<bool> dataReceived;
+
     sc_out<packet> out;
+    sc_out<bool> dataPending;
 
     // Constructor
-    producer(sc_module_name name, int genSpeed);
+    producer(sc_module_name name, int genSpeed, int maxAddress);
 
     void sendPackageRandomly();
+//    void ackDataReceived();
 
   private:
-    const static int K_MAX_ADDRESS = std::numeric_limits<int>::max();
     int genSpeed;
+    int maxAddressCnt;
 
     bool getRandomBool() const;
     int getRandomAddress() const;

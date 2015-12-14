@@ -19,8 +19,14 @@ SC_MODULE(Switch)
 {
     // inputs
     sc_in<bool> clk;
+
+    // interface to producer
     sc_in<packet> *in;
-    //outputs
+    sc_in<bool> *pPending;
+    //sc_out<bool> *pReceived;
+
+    // interface to consumer
+    sc_in<bool> *cBusy;
     sc_out<packet> *out;
 
     // Constructor
@@ -32,7 +38,11 @@ SC_MODULE(Switch)
     int n;
     int m;
     int bufferSize;
-    packet *buffer;
+    packet **buffer;
+    int *bufferCount;
+
+    bool insertPackageIntoBuffer(int producer, int consumer);
+    packet ReadPackageFromBuffer(int cIdx);
 };
 
 #endif /* SWITCH_H_ */

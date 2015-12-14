@@ -10,12 +10,15 @@
 // Class Header
 #include "producer.h"
 
-producer::producer(sc_module_name name, int genSpeed) :
-    sc_module(name), genSpeed(genSpeed)
+producer::producer(sc_module_name name, int genSpeed, int maxAddressCnt) :
+    sc_module(name), genSpeed(genSpeed), maxAddressCnt(maxAddressCnt)
 {
   SC_HAS_PROCESS(producer);
   SC_METHOD(sendPackageRandomly);
-  sensitive << clk;
+  sensitive << clk.pos();
+
+  //SC_METHOD(ackDataReceived);
+  //sensitive << dataReceived;
 }
 
 void producer::sendPackageRandomly()
@@ -23,8 +26,17 @@ void producer::sendPackageRandomly()
   if((rand() % 100) < genSpeed)
   {
     out = packet(getRandomAddress(), getRandomDatum(), getRandomBool());
+    dataPending = true;
   }
 }
+
+//void producer::ackDataReceived()
+//{
+//  if(dataReceived)
+//  {
+//    dataPending = false;
+//  }
+//}
 
 bool producer::getRandomBool() const
 {
@@ -33,7 +45,7 @@ bool producer::getRandomBool() const
 
 int producer::getRandomAddress() const
 {
-  return (rand() % K_MAX_ADDRESS);
+  return (rand() % maxAddressCnt);
 }
 
 int producer::getRandomDatum() const
