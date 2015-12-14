@@ -17,7 +17,7 @@ using namespace std;
  * todo Habe ich kein Plan von, sollte Steffen kurz beschreiben!
  */
 
-#define K_DEBUG
+//#define K_DEBUG
 #ifdef K_DEBUG
   #define PRINT_DEBUG(a, b, c, d) { cout << (a) << to_string((int64_t)(b)) << ", " << to_string((int64_t)(c)) << " = " << to_string((int64_t)(d)) << endl; }
 #else
@@ -40,8 +40,9 @@ using namespace std;
 #define IS_COMP (0x14)
 
 /*
- * Das Klasse waiter dient wirklich nur dazu um eine Millisekunde zu warten und beinhaltet nur eine Methode.
+ * Das Klasse waiter dient dazu, die Simulation nach 1ms zu stoppen.
  */
+#ifdef K_DEBUG
 SC_MODULE(waiter)
 {
 
@@ -56,6 +57,7 @@ SC_MODULE(waiter)
       SC_THREAD(waiting);
     }
 };
+#endif
 
 /*
  * Die Klasse 'tester' stellt die Testbench des Programms dar. Hiermit werden für jede Operation mindestens 10
@@ -68,6 +70,7 @@ SC_MODULE(waiter)
  * Am Ende der Testbench wird eine Benachrichtigung ausgegeben, dass die Testbench erfolgreich ausgeführt wurde und das Programm
  * wird über ein 'sc_stop()' beendet.
  */
+#ifdef K_DEBUG
 SC_MODULE(tester)
 {
     // Die Übergabe der Variablen für instruction, dataA und dataB sowie clk und result.
@@ -701,6 +704,7 @@ SC_MODULE(tester)
         SC_THREAD(testing);
       }
 };
+#endif
 
 /*
  * Die Klasse alu liefert die Methode inst, die die einzelnen Berechnungen ausführt.
@@ -863,9 +867,11 @@ int sc_main(int, char *[])
   sc_signal<sc_int<64> > result;
 
   // Erstellen der Objekte der Klassen
-  waiter w("Waiter");
   alu alui("alu");
+  #ifdef K_DEBUG
+  waiter w("Waiter");
   tester test("Tester");
+  #endif
 
   // Übergeben der Variablen an die Klasse alu
   alui.clk(clk);
@@ -875,11 +881,13 @@ int sc_main(int, char *[])
   alui.result(result);
 
   // Übergeben der Variablen an die Klasse tester
+  #ifdef K_DEBUG
   test.clk(clk);
   test.instruction(instruction);
   test.dataA(dataA);
   test.dataB(dataB);
   test.result(result);
+  #endif
 
   // Erstellen eine Impulsdiagrammes, dass mit dem Plugion GTK_wave betrachtet werden kann.
   // Hierdurch wird ein Debugging möglich.
