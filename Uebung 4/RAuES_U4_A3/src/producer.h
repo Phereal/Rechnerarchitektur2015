@@ -15,7 +15,6 @@
 // Custom Header
 #include "packet.h"
 
-
 SC_MODULE(producer)
 {
     sc_in<bool> clk;

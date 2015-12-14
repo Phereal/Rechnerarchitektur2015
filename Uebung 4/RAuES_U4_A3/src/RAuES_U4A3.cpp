@@ -41,6 +41,7 @@ int sc_main(int argc, char *argv[])
 {
   int numIn, numOut, genSpeed, inClock, outClock, bufferSize;
 
+
   // ------------------------------
   // check for right parameter count
   // ------------------------------
@@ -48,6 +49,7 @@ int sc_main(int argc, char *argv[])
   {
     return -1;
   }
+
 
   // ------------------------------
   // Convert parameters from strings to integers
@@ -58,6 +60,7 @@ int sc_main(int argc, char *argv[])
   inClock = stoi(argv[4]);
   outClock = stoi(argv[5]);
   bufferSize = stoi(argv[6]);
+
 
   // ------------------------------
   // Check parameters
@@ -91,10 +94,12 @@ int sc_main(int argc, char *argv[])
     return -1;
   }
 
+
   // ------------------------------
   // initialize random seed for producer
   // ------------------------------
   srand (time(NULL));
+
 
   // ------------------------------
   // clocks
@@ -102,11 +107,13 @@ int sc_main(int argc, char *argv[])
   sc_clock clkIn("clkIn", inClock, SC_NS, 0.5);
   sc_clock clkOut("clkOut", outClock, SC_NS, 0.5);
 
+
   // ------------------------------
   // signals
   // ------------------------------
   sc_signal<packet> inList[numIn];
   sc_signal<packet> outList[numOut];
+
 
   // ------------------------------
   // Erstellen der Objekte der Klassen
@@ -116,6 +123,7 @@ int sc_main(int argc, char *argv[])
   #endif
   producer *pList[numIn];
   consumer *cList[numOut];
+  Switch sw("Switch", numIn, numOut, bufferSize);
 
   for(int i = 0; i < numIn; ++i)
   {
@@ -131,20 +139,25 @@ int sc_main(int argc, char *argv[])
     cList[i] = new consumer(name.c_str());
   }
 
+
   // ------------------------------
   // Connect Signals
   // ------------------------------
-  // connect signals to producer
+  // connect switch clock
+  sw.clk(clkIn);
+  // connect signals to producer and switch inputs
   for(int i = 0; i < numIn; ++i)
   {
     pList[i]->clk(clkIn);
     pList[i]->out(inList[i]);
+    sw.in[i](inList[i]);
   }
-  // connect signals to producer
+  // connect signals to producer and switch outputs
   for(int i = 0; i < numOut; ++i)
   {
     cList[i]->clk(clkOut);
     cList[i]->in(outList[i]);
+    sw.out[i](outList[i]);
   }
 
 
@@ -164,10 +177,12 @@ int sc_main(int argc, char *argv[])
   // ------------------------------
   sc_start();
 
+
   // ------------------------------
   // Close file of the wave diagramm
   // ------------------------------
   sc_close_vcd_trace_file(Tf);
+
 
   return 0;
 }

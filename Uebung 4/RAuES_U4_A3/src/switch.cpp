@@ -5,16 +5,23 @@
  *      Author: steffen
  */
 
+// C/C++ Header
+// Class Header
 #include "switch.h"
 
-Switch::Switch()
+Switch::Switch(sc_module_name name, int n, int m, int bufferSize) :
+    sc_module(name), n(n), m(m), bufferSize(bufferSize)
 {
-  // TODO Auto-generated constructor stub
+  in = new sc_in<packet>[n];
+  out = new sc_out<packet>[m];
+  buffer = new packet[bufferSize];
 
+  SC_HAS_PROCESS(Switch);
+  SC_METHOD(distribute);
+  sensitive << clk;
 }
 
-Switch::~Switch()
+void Switch::distribute()
 {
-  // TODO Auto-generated destructor stub
-}
 
+}
