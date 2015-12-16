@@ -34,13 +34,19 @@ SC_MODULE(Switch)
 
     void distribute();
 
+    // private Hilfsvariablen
     private:
-    int n;
-    int m;
-    int bufferSize;
+    int n; // Anzahl Eingaenge (gesetzt per Konstruktor)
+    int m; // Anzahl Ausgaenge (gesetzt per Konstruktor)
+    int bufferSize; // Groesse des Buffers je Ausgang (gesetzt per Konstruktor)
+    // pointer auf den Buffer (2-dim. Array, [m][bufferSize])
+    // pointer, da die dimensionen erst mit dem Konstruker uebergeben werden,
+    // speicher wird also vor der simulation im konstruktor allokiert.
     packet **buffer;
+    // speichert die Anzahl der belegten Plaetze fuer jeden Ausgangsbuffer
     int *bufferCount;
 
+    // hilfsmethoden die den Zugriff auf den Buffer regeln (Einhaltung des Fifo prinzips)
     bool insertPackageIntoBuffer(int producer, int consumer);
     packet ReadPackageFromBuffer(int cIdx);
 };

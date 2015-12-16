@@ -16,7 +16,7 @@ Switch::Switch(sc_module_name name, int n, int m, int bufferSize) :
     in = new sc_in<packet> [n];
     out = new sc_out<packet> [m];
 
-    //Is set to true if there is a pending packet on that adress.
+    // Is set to true if there is a pending packet on that address.
     pPending = new sc_in<bool> [n];
 
     //pReceived = new sc_out<bool>[n];
