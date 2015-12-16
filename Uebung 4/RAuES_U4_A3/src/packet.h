@@ -7,7 +7,7 @@
 
 using namespace std;
 
-//Tutoriums-Datei dist.ccp entnommen
+//An Tutoriums-Datei dist.ccp angelehnt
 struct packet
 {
     int addr;
