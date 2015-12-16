@@ -1,6 +1,12 @@
 /*
  * switch.cpp
  *
+ * Leitet packets von producern an consumer weiter.
+ * Außerdem werden Pakete gepuffert, wenn ein Ziel-consumer beschäftigt ist.
+ * Pakete mit höherer Priorität werden immer vor nicht-prioritäts-Paketen im
+ * Puffer weitergeleitet. Andere Zeitgleich an diesen consumer gesendete Pakete
+ * gehen stattdessen in den Puffer.
+ *
  *  Created on: 14.12.2015
  *      Author: steffen
  */
