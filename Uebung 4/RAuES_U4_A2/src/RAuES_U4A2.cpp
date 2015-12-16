@@ -13,8 +13,16 @@
 using namespace std;
 
 /*
- * Debug-Definitoonen
- * todo Habe ich kein Plan von, sollte Steffen kurz beschreiben!
+ * Debug-Definitionen
+ * Per Schalter K_DEBUG werden die in der Alu ausgefuehrten Befehle in die
+ * Standartausgabe gedruckt. Die Moeglichkeit das per Schalter zu steuern wurde
+ * so gewaehlt, um zur Entwicklungszeit und beim Ausfuehren der Tests auch
+ * manuell nachvollziehen zu koennen was die alu macht. Weiterhin wird mit
+ * aktivem Schalter die Testbench ausgefuehrt.
+ * Da fuer die eigentliche Abgabe von uns weder die prints noch die Testbench
+ * gewuenscht ist (da der Pruefer vrsl. eine eigene Testbench, mit ggf. eigenen
+ * prints hat und somit Fehlverhalten und eine unuebersichtliche Konsole
+ * vermieden wird).
  */
 
 //#define K_DEBUG
@@ -26,7 +34,9 @@ using namespace std;
 
 /*
  * InstructionSet
- * Die folgenden Definitionen dienen einem leichteren Verständis der Operationen, sodass sich der Hex-Wert nicht gemerkt werden muss.
+ * Die folgenden Definitionen dienen einem leichteren Verständis der Operationen,
+ * sodass sich der Hex-Wert nicht gemerkt werden muss. Außerdem muss man bei
+ * Aenderung der Befehle nur an einer Stelle Aenderungen vornehmen.
  */
 #define IS_ADD  (0x01)
 #define IS_SUB  (0x02)
@@ -40,12 +50,15 @@ using namespace std;
 #define IS_COMP (0x14)
 
 /*
- * Das Klasse waiter dient dazu, die Simulation nach 1ms zu stoppen.
+ * Das Klasse waiter dient dazu, die Simulation nach 1ms zu stoppen. Damit,
+ * falls z.B. irgend ein unvorhersehbarer Fehler auftritt, die Anwendung nicht
+ * unendlich laueft, werden diese Klasse verwendet. 1ms reicht fuer unsere Tests
+ * aus. Fuer die Abgabe wird das Modul deaktiviert und die Alu laueft unendlich.
+ * Die Klasse basiert auf den Tutorium-Beispielen.
  */
 #ifdef K_DEBUG
 SC_MODULE(waiter)
 {
-
     void waiting()
     {
       wait(1, SC_MS);
@@ -60,20 +73,23 @@ SC_MODULE(waiter)
 #endif
 
 /*
- * Die Klasse 'tester' stellt die Testbench des Programms dar. Hiermit werden für jede Operation mindestens 10
- * Testfälle durchgeführt und mit erwarteten Ergebnissen verglichen. Sollte dabei ein Ergebnis nicht den erwarteten
- * Werte entsprechen, wird über eine if-Klausel eine Exception geworfen und das Programm mit einer Fehlermeldung abgebrochen.
+ * Die Klasse 'tester' stellt die Testbench des Programms dar. Hiermit werden
+ * für jede Operation mindestens 10 Testfälle durchgeführt und mit erwarteten
+ * Ergebnissen verglichen. Sollte dabei ein Ergebnis nicht den erwarteten Werten
+ * entsprechen, wird über eine if-Klausel eine Exception geworfen und das
+ * Programm mit einer Fehlermeldung abgebrochen.
  *
- * In der Fehlermeldung wird die Codezeile genannt, in dem der Fehler aufgetreten ist, sowie die Werte für dataA und dataB
- * sowie für result.
+ * In der Fehlermeldung wird die Codezeile genannt, in dem der Fehler
+ * aufgetreten ist, sowie die Werte für dataA und dataB sowie für result.
  *
- * Am Ende der Testbench wird eine Benachrichtigung ausgegeben, dass die Testbench erfolgreich ausgeführt wurde und das Programm
- * wird über ein 'sc_stop()' beendet.
+ * Am Ende der Testbench wird eine Benachrichtigung ausgegeben, dass die
+ * Testbench erfolgreich ausgeführt wurde und das Programm wird über ein
+ * 'sc_stop()' beendet.
  */
 #ifdef K_DEBUG
 SC_MODULE(tester)
 {
-    // Die Übergabe der Variablen für instruction, dataA und dataB sowie clk und result.
+    // Die Übergabe der Signale für instruction, dataA und dataB sowie clk und result.
     sc_out<sc_uint<8> > instruction;
     sc_out<sc_int<64> > dataA;
     sc_out<sc_int<64> > dataB;
@@ -81,7 +97,8 @@ SC_MODULE(tester)
     sc_in<bool> clk;
     sc_in<sc_int<64> > result;
 
-      // Die Methode 'testing()' beinhaltet alle Testfälle und überprüft diese anhand von erwartet Ausgaben auf richtige Funktionalität.
+      // Die Methode 'testing()' beinhaltet alle Testfälle und überprüft diese
+      // anhand von erwarteten Ausgaben auf richtige Funktionalität.
       void testing()
       {
         /*
@@ -247,7 +264,7 @@ SC_MODULE(tester)
 
         /*
          *  Testing the modulo
-         *  Die Modulo-Operationn wird getestet, dabei wird über eine for-Schleife jewils die Werte für dataA und dataB dividiert und
+         *  Die Modulo-Operation wird getestet, dabei wird über eine for-Schleife jewils die Werte für dataA und dataB dividiert und
          *  der sich ergebende Rest 'result' wird mit dem erwarteten Wert aus dem Array testOutput[] verglichen.
          *
          *  Wenn die Werte nicht übereinstimmen, wird eine Exception geworfen. Es werden sowohl positive als auch negative Eingaben 'gemodulot',
@@ -707,16 +724,22 @@ SC_MODULE(tester)
 #endif
 
 /*
- * Die Klasse alu liefert die Methode inst, die die einzelnen Berechnungen ausführt.
+ * Die Klasse alu stellt die Methode inst bereit, in der die einzelnen Berechnungen ausführt werden.
  * Das ganze geschieht relativ selbsertklärend und man benötigt aufgrund der in C++ gut implementierten
  * Bitvektor-Operationen wenige kniffe, um die Berechnungen richtig durchzuführen!
+ * Es werden einfach die verschiedenen Befehlscodes (signal instruction) per
+ * switch unterschieden. Sollte ein Befehl nicht erkannt werden, wird 0 am
+ * Ausgang result angelegt.
+ *
  */
 SC_MODULE(alu)
 {
-    int64_t tmpResult = 0; //lokale Variable, in der das Ergebnis der Berechnung zwischengespeichert wird. Wurde für die Fehlerbehandlung angelegt,
-    // um ggf. falscheingaben abzufangen.
+  // lokale Variable, in der das Ergebnis der Berechnung zwischengespeichert wird.
+  // Wurde angelegt, um das berechnete Ergebnis ohne weitere Rechnung an die
+  // print-Ausgabe weiterzugeben.
+    int64_t tmpResult = 0;
 
-    // Die lokalen Variablen zur Speicherung von instruction, clk, dataA und dataB sowie result.
+    // Die Ein- und Ausgaenge fuer instruction, clk, dataA und dataB sowie result.
     sc_in<bool> clk;
     sc_in<sc_uint<8> > instruction;
     sc_in<sc_int<64> > dataA;
@@ -724,9 +747,10 @@ SC_MODULE(alu)
 
     sc_out<sc_int<64> > result;
 
+    // fuert die eigentliche alu aus
     void inst()
     {
-      //Ein Switch auf instruction um die jeweilige Operation auszuführen.
+      // Ein Switch auf instruction um die jeweilige Operation auszuwerten.
       switch(instruction.read())
       {
         // Addition der Werte von dataA und dataB und Ausgabe in result
@@ -736,7 +760,7 @@ SC_MODULE(alu)
           PRINT_DEBUG("Add: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
-          // Substraktion der Werte von dataA und dataB und Ausgabe in result
+        // Substraktion der Werte von dataA und dataB und Ausgabe in result
         case IS_SUB:
           tmpResult = dataA.read() - dataB.read();
           result.write(tmpResult);
@@ -750,7 +774,8 @@ SC_MODULE(alu)
           PRINT_DEBUG("Mul: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
-          // Division der Werte von dataA und dataB und Ausgabe in result [Bei Division durch 0 wird 0x00 an result ausgegeben]
+          // Division der Werte von dataA und dataB und Ausgabe in result
+          // [Bei Division durch 0 wird 0x00 an result ausgegeben]
         case IS_DIV:
           // check for division through 0
           if(dataB.read())
@@ -767,7 +792,8 @@ SC_MODULE(alu)
           }
           break;
 
-          // Modulo der Werte von dataA und dataB und Ausgabe in result [Bei Division durch 0 wird 0x00 an result ausgegeben]
+        // Modulo der Werte von dataA und dataB und Ausgabe in result
+        // [Bei Division durch 0 wird 0x00 an result ausgegeben]
         case IS_MOD:
           if(dataB.read())
           {
@@ -783,36 +809,38 @@ SC_MODULE(alu)
           }
           break;
 
-          // Bit Shifting des Wertes von dataA um den Wert von dataB. Bei positiven Werten wird nach links geshifet, bei negativen Werten nach rechts.
+        // Bit Shifting des Wertes von dataA um den Wert von dataB. Bei positiven
+        // Werten wird nach links geshifet, bei negativen Werten nach rechts.
         case IS_BS:
           tmpResult = dataA.read() << dataB.read();
           result.write(tmpResult);
           PRINT_DEBUG("Shift: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
-          // Bitweises OR der Werte von dataA und dataB, Ausgabe per 'result'
+        // Bitweises OR der Werte von dataA und dataB, Ausgabe per 'result'
         case IS_BOR:
           tmpResult = (dataA.read() | dataB.read());
           result.write(tmpResult);
           PRINT_DEBUG("Or: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
-          // Bitweises AND der Werte von dataA und dataB, Ausgabe per 'result'
+        // Bitweises AND der Werte von dataA und dataB, Ausgabe per 'result'
         case IS_BAND:
           tmpResult = (dataA.read() & dataB.read());
           result.write(tmpResult);
           PRINT_DEBUG("And: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
-          // Bitweises XOR der Werte von dataA und dataB, Ausgabe per 'result'
+        // Bitweises XOR der Werte von dataA und dataB, Ausgabe per 'result'
         case IS_BXOR:
           tmpResult = (dataA.read() ^ dataB.read());
           result.write(tmpResult);
           PRINT_DEBUG("Xor: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
-          // Vergleich der Werte von dataA und dataB, Ausgabe per 'result'. Wenn Gleichheit dan result = 0, wenn links größer dann result = 1,
-          // wenn rechts größer dann result = -1.
+        // Vergleich der Werte von dataA und dataB, Ausgabe per 'result'.
+        // Wenn Gleichheit dann result = 0, wenn links größer dann result = 1,
+        // wenn rechts größer dann result = -1.
         case IS_COMP:
           // return 0 if the same
           if(dataA.read() == dataB.read())
@@ -832,10 +860,10 @@ SC_MODULE(alu)
           PRINT_DEBUG("Comp: ", dataA.read(), dataB.read(), tmpResult);
           break;
 
-          // Der Default Fall, wenn die Operation nicht den bekannten entspricht wird 0x00 an result ausgegeben. Andere Fehlerbehandlungen waren nicht
-          // erforderlich durch die Aufgabenstellung.
+        // Der Default Fall, wenn die Operation nicht den bekannten entspricht
+        // wird 0 an result ausgegeben. Andere Fehlerbehandlungen waren nicht
+        // erforderlich durch die Aufgabenstellung.
         default:
-          // todo
           tmpResult = 0;
           result.write(tmpResult);
           PRINT_DEBUG("Default: ", dataA.read(), dataB.read(), tmpResult);
@@ -855,7 +883,7 @@ SC_MODULE(alu)
 
 int sc_main(int, char *[])
 {
-  // clock
+  // clock T=10ns
   sc_clock clk("clk", 10, SC_NS, 0.5);
 
   // inputs
@@ -867,6 +895,7 @@ int sc_main(int, char *[])
   sc_signal<sc_int<64> > result;
 
   // Erstellen der Objekte der Klassen
+  // waiter und tester nur wenn benoetigt (fuer eigene Tests)
   alu alui("alu");
   #ifdef K_DEBUG
   waiter w("Waiter");
@@ -890,7 +919,8 @@ int sc_main(int, char *[])
   #endif
 
   // Erstellen eine Impulsdiagrammes, dass mit dem Plugion GTK_wave betrachtet werden kann.
-  // Hierdurch wird ein Debugging möglich.
+  // Hierdurch wird ein Debugging möglich. Die erstellte datei wurde von uns
+  // manuell betrachtet um das zeitliche Verhalten unserer Alu zu testen.
   sc_trace_file* Tf;
   Tf = sc_create_vcd_trace_file("waves");
   Tf->set_time_unit(1, SC_NS);
@@ -900,6 +930,7 @@ int sc_main(int, char *[])
   sc_trace(Tf, dataB, "dataB");
   sc_trace(Tf, result, "result");
 
+  // starte die siumulation
   sc_start();
 
   sc_close_vcd_trace_file(Tf);
