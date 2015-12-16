@@ -1,6 +1,9 @@
 /*
  * Producer.cpp
  *
+ * Erstellt mit gegebener Wahrscheinlichkeit Pakete mit zufälligem Inhalt
+ * und zufälliger Priotität.
+ *
  *  Created on: 14.12.2015
  *      Author: steffen und daniel!
  */

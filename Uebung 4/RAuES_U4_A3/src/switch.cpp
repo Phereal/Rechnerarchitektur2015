@@ -12,7 +12,7 @@
 Switch::Switch(sc_module_name name, int n, int m, int bufferSize) :
     sc_module(name), n(n), m(m), bufferSize(bufferSize)
     {
-    //Aall packet in- and outputs
+    //All packet in- and outputs
     in = new sc_in<packet> [n];
     out = new sc_out<packet> [m];
 
