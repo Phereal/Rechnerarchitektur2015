@@ -1,7 +1,7 @@
 /*
  * RAuES_U5.cpp
  * In dieser Klasse wird das Programm gestartet, und die einzelnen Router-Objekte werden erzeugt.
- * Jedes Router-Objekt verfügt über ein Modul-Objekt, welches RAM, Gatway, Cache oder Compute sein kann.
+ * Jedes Router-Objekt verfügt über ein Modul-Objekt, welches RAM, Gaetway, Cache oder Compute sein kann.
  * Diese Module erben von der abstrakten Klasse "module", welches die Kommunikationsschnittstelle
  * zum Router-Objekt darstellt.
  *
@@ -15,20 +15,47 @@
  * des Router-Objekt-Arrays verbunden ist. [Bei einem 8x8 Array das Element an Stelle [7][7].
  *
  * Das Erste Router-Objekt an Array-Position [0][0] ist immer das Router-Objekt, das mit dem
- * RAM-Modul verbunden ist.
+ * RAM-Modul verbunden ist. Das RAM-Modul verfügt über zwei getrennte Speicherbänke,
+ * eine Speicherbank für das Originalbild und eine Speicherbank für das neu berechnete Bild.
+ * Wenn das Programm gestartet wird, erhält das RAM-Modul vom Gateway-Modul ein Paket mit dem
+ * OPCODE [rfi] (readfile) wodurch über die Klasse 'pgm' das betreffende Bild in das RAM
+ * eingelesen wird. Wenn dieser Vorgang abgeschlossen ist, sendet das RAM-Modul eine
+ * Bestätiung über den Abschluss des Prozesses mit dem OPCODE [rff] (readfilefinished).
+ *
+ * Anschließend beginnt das Gateway-Modul mit der Berechnung.
  *
  * Das Gateway-Modul steuert dabei die einzelnen Compute-Module und teilt ihnen mit, welchen Pixel
- * sie als nächstes berechnen sollen. Dabei sind dem Gateway-Modul alle Adresse bekannt, sodass
- * der Execute Befehl direkt an das betreffende Compute-Modul gesendet werden kann.
+ * sie als nächstes berechnen sollen. Dabei sind dem Gateway-Modul alle Adressen (der Compute-Module
+ * bekannt, sodass der Execute Befehl direkt an das betreffende Compute-Modul gesendet werden kann.
  *
  * Sobald das Compute-Modul den Execute-Befehl erhalten hat, fängt dieses damit an, die
- * betreffenden Informationen über die Nachbarpixel abzufragen.
+ * betreffenden Informationen über die Nachbarpixel aus den am nächsten Cache abzufragen.
+ *
+ * Wenn der Cache nicht über den entsprechenden Pixel verfügt, wird dieser aus dem RAM in
+ * den Cache nachgeladen. Hierbei wird die einfache Verdrängungsstrategie FIFO angewendet.
+ *
+ * Befindet sich der entsprechende Pixel im Cache, wird dieser an das Compute-Modul gesendet.
+ *
  * Wenn alle Informationen zur Verfügung stehen, wird die Berechnung durchgeführt und der
  * neu entstandene Pixel an den RAM gesendet.
+ *
  * Gleichzeitig wird eine Meldung an das Gateway gesendet, dass die Berechnung abgeschlossen
  * wurde und eine neuer Execute-Befehl empfangen werden kann.
  *
- * Für die Synchronisation der Berechnung wird der Modul
+ * Wenn alle Berechnungen durchgeführt wurden sendet das Gateway-Modul ein Paket mit dem
+ * OPCODE [wfi] (writefile) an das RAM-Modul.
+ *
+ * Daraufhin schreibt das RAM-MODUL den Inhalt der zweiten Speicherbank über die Klasse 'pgm'
+ * in eine Datei mit dem Namen 'noc.pgm'. Wenn dieser Vorgang abgeschlossen ist, sendet das
+ * RAM-Modul ein Paket mit dem OPCODE [wff] (writefilefinished) an das Getway-Modul,
+ * woraufhin der Programmablauf beendet wird.
+ *
+ * Generell wird bei jedem Kommunikationsvorgang eine Empfangsbestätigung gesendet, da wir
+ * in dieser Lösung mit Sende- und Empfangsbuffer arbeiten.
+ *
+ * Die entsprechenden Pakete werden erst aus den SendeBuffern gelöscht, wenn die
+ * Empfangsbestätigung eingetroffen ist. So kann garantiert werden, dass keine Pakete
+ * verloren gehen.
  */
 
 #include <iostream>

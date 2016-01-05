@@ -33,6 +33,15 @@
  *
  * 8. Als Ergebnis einer Berechnung des Compute-Moduls an das Gateway-Modul [o_pay] 0x07
  *
+ * 9. Als Aufforderung des Gateway-Moduls an das RAM-Modul den Inhalt der Bilddatei einzulesen [rfi] 0x08
+ *
+ * 10. Als Information, des RAM-Moduls, an das Gateway-Modul, das das einlesen beendet ist [rff] 0x09
+ *
+ * 11. Als Aufforderung des Gateway-Moduls an das RAM-Modul den Inhalt der zweiten Speicherbank
+ *     in die Datei 'noc.pgm' zu schreiben [wfi] 0x10
+ *
+ * 12. Als Information, des RAM-Moduls, an das Gateway-Modul, das das schreiben beendet ist [wff] 0x11
+ *
  * Da nicht sichergestellt werden kann, dass das Paket empfangen wird [Buffer des Empfängers ist voll],
  * müssen wir hier mit einer Empfangsbestätigung arbeiten. Die Empfangsbestätigung muss über eine eindeutige
  * Identifikation verfügen, da sonst nicht zugeordnet werden kann, welches Acknowledge welchem Paket zugeordnet
