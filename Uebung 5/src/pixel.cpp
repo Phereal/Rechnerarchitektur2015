@@ -2,7 +2,7 @@
  * paket.cpp
  *
  * Ein Paket dient als eine Kommunikationseinheit zwischen den einzelnen Routern bzw. Modulen und
- * beinhaltet dabei neben Statusinformationen [OPCODE; SENDER; RECEIVER; PAYLOAD] ggf. auch einen
+ * beinhaltet dabei neben Statusinformationen [ID; OPCODE; SENDER; RECEIVER; PAYLOAD] ggf. auch einen
  * Bildwert für einen Pixel.
  *
  * Bei dem Payload handelt es sich hier laut Aufgabenstellung um einen Pixel.
@@ -19,15 +19,27 @@
  * adressiert werden können.
  *
  * Ein Paket kann dabei in unterschiedlichen Varianten genutzt werden [OPCODE]:
+ *
  * 1. Als Berechnungsauftrag des Gateway-Moduls für ein Compute-Modul [exe] 0x00
- * 2. Als Bestätigung des Compute-Moduls, dass die Berechnung durchgeführt wurde [fin] 0x01
- * 3. Als Empfangsanfrage für ein Paket [req] (request) 0x02
- * 2. Als Empfangsbestätigung für ein Paket [ack] (acknowledge) 0x03
- * 3. Als Informationsträger aufgrund einer Empfangsanfrage [i_pay] 0x04
- * 4. oder als Ergebnis einer Berechnung [o_pay] 0x05
+ * 2. Als Bestätigung des Compute-Moduls, dass die Berechnung durchgeführt wurde an das Gateway-Modul [fin] 0x01
+ *
+ * 3. Als Empfangsanfrage für ein Paket vom Compute-Modul an den Cache [c_req] (Cache-request) 0x02
+ * 4  Als Empfangsanfrage für ein Paket vom Cache-Modul an das RAM-Modul [r_req] (RAM-request) 0x03
+ *
+ * 5. Als Empfangsbestätigung für ein Paket mit der betreffenden Paket-ID [ack] (acknowledge) 0x04
+ *
+ * 6. Als Informationsträger aufgrund einer Empfangsanfrage an den Cache-Modul vom Compute-Modul  [ic_pay] 0x05
+ * 7. Als Informationsträger aufgrund einer Empfangsanfrage an das RAM-Modul vom Cache-Modul [ir_pay] 0x06
+ *
+ * 8. Als Ergebnis einer Berechnung des Compute-Moduls an das Gateway-Modul [o_pay] 0x07
  *
  * Da nicht sichergestellt werden kann, dass das Paket empfangen wird [Buffer des Empfängers ist voll],
- * müssen wir hier mit einer Empfangsbestätigung arbeiten.
+ * müssen wir hier mit einer Empfangsbestätigung arbeiten. Die Empfangsbestätigung muss über eine eindeutige
+ * Identifikation verfügen, da sonst nicht zugeordnet werden kann, welches Acknowledge welchem Paket zugeordnet
+ * werden kann.
+ *
+ * Die ID ist ein HASH-Wert, der aus OPCODE, SENDER und RECEIVER gebildet wird. Empfangsbestätigungen werden immer
+ * mit dem gleichen HASH-Wert gesendet, wie die Pakete die empfangen wurden.
  */
 
 #include "paket.h"
