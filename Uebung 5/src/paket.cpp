@@ -45,13 +45,15 @@
  * Da nicht sichergestellt werden kann, dass das Paket empfangen wird [Buffer des Empfängers ist voll],
  * müssen wir hier mit einer Empfangsbestätigung arbeiten. Die Empfangsbestätigung muss über eine eindeutige
  * Identifikation verfügen, da sonst nicht zugeordnet werden kann, welches Acknowledge welchem Paket zugeordnet
- * werden kann.
+ * werden kann. Auf die empfangsbrestätigung selber wird keine neue Empfangsbestätigung gesendet.
  *
  * Die ID ist ein HASH-Wert, der aus OPCODE, SENDER und RECEIVER gebildet wird. Empfangsbestätigungen werden immer
  * mit dem gleichen HASH-Wert gesendet, wie die Pakete die empfangen wurden.
  */
 
 #include "paket.h"
+
+#include <systemc.h>
 
 paket::paket()
 {

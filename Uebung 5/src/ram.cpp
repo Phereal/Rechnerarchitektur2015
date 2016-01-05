@@ -1,11 +1,12 @@
 /*
  * ram.cpp
  *
- *  Created on: 05.01.2016
- *      Author: stefan
+ * erbt von module.cpp
  */
 
 #include "ram.h"
+
+#include <systemc.h>
 
 ram::ram()
 {

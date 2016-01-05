@@ -1,11 +1,14 @@
 /*
  * compute.cpp
  *
- *  Created on: 05.01.2016
- *      Author: stefan
+ * erbt von module.cpp
+ *
+ *
  */
 
 #include "compute.h"
+
+#include <systemc.h>
 
 compute::compute()
 {

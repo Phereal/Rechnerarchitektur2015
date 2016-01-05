@@ -1,11 +1,14 @@
 /*
  * cache.cpp
  *
- *  Created on: 05.01.2016
- *      Author: stefan
+ * erbt von module.cpp
+ *
+ *
  */
 
 #include "cache.h"
+
+#include <systemc.h>
 
 cache::cache()
 {

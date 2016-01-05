@@ -1,11 +1,13 @@
 /*
  * gateway.cpp
  *
- *  Created on: 05.01.2016
- *      Author: stefan
- */
+ * erbt von module.cpp
+ *
+*/
 
 #include "gateway.h"
+
+#include <systemc.h>
 
 gateway::gateway()
 {
