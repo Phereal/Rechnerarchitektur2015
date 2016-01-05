@@ -19,7 +19,10 @@
  * eine Speicherbank für das Originalbild und eine Speicherbank für das neu berechnete Bild.
  * Wenn das Programm gestartet wird, erhält das RAM-Modul vom Gateway-Modul ein Paket mit dem
  * OPCODE [rfi] (readfile) wodurch über die Klasse 'pgm' das betreffende Bild in das RAM
- * eingelesen wird. Wenn dieser Vorgang abgeschlossen ist, sendet das RAM-Modul eine
+ * eingelesen wird. Wenn dieser Vorgang a *
+ *  * Wenn Caches umgesetzt werden, erhält der Router als Informationsquelle in seinem Routing-Table nicht die Adresse des RAM-Moduls,
+ * sondern die Adresse des nächstgelegenen Caches. Es ist Aufgabe des Caches, die Informationen aus dem RAM zu erhalten und im eigenen
+ * Speicher vorzuhalten.bgeschlossen ist, sendet das RAM-Modul eine
  * Bestätiung über den Abschluss des Prozesses mit dem OPCODE [rff] (readfilefinished).
  *
  * Anschließend beginnt das Gateway-Modul mit der Berechnung.
