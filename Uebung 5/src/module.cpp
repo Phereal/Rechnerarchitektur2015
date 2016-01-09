@@ -26,13 +26,34 @@
 
 #include <systemc.h>
 
-module::module()
-{
-  // TODO Auto-generated constructor stub
+module::module(sc_module_name name, int sendBufferSize) :
+    sc_module(name), bufferSize(bufferSize)
+    {
+    //Anbindung zum Router
+    sc_in<paket> routerIn;
+    sc_out<paket> routerOut;
 
-}
+    sendBuffer = new packet[sendBufferSize];
+
+    SC_HAS_PROCESS(module);
+    SC_METHOD(refresh)
+    sensitive << clk.pos();
+
+    // TODO Auto-generated constructor stub
+
+    }
 
 module::~module()
-{
-  // TODO Auto-generated destructor stub
-}
+    {
+    // TODO Auto-generated destructor stub
+    }
+
+/*
+ * Wird jeden Clock ausgeführt.
+ * -Das älteste, nicht gesendete Paket aus dem sendBuffer entfernen und an Router übermitteln.
+ * -Das dazugehörige gesendete Paket aus dem sendBuffer entfernen, wenn die Sendebestätigung an routerIn angliegt.
+ */
+void module:: refresh()
+    {
+
+    }
