@@ -24,6 +24,8 @@
 #include "module.h"
 #include "paket.h"
 
+#include <vector>
+
 #include <systemc.h>
 
 module::module(sc_module_name name, int sendBufferSize) :
@@ -33,7 +35,10 @@ module::module(sc_module_name name, int sendBufferSize) :
     sc_in<paket> routerIn;
     sc_out<paket> routerOut;
 
-    sendBuffer = new packet[sendBufferSize];
+    //Puffer als Vektor (für einfache Elementeinfügung )
+    std::vector<packet> sendBuffer = {};
+    //Zähler für gesendete Pakete.
+    std::map<paket, int> sentPaketResponseTimesList;
 
     SC_HAS_PROCESS(module);
     SC_METHOD(refresh)
@@ -55,5 +60,45 @@ module::~module()
  */
 void module:: refresh()
     {
+    //1 Paket senden
+    int bufferIterator = 0;
+    while(true)
+	{
+	//Wenn Pakete fertig sind folgendes implementieren:
+	//1.: Wähle (wenn vorhanden) das erste, nicht gesendete Paket aus.
+	//2.: Gib dieses Element an routerOut weiter.
+	//3.: Entferne das Element und lass hintere Elemente nachrücken
+	break;
+	}
 
+    //Empfangenes Paket auf Sendebestätigung überprüfen
+    bool confirmationReceived; // = Paket-Bedingung, die es als Bestätigung markiert
+
+    if (confirmationReceived)
+	{
+	//Zugehöriges Paket aus Sende-Puffer entfernen.
+	}
+    else
+	{
+	//Führe Modul-Spezifischen compute out.
+	compute();
+	}
+
+    //Zuletzt müssen die Antwortzeit aller gesendeten und noch nicht angekommenen Pakete verarbeitet werden.
+    for (int i = 0; i<sentPaketResponseTimesList.size();i++)
+	{
+
+	}
+    return 0;
     }
+/*
+ * In dieser Klasse lediglich ein Platzhalter.
+ * In Unterklassen für den Umgang mit Paketen in routerIn verantwortlich.
+ */
+void module:: compute()
+    {
+    cout << "Eltern-compute() wurde aufgerufen.";
+    return 0;
+    }
+
+
