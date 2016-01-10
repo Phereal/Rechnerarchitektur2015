@@ -32,16 +32,16 @@ module::module(sc_module_name name, int sendBufferSize) :
     sc_module(name), bufferSize(bufferSize)
     {
     //Anbindung zum Router
-    sc_in<paket> routerIn;
-    sc_out<paket> routerOut;
+    sc_in < paket > routerIn;
+    sc_out < paket > routerOut;
 
-    //Puffer als Vektor (für einfache Elementeinfügung )
-    std::vector<packet> sendBuffer = {};
+    //Puffer als Vektor (für einfache Elementeinfügung und FIFO-ähnliches Verhalten)
+    std::vector < packet > sendBuffer;
     //Zähler für gesendete Pakete.
-    std::map<paket, int> sentPaketResponseTimesList;
+    pair<*paket, int> pendingPaketList[bufferSize];
 
-    SC_HAS_PROCESS(module);
-    SC_METHOD(refresh)
+    SC_HAS_PROCESS( module);
+    SC_METHOD    (refresh)
     sensitive << clk.pos();
 
     // TODO Auto-generated constructor stub
@@ -58,18 +58,17 @@ module::~module()
  * -Das älteste, nicht gesendete Paket aus dem sendBuffer entfernen und an Router übermitteln.
  * -Das dazugehörige gesendete Paket aus dem sendBuffer entfernen, wenn die Sendebestätigung an routerIn angliegt.
  */
-void module:: refresh()
+void module::refresh()
     {
-    //1 Paket senden
-    int bufferIterator = 0;
-    while(true)
-	{
-	//Wenn Pakete fertig sind folgendes implementieren:
-	//1.: Wähle (wenn vorhanden) das erste, nicht gesendete Paket aus.
-	//2.: Gib dieses Element an routerOut weiter.
-	//3.: Entferne das Element und lass hintere Elemente nachrücken
-	break;
-	}
+
+    /*Wenn Pakete fertig sind folgendes implementieren:
+     *1.: 	Überprüfe, ob eine Sendebestätigung eingetroffen ist.
+     *	Wenn ja, entferne das zugehörige Paket aus dem Puffer, sodass andere Pakete nachrücken.
+     *2.:	Erhöhe den Antwortzeit-zähler aller gesendeten Pakete im Puffer.
+     *	Überprüfe, ob Elemente bereits länger als 100 Zyklen auf Bestätigung warten.
+     *	Wenn ja, entferne deren sent-Flag, damit diese erneut gesendet werden.
+     *3.:	Sende das älteste Paket ohne sent-Flag.
+     */
 
     //Empfangenes Paket auf Sendebestätigung überprüfen
     bool confirmationReceived; // = Paket-Bedingung, die es als Bestätigung markiert
@@ -77,6 +76,7 @@ void module:: refresh()
     if (confirmationReceived)
 	{
 	//Zugehöriges Paket aus Sende-Puffer entfernen.
+	//TODO Fertig stellen, wenn Paket fertig ist.
 	}
     else
 	{
@@ -84,21 +84,37 @@ void module:: refresh()
 	compute();
 	}
 
-    //Zuletzt müssen die Antwortzeit aller gesendeten und noch nicht angekommenen Pakete verarbeitet werden.
-    for (int i = 0; i<sentPaketResponseTimesList.size();i++)
+    //Nun müssen die Antwortzeit aller gesendeten und noch nicht angekommenen Pakete verarbeitet werden.
+    for (int i = 0; i < pendingPaketList.size(); i++)
 	{
+	pendingPaketList[i].second++;
 
+	if (pendingPaketList[i].second > 99)
+	    {
+	    //sent-Flag von dem Paket entfernen, damit es im nächste Paket nachrücken kann.
+	    //TODO Fertig stellen, wenn Paket fertig ist.
+
+	    }
 	}
+
+    //Zuletzt muss so lange durch den sende-Puffer iteriert werden, bis ein Element ohne sent-Flag gefunden wurde.
+    //Sende dieses Paket an routerOut.
+    int bufferIterator = 0;
+    while (true)
+	{
+	//TODO Fertig stellen, wenn Paket fertig ist.
+	break;
+	}
+
     return 0;
     }
 /*
  * In dieser Klasse lediglich ein Platzhalter.
  * In Unterklassen für den Umgang mit Paketen in routerIn verantwortlich.
  */
-void module:: compute()
+void module::compute()
     {
     cout << "Eltern-compute() wurde aufgerufen.";
     return 0;
     }
-
 
