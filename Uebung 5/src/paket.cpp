@@ -59,17 +59,17 @@
  * mit dem gleichen HASH-Wert gesendet, wie die Pakete die empfangen wurden.
  */
 
-#include "paket.h"
-
-#include <systemc.h>
-
-paket::paket()
-{
-  // TODO Auto-generated constructor stub
-
-}
-
-paket::~paket()
-{
-  // TODO Auto-generated destructor stub
+//#include "paket.h"
+//
+//#include <systemc.h>
+//
+//paket::paket()
+//{
+//  // TODO Auto-generated constructor stub
+//
+//}
+//
+//paket::~paket()
+//{
+//  // TODO Auto-generated destructor stub
 }

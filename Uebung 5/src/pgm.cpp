@@ -1,4 +1,4 @@
-#include "pgm.hpp"
+#include "pgm.h"
 
 #include <iostream>
 #include <fstream>

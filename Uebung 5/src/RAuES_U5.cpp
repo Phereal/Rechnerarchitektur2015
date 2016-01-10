@@ -77,15 +77,16 @@ int sc_main(int, char *[])
   // Die Clock setzt den synchronen Systemtakt um, den die Aufgabenstellung verlangt.
   // Die langsamere Taktung des RAM-Modules wird dabei innerhalb der RAM-Klasse umgesetzt.
   // ------------------------------
-  sc_clock clk("clk", Clock, SC_NS, 0.5);
+  sc_clock clk("clk", 10, SC_NS, 0.5);
 
   // ------------------------------
   // NOC-Array
   // Dieses Array stellt das NOC dar. Wie aus der Aufgabenstellung werden hierbei
   // 8x8 Router-Objekt erzeugt, die jeweils über ein verbundenes Modul verfügen.
   // ------------------------------
-  int NOCBORDER = 8;
-  router noc[NOCBORDER][NOCBORDER];
+//  int NOCBORDER = 8;
+//  router noc[NOCBORDER][NOCBORDER];
+  router ro("RouterTest", 0, 4, 10);
 
   // ------------------------------
   // Starte Simulation
