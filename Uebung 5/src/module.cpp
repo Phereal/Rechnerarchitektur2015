@@ -15,6 +15,14 @@ module::module(sc_module_name name, uint8_t id, uint32_t bufferSize) :
   }
 
   sendeBuffer = new PaketBuffer(this->bufferSize);
+
+  SC_HAS_PROCESS(module);
+
+  SC_METHOD(receive);
+  sensitive << clk.pos();
+
+  SC_METHOD(send);
+  sensitive << clk.pos();
 }
 
 void module::receive()
