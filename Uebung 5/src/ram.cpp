@@ -23,16 +23,17 @@
 
 using namespace std;
 
-ram::ram(sc_module_name name) :
-        sc_module(name)
+ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize) : module(name, id, bufferSize)
 {
   init();
 
-  SC_HAS_PROCESS(ram);
+  //SC_HAS_PROCESS(ram);
 }
 //Überschreiben der process-Methode der Elternklasse Module
-void ram::process(){
+bool ram::process(paket &pkg){
+  bool processOk = false;
 
+      return processOk;
 }
 
 // Wenn alle Pixel berechnet wurden werden die Koordinaten X=-1 und Y=-1 zurückgegeben.

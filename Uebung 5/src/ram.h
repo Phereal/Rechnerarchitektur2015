@@ -13,10 +13,9 @@
 #include <vector>
 #include "module.h"
 
-SC_MODULE(ram)
+class ram : public module
 {
-  sc_in<bool> clk;
-  ram(sc_module_name name);
+  ram(sc_module_name name, uint8_t id, uint32_t bufferSize);
 
   unsigned char readPixel(int width, int height);
   void writePixel(int width, int height, unsigned char data);
@@ -24,7 +23,6 @@ SC_MODULE(ram)
   void writePGM();
   void nxtPixel(int &width, int &heigth);
   void init();
-  void process();
 
   private:
   int width = 0;
@@ -35,6 +33,9 @@ SC_MODULE(ram)
   std::vector<std::vector<unsigned char> > in_image;
   std::vector<std::vector<unsigned char> > out_image;
   std::vector<std::vector<bool> > nxt_map;
+
+
+  virtual bool process(paket &pkg);
 
 };
 
