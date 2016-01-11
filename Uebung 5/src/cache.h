@@ -8,11 +8,21 @@
 #ifndef CACHE_H_
 #define CACHE_H_
 
-class cache
+#include <systemc.h>
+#include <vector>
+#include "module.h"
+
+SC_MODULE(cache)
 {
-  public:
-    cache();
-    virtual ~cache();
+  cache(sc_module_name name);
+
+  unsigned char sendPixel(int width, int height);
+  void getPixel();
+  void init();
+
+  private:
+  std::vector<std::vector<unsigned char> > in_image;
+
 };
 
 #endif /* CACHE_H_ */

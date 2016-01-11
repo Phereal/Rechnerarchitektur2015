@@ -25,7 +25,16 @@ using namespace std;
 
 ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize) : module(name, id, bufferSize)
 {
-  init();
+  if(init == false) {
+    init();
+    init = true;
+  }
+  receive();
+  sensitive << clk.pos();
+  pakethandler();
+  sensitive << clk.pos();
+  send();
+  sensitive << clk.pos();
 
   //SC_HAS_PROCESS(ram);
 }
@@ -34,6 +43,78 @@ bool ram::process(paket &pkg){
   bool processOk = false;
 
       return processOk;
+}
+
+void ram::receive(){
+  i_id = routerIn.read().id;
+  i_opcode = routerIn.read().opcode;
+  i_sender = routerIn.read().sender;
+  i_receiver = routerIn.read().receiver;
+  i_xpos = routerIn.read().xpos;
+  i_ypos = routerIn.read().ypos;
+  i_color = routerIn.read().color;
+}
+
+void ram::send(){
+  routerOut.write(id) = o_id;
+  routerOut.write(opcode) = o_opcode;
+  routerOut.write(sender) = o_sender;
+  routerOut.write(receiver) = o_receiver;
+  routerOut.write(xpos) = o_xpos;
+  routerOut.write(ypos) = o_ypos;
+  routerOut.write(color) = o_color;
+}
+
+void ram::pakethandler() {
+  //Es werden nur OPCodes behandelt, die auch durch das RAM-Modul verarbeitet werden können.
+  switch(i_opcode){
+    case 0x00: break;//[emp]
+    case 0x01: break;//[exe]
+    case 0x02: break;//[fin]
+    case 0x03: break;//[c_req]
+    case 0x04: //[r_req]
+      o_id = 0;
+      o_opcode = 0x07; //[ir_pay]
+      o_sender = i_receiver;
+      o_receiver = i_sender;
+      o_xpos = i_xpos;
+      o_ypos = i_ypos;
+      o_color = readPixel(i_xpos,i_ypos);
+    case 0x05: break;//[ack]
+    case 0x06: break;//[ic_pay]
+    case 0x07: break;//[ir_pay]
+    case 0x08: //[o_pay]
+      writePixel(i_xpos,i_ypos,i_color);
+    case 0x09: //[rfi]
+      readPGM();
+      o_id = 0;
+      o_opcode = 0x0A; //[rff]
+      o_sender = i_receiver;
+      o_receiver = i_sender;
+      o_xpos = 0;
+      o_ypos = 0;
+      o_color = 0;
+    case 0x0A: break;//[rff]
+    case 0x0B: //[wfi]
+      writePGM();
+      o_id = 0;
+      o_opcode = 0x0C; //[wff]
+      o_sender = i_receiver;
+      o_receiver = i_sender;
+      o_xpos = 0;
+      o_ypos = 0;
+      o_color = 0;
+    case 0x0C: break;//[wff]
+    case 0x0D: //[nxt]
+      o_id = 0;
+      o_opcode = 0x0E; //[nxa]
+      o_sender = i_receiver;
+      o_receiver = i_sender;
+      nxtPixel(o_xpos,o_ypos);
+      o_color = 0;
+    case 0x0E: break;//[nxa]
+    default: break;
+  }
 }
 
 // Wenn alle Pixel berechnet wurden werden die Koordinaten X=-1 und Y=-1 zurückgegeben.
