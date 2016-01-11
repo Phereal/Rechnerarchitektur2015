@@ -39,7 +39,7 @@ void ram::process(){
 void ram::nxtPixel(int &width, int &heigth){
   for (int i = 0; i < height; i++){
     for (int j = 0; j < width; j++){
-      if(nxt_map[i][j] = false){
+      if(nxt_map[i][j] == false){
         width = i;
         heigth = j;
         break;
