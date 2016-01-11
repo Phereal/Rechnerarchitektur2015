@@ -26,8 +26,6 @@ router::router(sc_module_name name, uint8_t id, uint8_t routen, RoutingRichtung 
   this->routeOut = new sc_out<paket> [this->routen];
   this->routingTable = new RoutingRichtung[this->routen];
 
-
-
   this->sendeBuffer = new PaketBuffer*[this->routen];
   for(size_t i = 0; i < (size_t)this->routen; ++i)
   {
@@ -115,8 +113,8 @@ bool router::route(const paket &pkg, uint8_t quelleId)
 
   if(pkg.opcode != (uint8_t)0x00)
   {
-    routerId[0] = (id & (uint8_t)0x0F);
-    routerId[1] = ((id >> 4) & (uint8_t)0x0F);
+    routerId[0] = (id & (uint8_t)0x0F); // y zeile
+    routerId[1] = ((id >> 4) & (uint8_t)0x0F); // x spalte
 
     // Pruefe wohin das Paket geschickt werden soll
     if(pkg.receiver == id)
@@ -128,51 +126,51 @@ bool router::route(const paket &pkg, uint8_t quelleId)
     else
     {
       // An anderen Router, pruefe whoin genau
-      zielId[0] = (pkg.receiver & (uint8_t)0x0F);
-      zielId[1] = ((pkg.receiver >> 4) & (uint8_t)0x0F);
+      zielId[0] = (pkg.receiver & (uint8_t)0x0F); // y zeile
+      zielId[1] = ((pkg.receiver >> 4) & (uint8_t)0x0F); // x spalte
 
       richtungsVektor[0] = (int16_t)zielId[0] - (int16_t)routerId[0];
       richtungsVektor[1] = (int16_t)zielId[1] - (int16_t)routerId[1];
 
       if((richtungsVektor[0] > 0) && (richtungsVektor[1] > 0))
       {
-        // Right Up
-        paketRichtung = RoutingRichtung::RIGTH;
+        // Down Right
+        paketRichtung = RoutingRichtung::DOWN;
       }
       else if((richtungsVektor[0] > 0) && (richtungsVektor[1] < 0))
       {
-        // Right Down
-        paketRichtung = RoutingRichtung::RIGTH;
+        // Down Left
+        paketRichtung = RoutingRichtung::DOWN;
       }
       else if((richtungsVektor[0] > 0) && (richtungsVektor[1] == 0))
       {
-        // Right
-        paketRichtung = RoutingRichtung::RIGTH;
+        // Down
+        paketRichtung = RoutingRichtung::DOWN;
       }
       else if((richtungsVektor[0] < 0) && (richtungsVektor[1] > 0))
       {
-        // Left Up
-        paketRichtung = RoutingRichtung::LEFT;
+        // Up Right
+        paketRichtung = RoutingRichtung::UP;
       }
       else if((richtungsVektor[0] < 0) && (richtungsVektor[1] < 0))
       {
-        // Left Down
-        paketRichtung = RoutingRichtung::LEFT;
+        // Up Left
+        paketRichtung = RoutingRichtung::UP;
       }
       else if((richtungsVektor[0] < 0) && (richtungsVektor[1] == 0))
-      {
-        // Left
-        paketRichtung = RoutingRichtung::LEFT;
-      }
-      else if((richtungsVektor[0] == 0) && (richtungsVektor[1] > 0))
       {
         // Up
         paketRichtung = RoutingRichtung::UP;
       }
+      else if((richtungsVektor[0] == 0) && (richtungsVektor[1] > 0))
+      {
+        // Right
+        paketRichtung = RoutingRichtung::RIGTH;
+      }
       else if((richtungsVektor[0] == 0) && (richtungsVektor[1] < 0))
       {
-        // Down
-        paketRichtung = RoutingRichtung::DOWN;
+        // Left
+        paketRichtung = RoutingRichtung::LEFT;
       }
       else
       {

@@ -67,6 +67,7 @@
 
 #include "pgm.h"
 #include "router.h"
+#include "paket.h"
 
 using namespace std;
 
@@ -83,11 +84,235 @@ int sc_main(int, char *[])
   // NOC-Array
   // Dieses Array stellt das NOC dar. Wie aus der Aufgabenstellung werden hierbei
   // 8x8 Router-Objekt erzeugt, die jeweils über ein verbundenes Modul verfügen.
+  const size_t K_NOC_SIZE = 8;
+  // K_ROUTEN_CNT = 4 Ecken a 2 Routen + 4 Kanten a 3 Routen je Router + Mitte a 4 Routen je Router
+  //const size_t K_ROUTEN_CNT = (4 * 2) + (4 * (K_NOC_SIZE - 2) * 3)
+  //    + ((K_NOC_SIZE - 2) * (K_NOC_SIZE - 2) * 4);
+  const uint32_t K_BUFFER_SIZE = 10;
+
+  // Signale
+  sc_signal<paket> routeList[K_NOC_SIZE][K_NOC_SIZE][4];
+  sc_signal<paket> moduleRouteList[K_NOC_SIZE][K_NOC_SIZE][2];
+//  sc_signal<paket> routeList[K_ROUTEN_CNT];
+//  sc_signal<paket> outList[numOut];
+
+  router *routerList[K_NOC_SIZE][K_NOC_SIZE];
+
+  for(size_t y = 0; y < K_NOC_SIZE; ++y)
+  {
+    for(size_t x = 0; x < K_NOC_SIZE; ++x)
+    {
+      uint8_t routen;
+      string name = "Router[";
+      name.append(to_string(y));
+      name.append(",");
+      name.append(to_string(x));
+      name.append("]");
+      uint8_t id = (uint8_t)y;
+      id |= (uint8_t)((x << 4) & 0xF0);
+      RoutingRichtung routeRichtungen[4]; // Verdrahtung imm im UZS, beginnend bei UP wenn moeglich
+
+      if(y == 0)
+      {
+        if(x == 0)
+        {
+          // 1. Reihe, 1. Element
+          routen = 2;
+          routeRichtungen[0] = RoutingRichtung::RIGTH;
+          routeRichtungen[1] = RoutingRichtung::DOWN;
+        }
+        else if(x == (K_NOC_SIZE - 1))
+        {
+          // 1. Reihe, letztes Element
+          routen = 2;
+          routeRichtungen[0] = RoutingRichtung::DOWN;
+          routeRichtungen[1] = RoutingRichtung::LEFT;
+        }
+        else
+        {
+          // 1. Reihe, mittleres Element
+          routen = 3;
+          routeRichtungen[0] = RoutingRichtung::RIGTH;
+          routeRichtungen[1] = RoutingRichtung::DOWN;
+          routeRichtungen[2] = RoutingRichtung::LEFT;
+        }
+      }
+      else if(y == (K_NOC_SIZE - 1))
+      {
+        if(x == 0)
+        {
+          // Letzte Reihe, 1. Element
+          routen = 2;
+          routeRichtungen[0] = RoutingRichtung::UP;
+          routeRichtungen[1] = RoutingRichtung::RIGTH;
+        }
+        else if(x == (K_NOC_SIZE - 1))
+        {
+          // Letzte Reihe, letztes Element
+          routen = 2;
+          routeRichtungen[0] = RoutingRichtung::UP;
+          routeRichtungen[1] = RoutingRichtung::LEFT;
+        }
+        else
+        {
+          // Letzte Reihe, mittleres Element
+          routen = 3;
+          routeRichtungen[0] = RoutingRichtung::UP;
+          routeRichtungen[1] = RoutingRichtung::RIGTH;
+          routeRichtungen[2] = RoutingRichtung::LEFT;
+        }
+      }
+      else
+      {
+        if(x == 0)
+        {
+          // Mittlere Reihe, 1. Element
+          routen = 3;
+          routeRichtungen[0] = RoutingRichtung::UP;
+          routeRichtungen[1] = RoutingRichtung::RIGTH;
+          routeRichtungen[2] = RoutingRichtung::DOWN;
+        }
+        else if(x == (K_NOC_SIZE - 1))
+        {
+          // Mittlere Reihe, letztes Element
+          routen = 3;
+          routeRichtungen[0] = RoutingRichtung::UP;
+          routeRichtungen[1] = RoutingRichtung::DOWN;
+          routeRichtungen[2] = RoutingRichtung::LEFT;
+        }
+        else
+        {
+          // Mittlere Reihe, mittleres Element
+          routen = 4;
+          routeRichtungen[0] = RoutingRichtung::UP;
+          routeRichtungen[1] = RoutingRichtung::RIGTH;
+          routeRichtungen[2] = RoutingRichtung::DOWN;
+          routeRichtungen[3] = RoutingRichtung::LEFT;
+        }
+      }
+
+      // Komponente erzeugen
+      routerList[y][x] = new router(name.c_str(), id, routen, routeRichtungen, K_BUFFER_SIZE);
+    }
+  }
+
+
   // ------------------------------
-//  int NOCBORDER = 8;
-//  router noc[NOCBORDER][NOCBORDER];
-  RoutingRichtung r1[4] = {RoutingRichtung::UP, RoutingRichtung::DOWN, RoutingRichtung::RIGTH, RoutingRichtung::LEFT};
-  router ro("RouterTest", 0, 4, r1, 10);
+  // Connect Signals
+  // ------------------------------
+  for(size_t y = 0; y < K_NOC_SIZE; ++y)
+  {
+    for(size_t x = 0; x < K_NOC_SIZE; ++x)
+    {
+      routerList[y][x]->clk(clk);
+      routerList[y][x]->moduleOut(moduleRouteList[y][x][0]);
+      routerList[y][x]->moduleIn(moduleRouteList[y][x][1]);
+
+      // todo module-Gegenseite
+
+      if(y == 0)
+      {
+        if(x == 0)
+        {
+          // 1. Reihe, 1. Element (2)
+          routerList[y][x]->routeOut[0](routeList[y][x][1]); // right
+          routerList[y][x]->routeOut[1](routeList[y][x][2]); // down
+          routerList[y][x]->routeIn[0](routeList[y][x+1][3]); // right
+          routerList[y][x]->routeIn[1](routeList[y+1][x][0]); // down
+        }
+        else if(x == (K_NOC_SIZE - 1))
+        {
+          // 1. Reihe, letztes Element (2)
+          routerList[y][x]->routeOut[0](routeList[y][x][2]); // down
+          routerList[y][x]->routeOut[1](routeList[y][x][3]); // left
+          routerList[y][x]->routeIn[0](routeList[y+1][x][0]); // down
+          routerList[y][x]->routeIn[1](routeList[y][x-1][1]); // left
+        }
+        else
+        {
+          // 1. Reihe, mittleres Element (3)
+          routerList[y][x]->routeOut[0](routeList[y][x][1]); // right
+          routerList[y][x]->routeOut[1](routeList[y][x][2]); // down
+          routerList[y][x]->routeOut[2](routeList[y][x][3]); // left
+          routerList[y][x]->routeIn[0](routeList[y][x+1][3]); // right
+          routerList[y][x]->routeIn[1](routeList[y+1][x][0]); // down
+          routerList[y][x]->routeIn[2](routeList[y][x-1][1]); // left
+        }
+      }
+      else if(y == (K_NOC_SIZE - 1))
+      {
+        if(x == 0)
+        {
+          // Letzte Reihe, 1. Element (2)
+          routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
+          routerList[y][x]->routeOut[1](routeList[y][x][1]); // right
+          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x+1][3]); // right
+        }
+        else if(x == (K_NOC_SIZE - 1))
+        {
+          // Letzte Reihe, letztes Element (2)
+          routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
+          routerList[y][x]->routeOut[1](routeList[y][x][3]); // left
+          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x-1][1]); // left
+        }
+        else
+        {
+          // Letzte Reihe, mittleres Element (3)
+          routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
+          routerList[y][x]->routeOut[1](routeList[y][x][1]); // right
+          routerList[y][x]->routeOut[2](routeList[y][x][3]); // left
+          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x+1][3]); // right
+          routerList[y][x]->routeIn[2](routeList[y][x-1][1]); // left
+        }
+      }
+      else
+      {
+        if(x == 0)
+        {
+          // Mittlere Reihe, 1. Element (3)
+          routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
+          routerList[y][x]->routeOut[1](routeList[y][x][1]); // right
+          routerList[y][x]->routeOut[2](routeList[y][x][2]); // down
+          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x+1][3]); // right
+          routerList[y][x]->routeIn[2](routeList[y+1][x][0]); // down
+        }
+        else if(x == (K_NOC_SIZE - 1))
+        {
+          // Mittlere Reihe, letztes Element (3)
+          routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
+          routerList[y][x]->routeOut[1](routeList[y][x][2]); // down
+          routerList[y][x]->routeOut[2](routeList[y][x][3]); // left
+          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y+1][x][0]); // down
+          routerList[y][x]->routeIn[2](routeList[y][x-1][1]); // left
+        }
+        else
+        {
+          // Mittlere Reihe, mittleres Element (4)
+          routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
+          routerList[y][x]->routeOut[1](routeList[y][x][1]); // right
+          routerList[y][x]->routeOut[2](routeList[y][x][2]); // down
+          routerList[y][x]->routeOut[3](routeList[y][x][3]); // left
+          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x+1][3]); // right
+          routerList[y][x]->routeIn[2](routeList[y+1][x][0]); // down
+          routerList[y][x]->routeIn[3](routeList[y][x-1][1]); // left
+        }
+      }
+    }
+  }
+
+
+
+
+
+
+
+  // ------------------------------
 
   // ------------------------------
   // Starte Simulation
