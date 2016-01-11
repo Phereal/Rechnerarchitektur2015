@@ -8,7 +8,7 @@
  *
  * Für das einlesen und auch später das schreiben des Bildes von/in eine PGM-Datei ist die aus der Aufgabenstellung
  * vorgegegene Klasse pgm.cpp vorhanden.
- * Die Methoden read und write der Klasse pgm.cpp verwenden die variablen [WIDTH,HEIGHT] sowie die Pfadangaben für das Quell- bzw.
+ * Die Methoden read und write der Klasse pgm.cpp verwenden die variablen [xpos,ypos] sowie die Pfadangaben für das Quell- bzw.
  * Zielbild [INFILE,OUTFILE].
  * Die Farbgebung des Pixels basiert auf einem Zahlenwert der in dieser Aufgabe einen Wert zwischen 0 und 255 annehmen kann [COLOR_DEPTH].
  * Die Methode writePixel() stellt sicher, dass von dieser Farbtiefe nicht abgewichen werden kann. Mit dieser Methode schreibt man
@@ -25,44 +25,36 @@ using namespace std;
 
 ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize) : module(name, id, bufferSize)
 {
-  if(init == false) {
+  if(initialize == false) {
     init();
-    init = true;
+    initialize = true;
   }
-  receive();
-  sensitive << clk.pos();
   pakethandler();
-  sensitive << clk.pos();
-  send();
   sensitive << clk.pos();
 
   //SC_HAS_PROCESS(ram);
 }
 //Überschreiben der process-Methode der Elternklasse Module
 bool ram::process(paket &pkg){
-  bool processOk = false;
+  enable = false;
+  //Paket einlesen
+  i_id = pkg.id;
+  i_opcode = pkg.opcode;
+  i_sender = pkg.sender;
+  i_receiver = pkg.receiver;
+  i_xpos = pkg.xpos;
+  i_ypos = pkg.ypos;
+  i_color = pkg.color;
 
-      return processOk;
-}
-
-void ram::receive(){
-  i_id = routerIn.read().id;
-  i_opcode = routerIn.read().opcode;
-  i_sender = routerIn.read().sender;
-  i_receiver = routerIn.read().receiver;
-  i_xpos = routerIn.read().xpos;
-  i_ypos = routerIn.read().ypos;
-  i_color = routerIn.read().color;
-}
-
-void ram::send(){
-  routerOut.write(id) = o_id;
-  routerOut.write(opcode) = o_opcode;
-  routerOut.write(sender) = o_sender;
-  routerOut.write(receiver) = o_receiver;
-  routerOut.write(xpos) = o_xpos;
-  routerOut.write(ypos) = o_ypos;
-  routerOut.write(color) = o_color;
+  //Paket senden
+  pkg.id = o_id;
+  pkg.opcode = o_opcode;
+  pkg.sender = o_sender;
+  pkg.receiver = o_receiver;
+  pkg.xpos = o_xpos;
+  pkg.ypos = o_ypos;
+  pkg.color = o_color;
+        return enable;
 }
 
 void ram::pakethandler() {
@@ -80,6 +72,7 @@ void ram::pakethandler() {
       o_xpos = i_xpos;
       o_ypos = i_ypos;
       o_color = readPixel(i_xpos,i_ypos);
+      enable = true;
     case 0x05: break;//[ack]
     case 0x06: break;//[ic_pay]
     case 0x07: break;//[ir_pay]
@@ -94,6 +87,7 @@ void ram::pakethandler() {
       o_xpos = 0;
       o_ypos = 0;
       o_color = 0;
+      enable = true;
     case 0x0A: break;//[rff]
     case 0x0B: //[wfi]
       writePGM();
@@ -104,31 +98,32 @@ void ram::pakethandler() {
       o_xpos = 0;
       o_ypos = 0;
       o_color = 0;
+      enable = true;
     case 0x0C: break;//[wff]
     case 0x0D: //[nxt]
       o_id = 0;
       o_opcode = 0x0E; //[nxa]
       o_sender = i_receiver;
       o_receiver = i_sender;
-      nxtPixel(o_xpos,o_ypos);
+      nxtPixel(&o_xpos,&o_ypos);
       o_color = 0;
+      enable = true;
     case 0x0E: break;//[nxa]
     default: break;
   }
 }
 
 // Wenn alle Pixel berechnet wurden werden die Koordinaten X=-1 und Y=-1 zurückgegeben.
-void ram::nxtPixel(int &width, int &heigth){
-  for (int i = 0; i < height; i++){
-    for (int j = 0; j < width; j++){
+void ram::nxtPixel(uint32_t *xpos, uint32_t *ypos){
+  for (unsigned int i = 0; i < (*ypos); i++){
+    for (unsigned int j = 0; j < (*xpos); j++){
       if(nxt_map[i][j] == false){
-        width = i;
-        heigth = j;
+        (*xpos) = i;
+        (*ypos) = j;
         break;
       }
       else {
-        width = -1;
-        heigth = -1;
+        // TODO Benachrichtigung des Gateway-Moduls, dass alle Pixel berechnet wurden.
       }
     }
   }
@@ -144,25 +139,26 @@ void ram::init(){
   }
 }
 // Der Wert eines Pixels wird zurückgegeben
-unsigned char ram::readPixel(int width, int heigth) {
-  return in_image[width][heigth];
+unsigned char ram::readPixel(int xpos, int ypos) {
+  return in_image[xpos][ypos];
 }
 // Ein Pixel im Zielbildvektor wird geschrieben mit Fehlerbehandlung für maximale Bildtiefe
-void ram::writePixel(int width, int heigth, unsigned char data){
+void ram::writePixel(int xpos, int ypos, unsigned char data){
   if(data < 0){
     data = 0;
   }
   if(data > depth){
     data = depth;
   }
-  out_image[width][heigth] = data;
-  nxt_map[width][heigth] = true;
+  out_image[xpos][ypos] = data;
+  nxt_map[xpos][ypos] = true;
 }
+//void read_pgm(std::string filename, int& xpos, int& ypos, int& color_depth, pgm_image& image);
 // Das PGM-Bild wird über die Klasse pgm.h eingelesen
 void ram::readPGM() {
     read_pgm(infile,width,height,depth,in_image);
     cout << "read" << endl;
-/*    for (int i = 0; i < height; i++){
+/*    for (int i = 0; i < heigth; i++){
       for (int j = 0; j < width; j++){
         cout << to_string(in_image[i][j]) << " ";
       }

@@ -21,11 +21,13 @@ class ram : public module
   void writePixel(int width, int height, unsigned char data);
   void readPGM();
   void writePGM();
-  void nxtPixel(int &width, int &heigth);
+  void nxtPixel(uint32_t *width, uint32_t *height);
+  void pakethandler();
   void init();
 
   private:
-  bool init = false;
+  bool enable = false;
+  bool initialize = false;
   int width = 0;
   int height = 0;
   int depth = 0;
