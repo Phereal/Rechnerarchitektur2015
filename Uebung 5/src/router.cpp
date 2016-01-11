@@ -6,7 +6,7 @@
 #include "router.h"
 #include "paket.h"
 
-router::router(sc_module_name name, uint8_t id, uint8_t routen,
+router::router(sc_module_name name, uint8_t id, uint8_t routen, RoutingRichtung routeRichtungen[],
     uint32_t bufferSize) :
     sc_module(name), id(id), routen(routen), bufferSize(bufferSize)
 {
@@ -26,9 +26,12 @@ router::router(sc_module_name name, uint8_t id, uint8_t routen,
   this->routeOut = new sc_out<paket> [this->routen];
   this->routingTable = new RoutingRichtung[this->routen];
 
+
+
   this->sendeBuffer = new PaketBuffer*[this->routen];
   for(size_t i = 0; i < (size_t)this->routen; ++i)
   {
+    this->routingTable[i] = routeRichtungen[i];
     this->sendeBuffer[i] = new PaketBuffer(this->bufferSize);
   }
 
@@ -134,41 +137,57 @@ bool router::route(const paket &pkg, uint8_t quelleId)
       if((richtungsVektor[0] > 0) && (richtungsVektor[1] > 0))
       {
         // Right Up
+        paketRichtung = RoutingRichtung::RIGTH;
       }
       else if((richtungsVektor[0] > 0) && (richtungsVektor[1] < 0))
       {
         // Right Down
+        paketRichtung = RoutingRichtung::RIGTH;
       }
       else if((richtungsVektor[0] > 0) && (richtungsVektor[1] == 0))
       {
         // Right
+        paketRichtung = RoutingRichtung::RIGTH;
       }
       else if((richtungsVektor[0] < 0) && (richtungsVektor[1] > 0))
       {
         // Left Up
+        paketRichtung = RoutingRichtung::LEFT;
       }
       else if((richtungsVektor[0] < 0) && (richtungsVektor[1] < 0))
       {
         // Left Down
+        paketRichtung = RoutingRichtung::LEFT;
       }
       else if((richtungsVektor[0] < 0) && (richtungsVektor[1] == 0))
       {
         // Left
+        paketRichtung = RoutingRichtung::LEFT;
       }
       else if((richtungsVektor[0] == 0) && (richtungsVektor[1] > 0))
       {
         // Up
+        paketRichtung = RoutingRichtung::UP;
       }
       else if((richtungsVektor[0] == 0) && (richtungsVektor[1] < 0))
       {
         // Down
+        paketRichtung = RoutingRichtung::DOWN;
       }
       else
       {
         // keine Richtung, oben bereits abgefangen
       }
 
-      //todo
+      // Durchsuche routingtabelle nach gueltiger route
+      // wenn keine route gefunden => droppe paket
+      for(size_t i = 0; i < (size_t)routen; ++i)
+      {
+        if(paketRichtung == routingTable[i])
+        {
+          sendeBuffer[i]->push(pkg);
+        }
+      }
     }
 
   }
@@ -176,8 +195,6 @@ bool router::route(const paket &pkg, uint8_t quelleId)
   // todo: ggf, wenn buffer voll auf anderen knoten routen
   // daher auch quelleId, um zu vermeiden, dass es an den gleichen router erneut gesendet wird.
   // ggf. alternativ anhand der richtung des empfängers entscheiden ob richtung valid
-
-  //sendeBuffer[i]->push(routeIn[i].read());
 
   return allesOk;
 }

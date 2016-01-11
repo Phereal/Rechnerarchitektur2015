@@ -76,7 +76,7 @@ SC_MODULE(router)
     sc_in<paket> *routeIn;
     sc_out<paket> *routeOut;
     // Constructor
-    router(sc_module_name name, uint8_t id, uint8_t routen, uint32_t bufferSize);
+    router(sc_module_name name, uint8_t id, uint8_t routen, RoutingRichtung routeRichtungen[], uint32_t bufferSize);
 
     void receive();
     void send();

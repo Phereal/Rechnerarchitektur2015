@@ -86,7 +86,8 @@ int sc_main(int, char *[])
   // ------------------------------
 //  int NOCBORDER = 8;
 //  router noc[NOCBORDER][NOCBORDER];
-  router ro("RouterTest", 0, 4, 10);
+  RoutingRichtung r1[4] = {RoutingRichtung::UP, RoutingRichtung::DOWN, RoutingRichtung::RIGTH, RoutingRichtung::LEFT};
+  router ro("RouterTest", 0, 4, r1, 10);
 
   // ------------------------------
   // Starte Simulation
