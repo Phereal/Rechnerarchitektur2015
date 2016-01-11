@@ -46,7 +46,6 @@ router::router(sc_module_name name, uint8_t id, uint8_t routen, RoutingRichtung 
 
 void router::receive()
 {
-
   // Pruefe ob ein Paket am Modul-Eingang anliegt (opcode 0x00 == leeres Paket)
   if(moduleIn.read().opcode != (uint8_t)0x00)
   {

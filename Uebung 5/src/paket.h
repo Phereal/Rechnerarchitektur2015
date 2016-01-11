@@ -23,35 +23,37 @@
  *
  * Ein Paket kann dabei in unterschiedlichen Varianten genutzt werden [OPCODE]:
  *
- * 1. Als Berechnungsauftrag des Gateway-Moduls für ein Compute-Modul [exe] 0x00
+ * 0. Leeres Paket 0x00
  *
- * 2. Als Bestätigung des Compute-Moduls, dass die Berechnung durchgeführt wurde an das Gateway-Modul [fin] 0x01
+ * 1. Als Berechnungsauftrag des Gateway-Moduls für ein Compute-Modul [exe] 0x01
  *
- * 3. Als Empfangsanfrage für ein Paket vom Compute-Modul an den Cache [c_req] (Cache-request) 0x02
+ * 2. Als Bestätigung des Compute-Moduls, dass die Berechnung durchgeführt wurde an das Gateway-Modul [fin] 0x02
  *
- * 4  Als Empfangsanfrage für ein Paket vom Cache-Modul an das RAM-Modul [r_req] (RAM-request) 0x03
+ * 3. Als Empfangsanfrage für ein Paket vom Compute-Modul an den Cache [c_req] (Cache-request) 0x03
  *
- * 5. Als Empfangsbestätigung für ein Paket mit der betreffenden Paket-ID [ack] (acknowledge) 0x04
+ * 4  Als Empfangsanfrage für ein Paket vom Cache-Modul an das RAM-Modul [r_req] (RAM-request) 0x04
  *
- * 6. Als Informationsträger aufgrund einer Empfangsanfrage an den Cache-Modul vom Compute-Modul  [ic_pay] 0x05
+ * 5. Als Empfangsbestätigung für ein Paket mit der betreffenden Paket-ID [ack] (acknowledge) 0x05
  *
- * 7. Als Informationsträger aufgrund einer Empfangsanfrage an das RAM-Modul vom Cache-Modul [ir_pay] 0x06
+ * 6. Als Informationsträger aufgrund einer Empfangsanfrage an den Cache-Modul vom Compute-Modul  [ic_pay] 0x06
  *
- * 8. Als Ergebnis einer Berechnung des Compute-Moduls an das Gateway-Modul [o_pay] 0x07
+ * 7. Als Informationsträger aufgrund einer Empfangsanfrage an das RAM-Modul vom Cache-Modul [ir_pay] 0x07
  *
- * 9. Als Aufforderung des Gateway-Moduls an das RAM-Modul den Inhalt der Bilddatei einzulesen [rfi] 0x08
+ * 8. Als Ergebnis einer Berechnung des Compute-Moduls an das Gateway-Modul [o_pay] 0x08
  *
- * 10. Als Information, des RAM-Moduls, an das Gateway-Modul, das das einlesen beendet ist [rff] 0x09
+ * 9. Als Aufforderung des Gateway-Moduls an das RAM-Modul den Inhalt der Bilddatei einzulesen [rfi] 0x09
+ *
+ * 10. Als Information, des RAM-Moduls, an das Gateway-Modul, das das einlesen beendet ist [rff] 0x0A
  *
  * 11. Als Aufforderung des Gateway-Moduls an das RAM-Modul den Inhalt der zweiten Speicherbank
- *     in die Datei 'noc.pgm' zu schreiben [wfi] 0x10
+ *     in die Datei 'noc.pgm' zu schreiben [wfi] 0x0B
  *
- * 12. Als Information, des RAM-Moduls, an das Gateway-Modul, das das schreiben beendet ist [wff] 0x11
+ * 12. Als Information, des RAM-Moduls, an das Gateway-Modul, das das schreiben beendet ist [wff] 0x0C
  *
  * 13. Als Aufforderung des Gateway-Moduls an das RAM-Modul die Information über den nächsten zu bearbeitenden
- *     Pixel zu senden [nxt) 0x12
+ *     Pixel zu senden [nxt) 0x0D
  *
- * 14. Als Paket des RAM-Moduls an das Gateway Modul mit dem Inhalt des nächsten zu bearbeitenden Pixels. [nxa] 0x13
+ * 14. Als Paket des RAM-Moduls an das Gateway Modul mit dem Inhalt des nächsten zu bearbeitenden Pixels. [nxa] 0x0E
  *
  * Da nicht sichergestellt werden kann, dass das Paket empfangen wird [Buffer des Empfängers ist voll],
  * müssen wir hier mit einer Empfangsbestätigung arbeiten. Die Empfangsbestätigung muss über eine eindeutige
@@ -71,6 +73,9 @@
 #include <cstdint>
 
 using namespace std;
+
+#define K_OP_LEER (0x00)
+#define K_OP_ACK (0x05)
 
 //An Tutoriums-Datei dist.ccp angelehnt
 struct paket
