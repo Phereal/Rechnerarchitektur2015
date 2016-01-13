@@ -188,6 +188,7 @@ bool gateway::process(paket &pkg)
         {
           PRINT_DEBUG("gateway - Beende Process");
           state = Zustaende::IDLE;
+          sc_stop();
           // kein setzen von processOk, da kein paketsenden noetig
         }
         else

@@ -37,10 +37,6 @@ cache::cache(sc_module_name name, uint8_t id, uint32_t bufferSize,
     init();
     initialize = true;
   }
-  pakethandler();
-  sensitive << clk.pos();
-  requesthandler();
-  sensitive << clk.pos();
 }
 //Überschreiben der process-Methode der Elternklasse Module
 bool cache::process(paket &pkg)
@@ -54,6 +50,9 @@ bool cache::process(paket &pkg)
   i_xpos = pkg.xpos;
   i_ypos = pkg.ypos;
   i_color = pkg.color;
+
+  pakethandler();
+  requesthandler();
 
   //Paket senden
   pkg.id = o_id;
@@ -128,13 +127,9 @@ void cache::requesthandler()
   if(!sendSync && request_list.size() < 0)
   {
     request actRequest = request_list.front();
-    o_id = 0;
-    o_opcode = 0x06; //[ic_pay]
-    o_sender = actRequest.receiver;
-    o_receiver = actRequest.sender;
-    o_xpos = actRequest.xpos;
-    o_ypos = actRequest.ypos;
-    o_color = readPixelFromCache(actRequest.xpos, actRequest.ypos);
+    paket pkg0(0x06, actRequest.receiver, actRequest.sender, actRequest.xpos, actRequest.ypos, readPixelFromCache(actRequest.xpos, actRequest.ypos));
+    sendeBuffer->push(pkg0);
+
     enable = true;
     request_list.pop();
   }

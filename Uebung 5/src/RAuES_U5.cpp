@@ -89,15 +89,15 @@ SC_MODULE(waiter)
 {
     void waiting()
     {
-      /*      wait(1000, SC_NS);
-       sc_stop();
-       cout << "Simulation wurde durch \"waiter\" gestoppt!" << endl;*/
-    }
+      //wait(100, SC_MS);
+      //sc_stop();
+      //cout << "Simulation wurde durch \"waiter\" gestoppt!" << endl;
+  }
 
-    SC_CTOR(waiter)
-    {
-      SC_THREAD(waiting);
-    }
+  SC_CTOR(waiter)
+  {
+    SC_THREAD(waiting);
+  }
 };
 #endif
 

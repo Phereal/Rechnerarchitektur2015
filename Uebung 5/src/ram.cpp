@@ -95,88 +95,99 @@ void ram::pakethandler()
   switch(i_opcode)
   {
     case 0x00:
+    {
+    }
       break; //[emp]
 
     case 0x01:
+    {
+    }
       break; //[exe]
 
     case 0x02:
+    {
+    }
       break; //[fin]
 
     case 0x03:
+    {
+    }
       break; //[c_req]
 
-    case 0x04: //[r_req]
-      //cout << "[RAM] Starte Paketbehandlung eines RAM Requests" << endl;
-      o_id = 0;
-      o_opcode = 0x07; //[ir_pay]
-      o_sender = i_receiver;
-      o_receiver = i_sender;
-      o_xpos = i_xpos;
-      o_ypos = i_ypos;
-      o_color = readPixel();
+    case 0x04:
+    {//[r_req]
+      paket pkg0(0x07, i_receiver, i_sender, i_xpos, i_ypos, readPixel());
+      sendeBuffer->push(pkg0);
       enable = true;
-      //cout << "[RAM] Beende Paketbehandlung eines RAM Requests" << endl;
-      //cout << "[RAM] Sende ir_pay" << endl;
+    }
       break;
 
     case 0x05:
+    {
+    }
       break; //[ack]
 
     case 0x06:
+    {
+    }
       break; //[ic_pay]
 
     case 0x07:
+    {
+    }
       break; //[ir_pay]
 
-    case 0x08: //[o_pay]
+    case 0x08:
+    {//[o_pay]
       //cout << "[RAM] Starte Paketbehandlung einer Schreiboperation in den RAM" << endl;
       writePixel();
-      //cout << "[RAM] Beende Paketbehandlung einer Schreiboperation in den RAM" << endl;
+    }//cout << "[RAM] Beende Paketbehandlung einer Schreiboperation in den RAM" << endl;
       break;
 
-    case 0x09: //[rfi]
-      PRINT_DEBUG("ram - empfange opcode = RFI")
-      ;
+    case 0x09:
+    { //[rfi]
+      PRINT_DEBUG("ram - empfange opcode = RFI");
 
       //cout << "[RAM] Starte Paketbehandlung einlesen des Bildes in den RAM" << endl;
       readPGM();
-      PRINT_DEBUG("ram - empfange opcode = RFI 2")
-      ;
+      PRINT_DEBUG("ram - empfange opcode = RFI 2");
       //cout << "[RAM] Beende Paketbehandlung einlesen des Bildes in den RAM" << endl;
-      o_id = 0;
-      o_opcode = 0x0A; //[rff]
-      o_sender = i_receiver;
-      o_receiver = i_sender;
-      o_xpos = 0;
-      o_ypos = 0;
-      o_color = 0;
+
+      paket pkg1(0x0A, i_receiver, i_sender, 0, 0, 0);
+      sendeBuffer->push(pkg1);
+
       enable = true;
       //cout << "[RAM] Sende rff" << endl;
+    }
       break;
 
     case 0x0A:
+    {
+    }
       break; //[rff]
 
-    case 0x0B: //[wfi]
+    case 0x0B:
+    {
+      //[wfi]
       //cout << "[RAM] Starte Paketbehandlung schreiben des Bildes aus dem RAM" << endl;
       writePGM();
       //cout << "[RAM] Beende Paketbehandlung schreiben des Bildes aus dem RAM" << endl;
-      o_id = 0;
-      o_opcode = 0x0C; //[wff]
-      o_sender = i_receiver;
-      o_receiver = i_sender;
-      o_xpos = 0;
-      o_ypos = 0;
-      o_color = 0;
+
+      paket pkg2(0x0C, i_receiver, i_sender, 0, 0, 0);
+      sendeBuffer->push(pkg2);
+
       enable = true;
       //cout << "[RAM] Sende wff" << endl;
+    }
       break;
 
     case 0x0C:
+    {
+    }
       break; //[wff]
 
-    case 0x0D: //[nxt]
+    case 0x0D:
+    { //[nxt]
       //cout << "[RAM] Starte Paketbehandlung auf nächsten zu berechnenden Pixel!" << endl;
       if(nxtPixel()) // sendet [nxa] wenn vorhanden
       {
@@ -184,43 +195,46 @@ void ram::pakethandler()
       }
       else
       {
-        o_id = 0;
-        o_opcode = 0x0F; //[end]
-        o_sender = i_receiver;
-        o_receiver = i_sender;
-        o_xpos = 0;
-        o_ypos = 0;
-        o_color = 0;
+
+        paket pkg3(0x0F, i_receiver, i_sender, 0, 0, 0);
+        sendeBuffer->push(pkg3);
+
         enable = true;
         //cout << "[RAM] Sende end" << endl;
       }
-      //cout << "[RAM] Beende Paketbehandlung auf nächsten zu berechnenden Pixel!" << endl;
+    }//cout << "[RAM] Beende Paketbehandlung auf nächsten zu berechnenden Pixel!" << endl;
       break;
 
     case 0x0E:
+    {
+    }
       break; //[nxa]
 
     case 0x0F:
+    {
+    }
       break; //[end]
 
-    case 0x10: //[brd]
+    case 0x10:
+    { //[brd]
       //cout << "[RAM] Starte Paketbehandlung auf Übertragung der Bildgrenzen!" << endl;
-      o_id = 0;
-      o_opcode = 0x11; //[brr]
-      o_sender = i_receiver;
-      o_receiver = i_sender;
-      o_xpos = width; //Nicht die Angabe der Pixelposition sondern die Rastergröße des Bildes wird übertragen!
-      o_ypos = height;
-      o_color = 0;
+
+      paket pkg4(0x11, i_receiver, i_sender, width, height, 0);
+      sendeBuffer->push(pkg4);
       enable = true;
       //cout << "[RAM] Beende Paketbehandlung auf Übertragung der Bildgrenzen!" << endl;
       //cout << "[RAM] Sende brr" << endl;
+    }
       break;
 
     case 0x11:
+    {
+    }
       break; //[brr]
 
     default:
+    {
+    }
       break;
   }
   //cout << "[RAM] Beende Pakethandler" << endl;
