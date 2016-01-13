@@ -62,6 +62,7 @@
  */
 
 #include <iostream>
+#include <string>
 
 #include <systemc.h>
 
@@ -139,8 +140,24 @@ SC_MODULE(starter)
 
 
 
-int sc_main(int, char *[])
+int sc_main(int argc, char *argv[])
 {
+  std::string inFile;
+  std::string outFile;
+
+  // ------------------------------
+  // Check main parameters
+  // ------------------------------
+  if(argc > 1)
+  {
+    inFile = argv[1];
+  }
+  if(argc > 2)
+  {
+    outFile = argv[2];
+  }
+
+
   // ------------------------------
   // Clock
   // Die Clock setzt den synchronen Systemtakt um, den die Aufgabenstellung verlangt.
@@ -304,7 +321,7 @@ int sc_main(int, char *[])
         name.append(",");
         name.append(to_string(x));
         name.append("]");
-        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE);
+        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE, inFile, outFile);
         PRINT_DEBUG("main - ram erzeugt");
       }
       else if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
