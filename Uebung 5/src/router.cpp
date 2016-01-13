@@ -5,6 +5,7 @@
 
 #include "router.h"
 #include "paket.h"
+#include "RAuES_U5.h"
 
 router::router(sc_module_name name, uint8_t id, uint8_t routen, RoutingRichtung routeRichtungen[],
     uint32_t bufferSize) :
@@ -53,6 +54,7 @@ void router::receive()
   {
     // Paket liegt an, lege es an die naechste frei Stelle des jeweiligen Sendebuffers
     // Falls der Buffer voll ist, wird das Paket verworfen
+    PRINT_DEBUG("router - empfange modulpaket [" + to_string((uint8_t)(id & 0x0F)) + "," + to_string((uint8_t)((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(moduleIn.read().opcode));
     route(moduleIn.read(), id);
   }
 
@@ -64,6 +66,7 @@ void router::receive()
     {
       // Paket liegt an, lege es an die naechste frei Stelle des jeweiligen Sendebuffers
       // Falls der Buffer voll ist, wird das Paket verworfen
+      PRINT_DEBUG("router - empfange routerpaket [" + to_string((uint8_t)(id & 0x0F)) + "," + to_string((uint8_t)((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(routeIn[i].read().opcode));
       route(routeIn[i].read(), i);
     }
   }
@@ -80,6 +83,8 @@ void router::send()
   {
     // Paket aus dem Buffer in tmpPaket gespeichert, sende es
     moduleOut.write(tmpPaket);
+    PRINT_DEBUG("router - sende modulpaket [" + to_string((uint8_t)(id & 0x0F)) + "," + to_string((uint8_t)((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(tmpPaket.opcode));
+
   }
   else
   {
@@ -95,6 +100,7 @@ void router::send()
     {
       // Paket aus dem Buffer in tmpPaket gespeichert, sende es
       routeOut[i].write(tmpPaket);
+      PRINT_DEBUG("router - sende routerpaket [" + to_string((uint8_t)(id & 0x0F)) + "," + to_string((uint8_t)((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(tmpPaket.opcode));
     }
     else
     {
