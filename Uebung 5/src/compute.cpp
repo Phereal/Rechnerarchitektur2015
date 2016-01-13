@@ -12,8 +12,8 @@
 
 compute::compute(sc_module_name name, uint8_t id, uint32_t bufferSize,
     uint8_t ramId, uint8_t gwId, uint8_t cacheList[], uint32_t cacheCount) :
-    module(name, id, bufferSize), ramId(ramId), gwId(gwId), cacheCount(
-        cacheCount)
+  module(name, id, bufferSize), ramId(ramId), gwId(gwId),
+      cacheCount(cacheCount)
 {
 
   if(cacheCount == 0)
@@ -49,7 +49,7 @@ bool compute::process(paket &pkg)
   i_color = pkg.color;
 
   pakethandler();
-  taskhandler();
+  taskHandler();
 
   //Paket senden
   pkg.id = o_id;
@@ -70,7 +70,9 @@ void compute::pakethandler()
     case 0x00:
       break; //[emp] -- leeres Paket (/)
     case 0x01: //[exe] -- Berechnungsauftrag (Gateway|Compute)
-
+      taskReceived = true;
+      xpos[4] = i_xpos;
+      ypos[4] = i_ypos;
       break;
     case 0x02:
       break; //[fin] -- Berechnung abgeschlossen (Compute|Gateway)
@@ -121,111 +123,137 @@ void compute::init()
   bordersReceived = false;
   neighboursCalculated = false;
   pixelRequested = false;
+  taskReceived = false;
 }
 
-void calcNeighbours()
+void compute::calcNeighbours()
 {
   // Berechne die X-Nachbarn
-  xpos[1] = xpos[4] = xpos[7] = i_xpos;
+  xpos[1] = i_xpos;
+  xpos[4] = i_xpos;
+  xpos[7] = i_xpos;
   if(i_xpos - 1 >= 0)
   {
-    xpos[0] = xpos[3] = xpos[6] = i_xpos - 1;
+    xpos[0] = i_xpos - 1;
+    xpos[3] = i_xpos - 1;
+    xpos[6] = i_xpos - 1;
   }
   else
   {
-    xpos[0] = xpos[3] = xpos[6] = 0;
+    xpos[0] = 0;
+    xpos[3] = 0;
+    xpos[6] = 0;
   }
   if(i_xpos + 1 <= width)
   {
-    xpos[2] = xpos[5] = xpos[8] = i_xpos + 1;
+    xpos[2] = i_xpos + 1;
+    xpos[5] = i_xpos + 1;
+    xpos[8] = i_xpos + 1;
   }
   else
   {
-    xpos[2] = xpos[5] = xpos[8] = width;
+    xpos[2] = width;
+    xpos[5] = width;
+    xpos[8] = width;
   }
 
   // Berechne die Y-Nachbarn
-  ypos[3] = ypos[4] = ypos[5] = i_ypos;
+  ypos[3] = i_ypos;
+  ypos[4] = i_ypos;
+  ypos[5] = i_ypos;
   if(i_ypos - 1 >= 0)
   {
-    ypos[0] = ypos[1] = ypos[2] = i_ypos - 1;
+    ypos[0] = i_ypos - 1;
+    ypos[1] = i_ypos - 1;
+    ypos[2] = i_ypos - 1;
   }
   else
   {
-    ypos[0] = ypos[1] = ypos[2] = 0;
+    ypos[0] = 0;
+    ypos[1] = 0;
+    ypos[2] = 0;
   }
   if(i_ypos + 1 <= height)
   {
-    ypos[6] = ypos[7] = ypos[8] = i_ypos + 1;
+    ypos[6] = i_ypos + 1;
+    ypos[7] = i_ypos + 1;
+    ypos[8] = i_ypos + 1;
   }
   else
   {
-    ypos[6] = ypos[7] = ypos[8] = height;
+    ypos[6] = height;
+    ypos[7] = height;
+    ypos[8] = height;
   }
 }
 
-void compute::taskhandler()
+void compute::taskHandler()
 {
-  if(!bordersRequested)
+  if(!taskReceived)
   {
-    getBorders();
-  }
-  if(!bordersReceived)
-  {
-    //tue nichts, denn solange die Bildgrenzen nicht erhalten sind können nie Nachbarpixel nicht berechnet werden!
-  }
-  else
-  {
-    //Bildgrenzen erhalten, Nachbarpixel können berechnet werden!
-    if(!neighboursCalculated)
+    if(!bordersRequested)
     {
-      calcNeighbours();
+      getBorders();
     }
-    //Wenn die Nachbarpixel berechnet wurden, können die umliegenden Pixel aus dem Cache angefragt werden!
-    if(!pixelRequested)
+    if(!bordersReceived)
     {
-      requestPixel();
+      //tue nichts, denn solange die Bildgrenzen nicht erhalten sind können nie Nachbarpixel nicht berechnet werden!
+    }
+    else
+    {
+      //Bildgrenzen erhalten, Nachbarpixel können berechnet werden!
+      if(!neighboursCalculated)
+      {
+        calcNeighbours();
+      }
+      //Wenn die Nachbarpixel berechnet wurden, können die umliegenden Pixel aus dem Cache angefragt werden!
+      if(!pixelRequested)
+      {
+        requestPixel();
+      }
+      if(!pixelReceived){
+
+      }
     }
   }
-  sendeBuffer->push(pkg);
 }
 
 void compute::requestPixel()
 {
   //Pixel 0
-  paket pkg(0x03, id, ramId, xpos[0], ypos[0], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg0(0x03, id, getMinCacheId(), xpos[0], ypos[0], 0);
+  sendeBuffer->push(pkg0);
 
   //Pixel 1
-  paket pkg(0x03, id, ramId, xpos[1], ypos[1], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg1(0x03, id, getMinCacheId(), xpos[1], ypos[1], 0);
+  sendeBuffer->push(pkg1);
   //Pixel 2
-  paket pkg(0x03, id, ramId, xpos[2], ypos[2], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg2(0x03, id, getMinCacheId(), xpos[2], ypos[2], 0);
+  sendeBuffer->push(pkg2);
 
   //Pixel 3
-  paket pkg(0x03, id, ramId, xpos[3], ypos[3], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg3(0x03, id, getMinCacheId(), xpos[3], ypos[3], 0);
+  sendeBuffer->push(pkg3);
 
   //Pixel 4
-  paket pkg(0x03, id, ramId, xpos[4], ypos[4], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg4(0x03, id, getMinCacheId(), xpos[4], ypos[4], 0);
+  sendeBuffer->push(pkg4);
 
   //Pixel 5
-  paket pkg(0x03, id, ramId, xpos[5], ypos[5], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg5(0x03, id, getMinCacheId(), xpos[5], ypos[5], 0);
+  sendeBuffer->push(pkg5);
 
   //Pixel 6
-  paket pkg(0x03, id, ramId, xpos[6], ypos[6], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg6(0x03, id, getMinCacheId(), xpos[6], ypos[6], 0);
+  sendeBuffer->push(pkg6);
 
   //Pixel 7
-  paket pkg(0x03, id, ramId, xpos[7], ypos[7], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg7(0x03, id, getMinCacheId(), xpos[7], ypos[7], 0);
+  sendeBuffer->push(pkg7);
 
   //Pixel 8
-  paket pkg(0x03, id, ramId, xpos[8], ypos[8], 0); //TODO Adresse des nächsten Caches muss hier rein!
-  sendeBuffer->push(pkg);
+  paket pkg8(0x03, id, getMinCacheId(), xpos[8], ypos[8], 0);
+  sendeBuffer->push(pkg8);
 
   pixelRequested = true;
   enable = true;
@@ -233,16 +261,11 @@ void compute::requestPixel()
 
 void compute::getBorders()
 {
-  o_id = 0;
-  o_opcode = 0x10; //[brd]
-  o_sender = id;
-  o_receiver = ramId;
-  o_xpos = 0;
-  o_ypos = 0;
-  o_color = 0;
-  enable = true;
+  paket pkg(0x10, id, getMinCacheId(), 0, 0, 0);
   sendeBuffer->push(pkg);
+
   bordersRequested = true;
+  enable = true;
 }
 
 void compute::receiveBorders()
@@ -252,37 +275,36 @@ void compute::receiveBorders()
   bordersReceived = true;
 }
 
-int compute::calcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord,
-    int yCoord)
-{
-  int sum = 0;
+/*int compute::calcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord,
+ int yCoord)
+ {
+ int sum = 0;
 
-  for(int i = 1; i <= MATRIX_SIZE; i++)
-  {
-    for(int j = 1; j <= MATRIX_SIZE; j++)
-    {
-      int M = matrix[i - 1][j - 1]; //-1, da Arrays ab 0 zählen.
+ for(int i = 1; i <= MATRIX_SIZE; i++)
+ {
+ for(int j = 1; j <= MATRIX_SIZE; j++)
+ {
+ int M = matrix[i - 1][j - 1]; //-1, da Arrays ab 0 zählen.
 
-      //Da wir Integer teilen erhalten wir bei der folgenden Rechnung immer die
-      //Werte der 9 Pixel, die den Quellpixel und die ihn umgebenden Pixel beschreiben.
+ //Da wir Integer teilen erhalten wir bei der folgenden Rechnung immer die
+ //Werte der 9 Pixel, die den Quellpixel und die ihn umgebenden Pixel beschreiben.
 
-      int currentTargetX = (xCoord + i - MATRIX_SIZE / 2);
-      int currentTargetY = (yCoord + j - MATRIX_SIZE / 2);
+ int currentTargetX = (xCoord + i - MATRIX_SIZE / 2);
+ int currentTargetY = (yCoord + j - MATRIX_SIZE / 2);
 
-      int currentPixel = getValueAt(currentTargetX, currentTargetY); //getValueAt() ist ein Platzhalter! Ersetzen.
+ int currentPixel = getValueAt(currentTargetX, currentTargetY); //getValueAt() ist ein Platzhalter! Ersetzen.
 
-      sum += M * currentPixel; //Führe die eigentliche Formel durch und addierte den Summen-Berechnungsschritt:
+ sum += M * currentPixel; //Führe die eigentliche Formel durch und addierte den Summen-Berechnungsschritt:
 
-      //Bevor wir eine weitere Schleife erlauben, pausieren wir die Programmausführung so lange,
-      //wie die Formelausrechnung auf der Hardware ungefähr dauern würde.
+ //Bevor wir eine weitere Schleife erlauben, pausieren wir die Programmausführung so lange,
+ //wie die Formelausrechnung auf der Hardware ungefähr dauern würde.
 
-      //TODO wait-statement
+ //TODO wait-statement
 
-    }
-  }
-  return std::min(std::max(sum, 0), 255); //Auf 0-255 auf / abrunden.
-}
-
+ }
+ }
+ return std::min(std::max(sum, 0), 255); //Auf 0-255 auf / abrunden.
+ }*/
 
 uint8_t compute::getMinCacheId()
 {
@@ -315,7 +337,7 @@ uint8_t compute::getMinCacheId()
     }
 
     // entfernung kleiner als bisheriger wert? Dann ersete Wert und id
-    if( (tmpEntfernung[0] + tmpEntfernung[1]) < (minEntfernung) )
+    if((tmpEntfernung[0] + tmpEntfernung[1]) < (minEntfernung))
     {
       minEntfernung = tmpEntfernung[0] + tmpEntfernung[1];
       minCache = cacheList[i];

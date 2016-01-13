@@ -27,9 +27,10 @@ class compute : public module
 
     void getBorders();
     void receiveBorders();
-    void handleTask();
+    void taskHandler();
     void requestPixel();
     void calcPixel();
+    void calcNeighbours();
     uint8_t getMinCacheId();
 
 
@@ -44,14 +45,16 @@ class compute : public module
     bool bordersRequested = false;
     bool bordersReceived = false;
     bool neighboursCalculated = false;
-    bool pixelrequested = false;
+    bool pixelRequested = false;
+    bool taskReceived = false;
+    bool pixelReceived = false;
 
     unsigned int width = 0;
     unsigned int height = 0;
 
-    unsigned int xpos[5];
-    unsigned int ypos[5];
-    unsigned char color[5];
+    unsigned int xpos[8];
+    unsigned int ypos[8];
+    unsigned char color[8];
 
     //lokale Speicherung des eingehenden Paketes
     uint32_t i_id;
