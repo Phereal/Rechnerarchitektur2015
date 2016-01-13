@@ -83,6 +83,7 @@ void compute::pakethandler()
     case 0x05:
       break; //[ack] -- Empfangsbestätigung (/)
     case 0x06: //[ic_pay] -- Pixel vom Cache an Compute (Cache|Compute)
+      receivePixel();
       break;
     case 0x07:
       break; //[ir_pay] -- Pixel vom RAM an Cache (RAM|Cache)
@@ -113,11 +114,15 @@ void compute::pakethandler()
 // Initialisierung
 void compute::init()
 {
-  for(int i = 0; i < 5; ++i)
+  for(int i = 0; i < 8; ++i)
   {
     xpos[i] = 0;
     ypos[i] = 0;
     color[i] = 0;
+  }
+  for(int i = 0; i < 9; ++i)
+  {
+    pixelReceived[i] = false;
   }
   bordersRequested = false;
   bordersReceived = false;
@@ -206,16 +211,45 @@ void compute::taskHandler()
       {
         calcNeighbours();
       }
-      //Wenn die Nachbarpixel berechnet wurden, können die umliegenden Pixel aus dem Cache angefragt werden!
-      if(!pixelRequested)
+      else
       {
-        requestPixel();
-      }
-      if(!pixelReceived){
-
+        //Wenn die Nachbarpixel berechnet wurden, können die umliegenden Pixel aus dem Cache angefragt werden!
+        if(!pixelRequested)
+        {
+          requestPixel();
+        }
+        if(!pixelReceived[9])
+        {
+          //tue nichts, weil noch nicht alle Pixel angekommen sind!
+        }
+        else
+        {
+          if(!calcExecuted)
+          {
+            calcPixel();
+          }
+          else
+          {
+            if(!pixelCalculated)
+            {
+              //tue nichts, da die Berechnung noch nicht abgeschlossen ist!
+            }
+            else
+            {
+              if(!resultSend)
+              {
+                sendResult();
+              }
+            }
+          }
+        }
       }
     }
   }
+}
+
+void compute::sendResult(){
+
 }
 
 void compute::requestPixel()
@@ -259,6 +293,58 @@ void compute::requestPixel()
   enable = true;
 }
 
+void compute::receivePixel()
+{
+  if(i_xpos == xpos[0] && i_ypos == ypos[0])
+  {
+    color[0] = i_color;
+    pixelReceived[0] = true;
+  }
+  if(i_xpos == xpos[1] && i_ypos == ypos[1])
+  {
+    color[1] = i_color;
+    pixelReceived[1] = true;
+  }
+  if(i_xpos == xpos[2] && i_ypos == ypos[2])
+  {
+    color[2] = i_color;
+    pixelReceived[2] = true;
+  }
+  if(i_xpos == xpos[3] && i_ypos == ypos[3])
+  {
+    color[3] = i_color;
+    pixelReceived[3] = true;
+  }
+  if(i_xpos == xpos[4] && i_ypos == ypos[4])
+  {
+    color[4] = i_color;
+    pixelReceived[4] = true;
+  }
+  if(i_xpos == xpos[5] && i_ypos == ypos[5])
+  {
+    color[5] = i_color;
+    pixelReceived[5] = true;
+  }
+  if(i_xpos == xpos[6] && i_ypos == ypos[6])
+  {
+    color[6] = i_color;
+    pixelReceived[6] = true;
+  }
+  if(i_xpos == xpos[7] && i_ypos == ypos[7])
+  {
+    color[7] = i_color;
+    pixelReceived[7] = true;
+  }
+  if(i_xpos == xpos[8] && i_ypos == ypos[8])
+  {
+    color[8] = i_color;
+    pixelReceived[8] = true;
+  }
+  pixelReceived[9] = pixelReceived[0] && pixelReceived[1] && pixelReceived[2]
+      && pixelReceived[3] && pixelReceived[4] && pixelReceived[5]
+      && pixelReceived[6] && pixelReceived[7] && pixelReceived[8];
+}
+
 void compute::getBorders()
 {
   paket pkg(0x10, id, getMinCacheId(), 0, 0, 0);
@@ -275,6 +361,9 @@ void compute::receiveBorders()
   bordersReceived = true;
 }
 
+void compute::calcPixel(){
+
+}
 /*int compute::calcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord,
  int yCoord)
  {

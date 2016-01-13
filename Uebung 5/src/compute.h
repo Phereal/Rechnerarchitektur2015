@@ -1,9 +1,9 @@
 /*
-* compute.h
-*
-*  Created on: 05.01.2016
-*      Author: stefan
-*/
+ * compute.h
+ *
+ *  Created on: 05.01.2016
+ *      Author: stefan
+ */
 
 #ifndef COMPUTE_H_
 #define COMPUTE_H_
@@ -19,9 +19,11 @@
 class compute : public module
 {
   public:
-    compute(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId, uint8_t gwId, uint8_t cacheList[], uint32_t cacheCount);
+    compute(sc_module_name name, uint8_t id, uint32_t bufferSize,
+        uint8_t ramId, uint8_t gwId, uint8_t cacheList[], uint32_t cacheCount);
 
-  private: //Methoden
+  private:
+    //Methoden
     void pakethandler();
     void init();
 
@@ -31,10 +33,12 @@ class compute : public module
     void requestPixel();
     void calcPixel();
     void calcNeighbours();
+    void receivePixel();
+    void sendResult();
     uint8_t getMinCacheId();
 
-
-  private: //Variablen
+  private:
+    //Variablen
     uint8_t ramId;
     uint8_t gwId;
     uint32_t cacheCount;
@@ -47,7 +51,12 @@ class compute : public module
     bool neighboursCalculated = false;
     bool pixelRequested = false;
     bool taskReceived = false;
-    bool pixelReceived = false;
+    bool pixelReceived[9] = {false, false, false, false, false, false, false,
+        false, false};
+    bool calcExecuted = false;
+    bool pixelCalculated = false;
+    bool resultSend = false;
+    bool initExecuted = false;
 
     unsigned int width = 0;
     unsigned int height = 0;
