@@ -12,8 +12,9 @@
 gateway::gateway(sc_module_name name, uint8_t id, uint32_t bufferSize,
     uint8_t ramId, uint8_t computeList[], uint32_t computeCount,
     uint32_t pixelBufferSize) :
-    module(name, id, bufferSize), ramId(ramId), state(Zustaende::IDLE), computeCount(
-        computeCount), computeBusyCnt(0), pixelBufferSize(pixelBufferSize)
+  module(name, id, bufferSize), ramId(ramId), state(Zustaende::IDLE),
+      computeCount(computeCount), computeBusyCnt(0),
+      pixelBufferSize(pixelBufferSize)
 {
   PRINT_DEBUG("gateway - Konstruktor");
 
@@ -38,7 +39,6 @@ gateway::gateway(sc_module_name name, uint8_t id, uint32_t bufferSize,
   }
 
   this->pixelBuffer = new PaketBuffer(this->pixelBufferSize);
-
   SC_HAS_PROCESS(gateway);
 
   SC_METHOD(checkStart);

@@ -79,7 +79,6 @@
 
 using namespace std;
 
-
 /*
  * Das Klasse waiter dient dazu, die Simulation nach 1000ms zu stoppen. Damit,
  * falls z.B. irgend ein unvorhersehbarer Fehler auftritt, die Anwendung nicht
@@ -90,9 +89,9 @@ SC_MODULE(waiter)
 {
     void waiting()
     {
-      wait(1000, SC_NS);
-      sc_stop();
-      cout << "Simulation wurde durch \"waiter\" gestoppt!" << endl;
+      /*      wait(1000, SC_NS);
+       sc_stop();
+       cout << "Simulation wurde durch \"waiter\" gestoppt!" << endl;*/
     }
 
     SC_CTOR(waiter)
@@ -102,43 +101,39 @@ SC_MODULE(waiter)
 };
 #endif
 
-
-
 #ifdef K_DEBUG
 SC_MODULE(starter)
 {
-  // Startsignal fuer gateway
-  sc_out<bool> start;
+    // Startsignal fuer gateway
+    sc_out<bool> start;
 
-  sc_in<bool> clk;
+    sc_in<bool> clk;
 
-  void starting()
-  {
-    // halte start 10 takte lang auf 1
-    if( waitCnt < 10 )
+    void starting()
     {
-      start.write(true);
-      waitCnt++;
+      // halte start 10 takte lang auf 1
+      if(waitCnt < 10)
+      {
+        start.write(true);
+        waitCnt++;
+      }
+      else
+      {
+        start.write(false);
+      }
     }
-    else
-    {
-      start.write(false);
-    }
-  }
 
-  // Konstruktor der Klasse starter die die Methode starting() aufruft.
-  SC_CTOR(starter)
-  {
-    SC_METHOD(starting);
-    sensitive << clk.pos();
-  }
+    // Konstruktor der Klasse starter die die Methode starting() aufruft.
+    SC_CTOR(starter)
+    {
+      SC_METHOD(starting);
+      sensitive << clk.pos();
+    }
 
   private:
-  uint32_t waitCnt = 0;
+    uint32_t waitCnt = 0;
 };
 #endif
-
-
 
 int sc_main(int argc, char *argv[])
 {
@@ -157,7 +152,6 @@ int sc_main(int argc, char *argv[])
     outFile = argv[2];
   }
 
-
   // ------------------------------
   // Clock
   // Die Clock setzt den synchronen Systemtakt um, den die Aufgabenstellung verlangt.
@@ -166,36 +160,30 @@ int sc_main(int argc, char *argv[])
   sc_clock clk("clk", 10, SC_NS, 0.5);
   sc_clock clkSlow("clkSlow", 20, SC_NS, 0.5);
 
-
-
   // ------------------------------
   // NOC-Array
   // Dieses Array stellt das NOC dar. Wie aus der Aufgabenstellung werden hierbei
   // 8x8 Router-Objekt erzeugt, die jeweils über ein verbundenes Modul verfügen.
   const size_t K_NOC_SIZE = 8;
-  const uint32_t K_ROUTER_BUFFER_SIZE = 10;
-  const uint32_t K_RAM_BUFFER_SIZE = 10;
-  const uint32_t K_GATEWAY_BUFFER_SIZE = 10;
-  const uint32_t K_GATEWAY_PIXEL_BUFFER_SIZE = 10;
-  const uint32_t K_COMPUTE_BUFFER_SIZE = 10;
-  const uint32_t K_CACHE_BUFFER_SIZE = 10;
-
-
+  const uint32_t K_ROUTER_BUFFER_SIZE = 50;
+  const uint32_t K_RAM_BUFFER_SIZE = 200;
+  const uint32_t K_GATEWAY_BUFFER_SIZE = 20;
+  const uint32_t K_GATEWAY_PIXEL_BUFFER_SIZE = 20;
+  const uint32_t K_COMPUTE_BUFFER_SIZE = 25;
+  const uint32_t K_CACHE_BUFFER_SIZE = 100;
 
   // Signale
   sc_signal<paket> routeList[K_NOC_SIZE][K_NOC_SIZE][4];
   sc_signal<paket> moduleRouteList[K_NOC_SIZE][K_NOC_SIZE][2];
   sc_signal<bool> start;
 
-
-
   // ------------------------------
   // Erstellen der Objekte der Klassen
   // ------------------------------
-  #ifdef K_DEBUG
+#ifdef K_DEBUG
   waiter w("Waiter");
   starter s("Starter");
-  #endif
+#endif
   router *routerList[K_NOC_SIZE][K_NOC_SIZE];
   module *moduleList[K_NOC_SIZE][K_NOC_SIZE];
 
@@ -321,7 +309,8 @@ int sc_main(int argc, char *argv[])
         name.append(",");
         name.append(to_string(x));
         name.append("]");
-        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE, inFile, outFile);
+        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE, inFile,
+            outFile);
         PRINT_DEBUG("main - ram erzeugt");
       }
       else if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
@@ -331,8 +320,8 @@ int sc_main(int argc, char *argv[])
       }
       else
       {
-        if(((x == 2) || (x == 5))
-            && ((y == 1) || (y == 3) || (y == 5) || (y == 7)))
+        if(((x == 2) || (x == 5)) && ((y == 1) || (y == 3) || (y == 5) || (y
+            == 7)))
         {
           // Cache at specific positions (see router.h)
           name = "Cache[";
@@ -340,7 +329,8 @@ int sc_main(int argc, char *argv[])
           name.append(",");
           name.append(to_string(x));
           name.append("]");
-          moduleList[y][x] = new cache(name.c_str(), id, K_CACHE_BUFFER_SIZE, 0); // 0 = ramId
+          moduleList[y][x]
+              = new cache(name.c_str(), id, K_CACHE_BUFFER_SIZE, 0); // 0 = ramId
           cacheIdList[cacheCnt++] = id; // id liste fuer compute
         }
         else
@@ -369,13 +359,7 @@ int sc_main(int argc, char *argv[])
       if((y == 0) && (x == 0))
       {
         // Ram at top left
-        name = "Ram[";
-        name.append(to_string(y));
-        name.append(",");
-        name.append(to_string(x));
-        name.append("]");
-        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE, inFile, outFile);
-        PRINT_DEBUG("main - ram erzeugt");
+        // wurde bereits vorher erzeugt
       }
       else if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
       {
@@ -384,8 +368,8 @@ int sc_main(int argc, char *argv[])
       }
       else
       {
-        if(((x == 2) || (x == 5))
-            && ((y == 1) || (y == 3) || (y == 5) || (y == 7)))
+        if(((x == 2) || (x == 5)) && ((y == 1) || (y == 3) || (y == 5) || (y
+            == 7)))
         {
           // Cache at specific positions (see router.h)
           // wurde zuvor erzeugt
@@ -400,7 +384,8 @@ int sc_main(int argc, char *argv[])
           name.append("]");
           uint8_t gwId = (uint8_t)7;
           gwId |= (uint8_t)((7 << 4) & 0xF0);
-          moduleList[y][x] = new compute(name.c_str(), id, K_COMPUTE_BUFFER_SIZE, 0, gwId, cacheIdList, cacheCnt);
+          moduleList[y][x] = new compute(name.c_str(), id,
+              K_COMPUTE_BUFFER_SIZE, 0, gwId, cacheIdList, cacheCnt);
           computeIdList[computeCnt++] = id; // id liste fuer gateway
         }
 
@@ -419,7 +404,9 @@ int sc_main(int argc, char *argv[])
     name.append("]");
     uint8_t id = (uint8_t)(K_NOC_SIZE - 1);
     id |= (uint8_t)(((K_NOC_SIZE - 1) << 4) & 0xF0);
-    moduleList[K_NOC_SIZE - 1][K_NOC_SIZE - 1] = new gateway(name.c_str(), id, K_GATEWAY_BUFFER_SIZE, 0, computeIdList, computeCnt, K_GATEWAY_PIXEL_BUFFER_SIZE); // 0 = ramId
+    moduleList[K_NOC_SIZE - 1][K_NOC_SIZE - 1] = new gateway(name.c_str(), id,
+        K_GATEWAY_BUFFER_SIZE, 0, computeIdList, computeCnt,
+        K_GATEWAY_PIXEL_BUFFER_SIZE); // 0 = ramId
   }
   PRINT_DEBUG("main - gateway erzeugt");
 
@@ -427,10 +414,10 @@ int sc_main(int argc, char *argv[])
   // Connect Signals
   // ------------------------------
   // Übergeben der Signale an die Klasse starter
-  #ifdef K_DEBUG
+#ifdef K_DEBUG
   s.clk(clk);
   s.start(start);
-  #endif
+#endif
 
   PRINT_DEBUG("main - signale verbinden");
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
@@ -446,20 +433,20 @@ int sc_main(int argc, char *argv[])
       routerList[y][x]->moduleIn(moduleRouteList[y][x][1]);
       moduleList[y][x]->routerOut(moduleRouteList[y][x][1]);
 
-//      // todo ggf. in ram selbst regeln
-//      if( (y == 0) && (x == 0) )
-//      {
-//        // ram hat langsameren clock
-//        moduleList[y][x]->clk(clkSlow);
-//      }
-//      else
-//      {
-//        moduleList[y][x]->clk(clk);
-//      }
+      //      // todo ggf. in ram selbst regeln
+      //      if( (y == 0) && (x == 0) )
+      //      {
+      //        // ram hat langsameren clock
+      //        moduleList[y][x]->clk(clkSlow);
+      //      }
+      //      else
+      //      {
+      //        moduleList[y][x]->clk(clk);
+      //      }
       moduleList[y][x]->clk(clk);
 
       // start signal fuer gateway
-      if( (y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)) )
+      if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
       {
         ((gateway*)(moduleList[y][x]))->startIn(start);
       }
@@ -579,7 +566,6 @@ int sc_main(int argc, char *argv[])
   PRINT_DEBUG("main - simulation starten");
   sc_start();
   PRINT_DEBUG("main - simulation beendet");
-
 
   sc_close_vcd_trace_file(Tf);
 
