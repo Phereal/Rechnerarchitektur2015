@@ -15,8 +15,10 @@
 
 class ram : public module
 {
+  public:
   ram(sc_module_name name, uint8_t id, uint32_t bufferSize);
 
+  private:
   unsigned char readPixel(int width, int height);
   void writePixel(int width, int height, unsigned char data);
   void readPGM();

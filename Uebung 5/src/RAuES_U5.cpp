@@ -66,8 +66,12 @@
 #include <systemc.h>
 
 #include "pgm.h"
-#include "router.h"
 #include "paket.h"
+#include "router.h"
+#include "module.h"
+#include "ram.h"
+#include "gateway.h"
+#include "cache.h"
 
 using namespace std;
 
@@ -88,7 +92,11 @@ int sc_main(int, char *[])
   // K_ROUTEN_CNT = 4 Ecken a 2 Routen + 4 Kanten a 3 Routen je Router + Mitte a 4 Routen je Router
   //const size_t K_ROUTEN_CNT = (4 * 2) + (4 * (K_NOC_SIZE - 2) * 3)
   //    + ((K_NOC_SIZE - 2) * (K_NOC_SIZE - 2) * 4);
-  const uint32_t K_BUFFER_SIZE = 10;
+  const uint32_t K_ROUTER_BUFFER_SIZE = 10;
+  const uint32_t K_RAM_BUFFER_SIZE = 10;
+  const uint32_t K_GATEWAY_BUFFER_SIZE = 10;
+  const uint32_t K_COMPUTE_BUFFER_SIZE = 10;
+  const uint32_t K_CACHE_BUFFER_SIZE = 10;
 
   // Signale
   sc_signal<paket> routeList[K_NOC_SIZE][K_NOC_SIZE][4];
@@ -97,6 +105,7 @@ int sc_main(int, char *[])
 //  sc_signal<paket> outList[numOut];
 
   router *routerList[K_NOC_SIZE][K_NOC_SIZE];
+  module *moduleList[K_NOC_SIZE][K_NOC_SIZE];
 
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
   {
@@ -192,10 +201,66 @@ int sc_main(int, char *[])
       }
 
       // Komponente erzeugen
-      routerList[y][x] = new router(name.c_str(), id, routen, routeRichtungen, K_BUFFER_SIZE);
+      routerList[y][x] = new router(name.c_str(), id, routen, routeRichtungen, K_ROUTER_BUFFER_SIZE);
     }
   }
 
+  for(size_t y = 0; y < K_NOC_SIZE; ++y)
+  {
+    for(size_t x = 0; x < K_NOC_SIZE; ++x)
+    {
+      string name;
+      uint8_t id = (uint8_t)y;
+      id |= (uint8_t)((x << 4) & 0xF0);
+      RoutingRichtung routeRichtungen[4]; // Verdrahtung imm im UZS, beginnend bei UP wenn moeglich
+
+      if((y == 0) && (x == 0))
+      {
+        // Ram at top left
+        name = "Ram[";
+        name.append(to_string(y));
+        name.append(",");
+        name.append(to_string(x));
+        name.append("]");
+        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE);
+      }
+      else if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
+      {
+        // Gateway at bottom right
+        name = "Gateway[";
+        name.append(to_string(y));
+        name.append(",");
+        name.append(to_string(x));
+        name.append("]");
+//        moduleList[y][x] = new gateway(name.c_str(), id, K_GATEWAY_BUFFER_SIZE);
+      }
+      else
+      {
+        if( ((x == 2) || (x == 5)) &&
+            ((y == 1) || (y == 3) || (y == 5) || (y == 7)) )
+        {
+          // Cache at specific positions (see router.h)
+          name = "Cache[";
+          name.append(to_string(y));
+          name.append(",");
+          name.append(to_string(x));
+          name.append("]");
+//          moduleList[y][x] = new cache(name.c_str(), id, K_CACHE_BUFFER_SIZE);
+        }
+        else
+        {
+          // Compute everywhere else
+          name = "Compute[";
+          name.append(to_string(y));
+          name.append(",");
+          name.append(to_string(x));
+          name.append("]");
+          //moduleList[y][x] = new compute(name.c_str(), id, K_COMPUTE_BUFFER_SIZE);
+        }
+
+      }
+    }
+  }
 
   // ------------------------------
   // Connect Signals
@@ -217,16 +282,16 @@ int sc_main(int, char *[])
           // 1. Reihe, 1. Element (2)
           routerList[y][x]->routeOut[0](routeList[y][x][1]); // right
           routerList[y][x]->routeOut[1](routeList[y][x][2]); // down
-          routerList[y][x]->routeIn[0](routeList[y][x+1][3]); // right
-          routerList[y][x]->routeIn[1](routeList[y+1][x][0]); // down
+          routerList[y][x]->routeIn[0](routeList[y][x + 1][3]); // right
+          routerList[y][x]->routeIn[1](routeList[y + 1][x][0]); // down
         }
         else if(x == (K_NOC_SIZE - 1))
         {
           // 1. Reihe, letztes Element (2)
           routerList[y][x]->routeOut[0](routeList[y][x][2]); // down
           routerList[y][x]->routeOut[1](routeList[y][x][3]); // left
-          routerList[y][x]->routeIn[0](routeList[y+1][x][0]); // down
-          routerList[y][x]->routeIn[1](routeList[y][x-1][1]); // left
+          routerList[y][x]->routeIn[0](routeList[y + 1][x][0]); // down
+          routerList[y][x]->routeIn[1](routeList[y][x - 1][1]); // left
         }
         else
         {
@@ -234,9 +299,9 @@ int sc_main(int, char *[])
           routerList[y][x]->routeOut[0](routeList[y][x][1]); // right
           routerList[y][x]->routeOut[1](routeList[y][x][2]); // down
           routerList[y][x]->routeOut[2](routeList[y][x][3]); // left
-          routerList[y][x]->routeIn[0](routeList[y][x+1][3]); // right
-          routerList[y][x]->routeIn[1](routeList[y+1][x][0]); // down
-          routerList[y][x]->routeIn[2](routeList[y][x-1][1]); // left
+          routerList[y][x]->routeIn[0](routeList[y][x + 1][3]); // right
+          routerList[y][x]->routeIn[1](routeList[y + 1][x][0]); // down
+          routerList[y][x]->routeIn[2](routeList[y][x - 1][1]); // left
         }
       }
       else if(y == (K_NOC_SIZE - 1))
@@ -246,16 +311,16 @@ int sc_main(int, char *[])
           // Letzte Reihe, 1. Element (2)
           routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
           routerList[y][x]->routeOut[1](routeList[y][x][1]); // right
-          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
-          routerList[y][x]->routeIn[1](routeList[y][x+1][3]); // right
+          routerList[y][x]->routeIn[0](routeList[y - 1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x + 1][3]); // right
         }
         else if(x == (K_NOC_SIZE - 1))
         {
           // Letzte Reihe, letztes Element (2)
           routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
           routerList[y][x]->routeOut[1](routeList[y][x][3]); // left
-          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
-          routerList[y][x]->routeIn[1](routeList[y][x-1][1]); // left
+          routerList[y][x]->routeIn[0](routeList[y - 1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x - 1][1]); // left
         }
         else
         {
@@ -263,9 +328,9 @@ int sc_main(int, char *[])
           routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
           routerList[y][x]->routeOut[1](routeList[y][x][1]); // right
           routerList[y][x]->routeOut[2](routeList[y][x][3]); // left
-          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
-          routerList[y][x]->routeIn[1](routeList[y][x+1][3]); // right
-          routerList[y][x]->routeIn[2](routeList[y][x-1][1]); // left
+          routerList[y][x]->routeIn[0](routeList[y - 1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x + 1][3]); // right
+          routerList[y][x]->routeIn[2](routeList[y][x - 1][1]); // left
         }
       }
       else
@@ -276,9 +341,9 @@ int sc_main(int, char *[])
           routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
           routerList[y][x]->routeOut[1](routeList[y][x][1]); // right
           routerList[y][x]->routeOut[2](routeList[y][x][2]); // down
-          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
-          routerList[y][x]->routeIn[1](routeList[y][x+1][3]); // right
-          routerList[y][x]->routeIn[2](routeList[y+1][x][0]); // down
+          routerList[y][x]->routeIn[0](routeList[y - 1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x + 1][3]); // right
+          routerList[y][x]->routeIn[2](routeList[y + 1][x][0]); // down
         }
         else if(x == (K_NOC_SIZE - 1))
         {
@@ -286,9 +351,9 @@ int sc_main(int, char *[])
           routerList[y][x]->routeOut[0](routeList[y][x][0]); // up
           routerList[y][x]->routeOut[1](routeList[y][x][2]); // down
           routerList[y][x]->routeOut[2](routeList[y][x][3]); // left
-          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
-          routerList[y][x]->routeIn[1](routeList[y+1][x][0]); // down
-          routerList[y][x]->routeIn[2](routeList[y][x-1][1]); // left
+          routerList[y][x]->routeIn[0](routeList[y - 1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y + 1][x][0]); // down
+          routerList[y][x]->routeIn[2](routeList[y][x - 1][1]); // left
         }
         else
         {
@@ -297,20 +362,14 @@ int sc_main(int, char *[])
           routerList[y][x]->routeOut[1](routeList[y][x][1]); // right
           routerList[y][x]->routeOut[2](routeList[y][x][2]); // down
           routerList[y][x]->routeOut[3](routeList[y][x][3]); // left
-          routerList[y][x]->routeIn[0](routeList[y-1][x][2]); // up
-          routerList[y][x]->routeIn[1](routeList[y][x+1][3]); // right
-          routerList[y][x]->routeIn[2](routeList[y+1][x][0]); // down
-          routerList[y][x]->routeIn[3](routeList[y][x-1][1]); // left
+          routerList[y][x]->routeIn[0](routeList[y - 1][x][2]); // up
+          routerList[y][x]->routeIn[1](routeList[y][x + 1][3]); // right
+          routerList[y][x]->routeIn[2](routeList[y + 1][x][0]); // down
+          routerList[y][x]->routeIn[3](routeList[y][x - 1][1]); // left
         }
       }
     }
   }
-
-
-
-
-
-
 
   // ------------------------------
 
