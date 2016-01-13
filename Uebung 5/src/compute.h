@@ -30,6 +30,7 @@ class compute : public module
     void handleTask();
     void requestPixel();
     void calcPixel();
+    uint8_t getMinCacheId();
 
 
   private: //Variablen
