@@ -8,35 +8,47 @@
 #ifndef COMPUTE_H_
 #define COMPUTE_H_
 
-#define MATRIX_SIZE 3
-
-//Wir simulieren Rechenzeit durch wait-statements, die bestimmt viele Clock-Zyklen warten:
-#define WAIT_CLOCKS_ADD 1
-#define WAIT_CLOCKS_SUB 1
-#define WAIT_CLOCKS_MUL 3
-#define WAIT_CLOCKS_DIV 25
-
 #include <systemc.h>
-#include "module.h"
 #include <queue>
 #include <iostream>
 
+#include "RAuES_U5.h"
+#include "module.h"
+#include "paket.h"
 
 class compute : public module
 {
-    compute(sc_module_name name, uint8_t id, uint32_t bufferSize);
+  public:
+    compute(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId, unint8_t gwId);
 
+  private: //Methoden
     void pakethandler();
-    void addRequestToQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos);
-    void deleteRequestFromQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos);
+    void init();
 
-    struct pixel { unsigned int xpos; unsigned int ypos; unsigned char color; };
-    std::queue<pixel> cache_list;
-    struct request {
-        unsigned int id; unsigned int sender; unsigned int receiver;
-        unsigned int xpos; unsigned int ypos;
-    };
-    std::queue<request> request_list;
+    void getBorders();
+    void receiveBorders();
+    void handleTask();
+    void requestPixel();
+    void calcPixel();
+
+
+  private: //Variablen
+    unint8_t ramId;
+    unint8_t gwId;
+
+    bool initialize = false;
+    bool enable = false;
+    bool bordersRequested = false;
+    bool bordersReceived = false;
+    bool neighboursCalculated = false;
+    bool pixelrequested = false;
+
+    unsigned int width = 0;
+    unsigned int height = 0;
+
+    unsigned int xpos[5];
+    unsigned int ypos[5];
+    unsigned char color[5];
 
     //lokale Speicherung des eingehenden Paketes
     uint32_t i_id;
@@ -59,7 +71,6 @@ class compute : public module
     uint8_t o_color;
 
     virtual bool process(paket &pkg);
-
 };
 
 #endif /* COMPUTE_H_ */

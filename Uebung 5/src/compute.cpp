@@ -1,114 +1,256 @@
 /*
-* compute.cpp
-*
-* erbt von module.cpp
-*
-*
-*/
+ * compute.cpp
+ *
+ * erbt von module.cpp
+ *
+ *
+ */
 
 #include "compute.h"
 
 #include <systemc.h>
 
-compute::compute(sc_module_name name, uint8_t id, uint32_t bufferSize) : module(name, id, bufferSize)
+compute::compute(sc_module_name name, uint8_t id, uint32_t bufferSize,
+    uint8_t ramId, uint8_t gwId) :
+  module(name, id, bufferSize), ramId(ramId), gwId(gwId)
 {
-    pakethandler();
-    sensitive << clk.pos();
+  if(initialize == false)
+  {
+    init();
+    initialize = true;
+  }
 }
-
 
 //Überschreiben der process-Methode der Elternklasse Module
-bool compute::process(paket &pkg) {
-    //Paket einlesen
-    i_id = pkg.id;
-    i_opcode = pkg.opcode;
-    i_sender = pkg.sender;
-    i_receiver = pkg.receiver;
-    i_xpos = pkg.xpos;
-    i_ypos = pkg.ypos;
-    i_color = pkg.color;
-
-    //Paket senden
-    pkg.id = o_id;
-    pkg.opcode = o_opcode;
-    pkg.sender = o_sender;
-    pkg.receiver = o_receiver;
-    pkg.xpos = o_xpos;
-    pkg.ypos = o_ypos;
-    pkg.color = o_color;
-    return false;
-}
-
-void compute::pakethandler() {
-    //Es werden nur OPCodes behandelt, die auch durch das compute-Modul verarbeitet werden können.
-    switch (i_opcode) {
-    case 0x00: break;//[emp] -- leeres Paket (/)
-    case 0x01: break;//[exe] -- Berechnungsauftrag (Gateway|Compute)
-    case 0x02: break;//[fin] -- Berechnung abgeschlossen (Compute|Gateway)
-    case 0x03: break;//[c_req] -- Pixel Anfrage an den Cache (Compute|Cache)
-    case 0x04: break;//[r_req] -- Pixel Anfrage an den RAM (Cache|RAM)
-    case 0x05: break;//[ack] -- Empfangsbestätigung (/)
-    case 0x06: break;//[ic_pay] -- Pixel vom Cache an Compute (Cache|Compute)
-    case 0x07: break;//[ir_pay] -- Pixel vom RAM an Cache (RAM|Cache)
-    case 0x08: break;//[o_pay] -- Berechneter Pixel an den RAM (Compute|RAM)
-    case 0x09: break;//[rfi] -- Bild einzulesen (Gateway|RAM)
-    case 0x0A: break;//[rff] -- Bild fertig eingelesen (RAM|Gateway)
-    case 0x0B: break;//[wfi] -- Zielbild schreiben (Gateway|RAM)
-    case 0x0C: break;//[wff] -- Zielbild schreiben abgeschlossen (RAM|Gateway)
-    case 0x0D: break;//[nxt] -- Sende nächsten zu berechnenden Pixel (Gateway|RAM)
-    case 0x0E: break;//[nxa] -- Nächster zu berechnender Pixel (RAM|Gateway)
-    default: break;
-    };
-}
-
-void compute::addRequestToQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos) {
-    request tmp = { id,sender,receiver,xpos,ypos };
-    request_list.push(tmp);
-}
-
-void compute::deleteRequestFromQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos) {
-    std::queue<request> tmp_request_list;
-    //Durchlaufe die Request List und suche nach dem zu löschenden Element
-    while (request_list.size() != 0) {
-        request tmpRequest = request_list.front();
-        if (tmpRequest.id == id && tmpRequest.sender == sender && tmpRequest.receiver == receiver && tmpRequest.xpos == xpos && tmpRequest.ypos == ypos) {
-            //Tue nichts, also schreibe füge den Request nicht der tmp_request_list wieder hinzu!
-            request_list.pop();
-        }
-        else {
-            tmp_request_list.push(tmpRequest);
-            request_list.pop();
-        }
-    }
-    request_list = tmp_request_list;
-}
-
-int recalcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord, int yCoord)
+bool compute::process(paket &pkg)
 {
-    int sum = 0;
+  enable = false;
+  //Paket einlesen
+  i_id = pkg.id;
+  i_opcode = pkg.opcode;
+  i_sender = pkg.sender;
+  i_receiver = pkg.receiver;
+  i_xpos = pkg.xpos;
+  i_ypos = pkg.ypos;
+  i_color = pkg.color;
 
-    for (int i = 1; i <= MATRIX_SIZE; i++)
-    {
-        for (int j = 1; j <= MATRIX_SIZE; j++)
-        {
-            int M = matrix[i - 1][j - 1]; //-1, da Arrays ab 0 zählen.
+  pakethandler();
+  taskhandler();
 
-            //Da wir Integer teilen erhalten wir bei der folgenden Rechnung immer die
-            //Werte der 9 Pixel, die den Quellpixel und die ihn umgebenden Pixel beschreiben.
+  //Paket senden
+  pkg.id = o_id;
+  pkg.opcode = o_opcode;
+  pkg.sender = o_sender;
+  pkg.receiver = o_receiver;
+  pkg.xpos = o_xpos;
+  pkg.ypos = o_ypos;
+  pkg.color = o_color;
+  return enable;
+}
 
-            int currentTargetX = (xCoord + i - MATRIX_SIZE / 2);
-            int currentTargetY = (yCoord + j - MATRIX_SIZE / 2);
+void compute::pakethandler()
+{
+  //Es werden nur OPCodes behandelt, die auch durch das compute-Modul verarbeitet werden können.
+  switch(i_opcode)
+  {
+    case 0x00:
+      break;//[emp] -- leeres Paket (/)
+    case 0x01: //[exe] -- Berechnungsauftrag (Gateway|Compute)
 
-            int currentPixel = getValueAt(currentTargetX, currentTargetY); //getValueAt() ist ein Platzhalter! Ersetzen.
 
-            sum += M * currentPixel;                                    //Führe die eigentliche Formel durch und addierte den Summen-Berechnungsschritt:
+      break;
+    case 0x02:
+      break;//[fin] -- Berechnung abgeschlossen (Compute|Gateway)
+    case 0x03:
+      break;//[c_req] -- Pixel Anfrage an den Cache (Compute|Cache)
+    case 0x04:
+      break;//[r_req] -- Pixel Anfrage an den RAM (Cache|RAM)
+    case 0x05:
+      break;//[ack] -- Empfangsbestätigung (/)
+    case 0x06: //[ic_pay] -- Pixel vom Cache an Compute (Cache|Compute)
+      break;
+    case 0x07:
+      break;//[ir_pay] -- Pixel vom RAM an Cache (RAM|Cache)
+    case 0x08:
+      break;//[o_pay] -- Berechneter Pixel an den RAM (Compute|RAM)
+    case 0x09:
+      break;//[rfi] -- Bild einzulesen (Gateway|RAM)
+    case 0x0A:
+      break;//[rff] -- Bild fertig eingelesen (RAM|Gateway)
+    case 0x0B:
+      break;//[wfi] -- Zielbild schreiben (Gateway|RAM)
+    case 0x0C:
+      break;//[wff] -- Zielbild schreiben abgeschlossen (RAM|Gateway)
+    case 0x0D:
+      break;//[nxt] -- Sende nächsten zu berechnenden Pixel (Gateway|RAM)
+    case 0x0E:
+      break;//[nxa] -- Nächster zu berechnender Pixel (RAM|Gateway)
+    case 0x10:
+      break;//[brd] -- Sende Bildgrenzen (Compute|RAM)
+    case 0x11: //[brr] -- Empfange Bildgrenzen (RAM|Compute)
+      receiveBorders();
+      break;
+    default:
+      break;
+  };
+}
 
-            //Bevor wir eine weitere Schleife erlauben, pausieren wir die Programmausführung so lange,
-            //wie die Formelausrechnung auf der Hardware ungefähr dauern würde.
+// Initialisierung
+void compute::init()
+{
+  for(int i = 0; i < 5; ++i)
+  {
+    xpos[i] = 0;
+    ypos[i] = 0;
+    color[i] = 0;
+  }
+  bordersRequested = false;
+  bordersReceived = false;
+  neighboursCalculated = false;
+  pixelRequested = false;
+}
 
-            //TODO wait-statement
+void calcNeighbours(){
+  // Berechne die X-Nachbarn
+  xpos[1] = xpos[4] = xpos[7] = i_xpos;
+  if(i_xpos-1 >=0){
+    xpos[0] = xpos[3] = xpos[6] = i_xpos-1;
+  }
+  else{
+    xpos[0] = xpos[3] = xpos[6] = 0;
+  }
+  if(i_xpos+1 <= width){
+    xpos[2] = xpos[5] = xpos[8] = i_xpos+1;
+  }
+  else{
+    xpos[2] = xpos[5] = xpos[8] = width;
+  }
 
-        }
+  // Berechne die Y-Nachbarn
+  ypos[3] = ypos[4] = ypos[5] = i_ypos;
+  if(i_ypos-1 >=0){
+    ypos[0] = ypos[1] = ypos[2] = i_ypos-1;
+  }
+  else{
+    ypos[0] = ypos[1] = ypos[2] = 0;
+  }
+  if(i_ypos+1 <= height){
+    ypos[6] = ypos[7] = ypos[8] = i_ypos+1;
+  }
+  else{
+    ypos[6] = ypos[7] = ypos[8] = height;
+  }
+}
+
+void compute::taskhandler()
+{
+  if(!bordersRequested){
+    getBorders();
+  }
+  if(!bordersReceived){
+    //tue nichts, denn solange die Bildgrenzen nicht erhalten sind können nie Nachbarpixel nicht berechnet werden!
+  }
+  else{
+    //Bildgrenzen erhalten, Nachbarpixel können berechnet werden!
+    if(!neighboursCalculated){
+      calcNeighbours();
     }
-    return std::min(std::max(sum, 0), 255); //Auf 0-255 auf / abrunden.
+    //Wenn die Nachbarpixel berechnet wurden, können die umliegenden Pixel aus dem Cache angefragt werden!
+    if(!pixelRequested){
+      requestPixel();
+    }
+  }
+  sendeBuffer->push(pkg);
+}
+
+void compute::requestPixel()
+{
+  //Pixel 0
+  paket pkg(0x03, id, ramId, xpos[0], ypos[0], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+
+  //Pixel 1
+  paket pkg(0x03, id, ramId, xpos[1], ypos[1], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+  //Pixel 2
+  paket pkg(0x03, id, ramId, xpos[2], ypos[2], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+
+  //Pixel 3
+  paket pkg(0x03, id, ramId, xpos[3], ypos[3], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+
+  //Pixel 4
+  paket pkg(0x03, id, ramId, xpos[4], ypos[4], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+
+  //Pixel 5
+  paket pkg(0x03, id, ramId, xpos[5], ypos[5], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+
+  //Pixel 6
+  paket pkg(0x03, id, ramId, xpos[6], ypos[6], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+
+  //Pixel 7
+  paket pkg(0x03, id, ramId, xpos[7], ypos[7], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+
+  //Pixel 8
+  paket pkg(0x03, id, ramId, xpos[8], ypos[8], 0); //TODO Adresse des nächsten Caches muss hier rein!
+  sendeBuffer->push(pkg);
+
+  pixelRequested = true;
+  enable = true;
+}
+
+void compute::getBorders()
+{
+  o_id = 0;
+  o_opcode = 0x10; //[brd]
+  o_sender = id;
+  o_receiver = ramId;
+  o_xpos = 0;
+  o_ypos = 0;
+  o_color = 0;
+  enable = true;
+  sendeBuffer->push(pkg);
+  bordersRequested = true;
+}
+
+void compute::receiveBorders(){
+  width = i_xpos;
+  height = i_ypos;
+  bordersReceived = true;
+}
+
+int compute::calcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord,
+    int yCoord)
+{
+  int sum = 0;
+
+  for(int i = 1; i <= MATRIX_SIZE; i++)
+  {
+    for(int j = 1; j <= MATRIX_SIZE; j++)
+    {
+      int M = matrix[i - 1][j - 1]; //-1, da Arrays ab 0 zählen.
+
+      //Da wir Integer teilen erhalten wir bei der folgenden Rechnung immer die
+      //Werte der 9 Pixel, die den Quellpixel und die ihn umgebenden Pixel beschreiben.
+
+      int currentTargetX = (xCoord + i - MATRIX_SIZE / 2);
+      int currentTargetY = (yCoord + j - MATRIX_SIZE / 2);
+
+      int currentPixel = getValueAt(currentTargetX, currentTargetY); //getValueAt() ist ein Platzhalter! Ersetzen.
+
+      sum += M * currentPixel; //Führe die eigentliche Formel durch und addierte den Summen-Berechnungsschritt:
+
+      //Bevor wir eine weitere Schleife erlauben, pausieren wir die Programmausführung so lange,
+      //wie die Formelausrechnung auf der Hardware ungefähr dauern würde.
+
+      //TODO wait-statement
+
+    }
+  }
+  return std::min(std::max(sum, 0), 255); //Auf 0-255 auf / abrunden.
 }
