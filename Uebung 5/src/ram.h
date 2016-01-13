@@ -21,10 +21,10 @@ class ram : public module
   private: //Methoden
   unsigned char readPixel();
   void writePixel();
+  void pakethandler();
   void readPGM();
   void writePGM();
   bool nxtPixel();
-  void pakethandler();
   void init();
 
   private: //Variablen
