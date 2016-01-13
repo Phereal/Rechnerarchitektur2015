@@ -65,6 +65,12 @@ class compute : public module
     unsigned int ypos[8];
     unsigned char color[8];
 
+    int matrix[3][3] = { {0, 1, 0}, {1, -4, 1}, {0, 1, 0}};
+
+    unsigned int calculatedPixel = 0;
+
+    int counter = 0;
+
     //lokale Speicherung des eingehenden Paketes
     uint32_t i_id;
     uint8_t i_opcode;

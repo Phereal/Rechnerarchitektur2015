@@ -124,11 +124,22 @@ void compute::init()
   {
     pixelReceived[i] = false;
   }
+
+  calcExecuted = false;
+  pixelCalculated = false;
+  resultSend = false;
+  initialize = false;
+  enable = false;
   bordersRequested = false;
   bordersReceived = false;
   neighboursCalculated = false;
   pixelRequested = false;
   taskReceived = false;
+  width = 0;
+  height = 0;
+  calculatedPixel = 0;
+
+  initExecuted = true;
 }
 
 void compute::calcNeighbours()
@@ -196,6 +207,7 @@ void compute::taskHandler()
 {
   if(!taskReceived)
   {
+    initExecuted = false;
     if(!bordersRequested)
     {
       getBorders();
@@ -240,6 +252,8 @@ void compute::taskHandler()
               {
                 sendResult();
               }
+              if(!initExecuted)
+                init();
             }
           }
         }
@@ -248,8 +262,17 @@ void compute::taskHandler()
   }
 }
 
-void compute::sendResult(){
+void compute::sendResult()
+{
+  //Sende Ergebnis an den RAM
+  paket pkg0(K_OP_FIN, id, ramId, xpos[4], xpos[4], calculatedPixel);
+  sendeBuffer->push(pkg0);
 
+  //Sende Erfolgsmeldung an Gateway, dass die Berechnung durchgeführt wurde!
+  paket pkg1(K_OP_END, id, gwId, 0, 0, 0);
+  sendeBuffer->push(pkg1);
+
+  resultSend = true;
 }
 
 void compute::requestPixel()
@@ -261,6 +284,7 @@ void compute::requestPixel()
   //Pixel 1
   paket pkg1(0x03, id, getMinCacheId(), xpos[1], ypos[1], 0);
   sendeBuffer->push(pkg1);
+
   //Pixel 2
   paket pkg2(0x03, id, getMinCacheId(), xpos[2], ypos[2], 0);
   sendeBuffer->push(pkg2);
@@ -361,39 +385,35 @@ void compute::receiveBorders()
   bordersReceived = true;
 }
 
-void compute::calcPixel(){
+void compute::calcPixel()
+{
+  calcExecuted = true;
+  int sum = 0;
 
+  for(int j = 0; j < 3; j++)
+  {
+    for(int i = 0; i < 3; i++)
+    {
+      int M = matrix[i][j]; //-1, da Arrays ab 0 zählen.
+
+      //Da wir Integer teilen erhalten wir bei der folgenden Rechnung immer die
+      //Werte der 9 Pixel, die den Quellpixel und die ihn umgebenden Pixel beschreiben.
+
+      sum += M * color[i + j * 3]; //Führe die eigentliche Formel durch und addierte den Summen-Berechnungsschritt:
+
+      //Bevor wir eine weitere Schleife erlauben, pausieren wir die Programmausführung so lange,
+      //wie die Formelausrechnung auf der Hardware ungefähr dauern würde.
+
+    }
+  }
+  // künstliches warten um Prozessorlaufzeit zu emulieren!
+  counter++;
+  if(counter == 72)
+  {
+    pixelCalculated = true;
+  }
+  calculatedPixel = std::min(std::max(sum, 0), 255); //Auf 0-255 auf / abrunden.
 }
-/*int compute::calcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord,
- int yCoord)
- {
- int sum = 0;
-
- for(int i = 1; i <= MATRIX_SIZE; i++)
- {
- for(int j = 1; j <= MATRIX_SIZE; j++)
- {
- int M = matrix[i - 1][j - 1]; //-1, da Arrays ab 0 zählen.
-
- //Da wir Integer teilen erhalten wir bei der folgenden Rechnung immer die
- //Werte der 9 Pixel, die den Quellpixel und die ihn umgebenden Pixel beschreiben.
-
- int currentTargetX = (xCoord + i - MATRIX_SIZE / 2);
- int currentTargetY = (yCoord + j - MATRIX_SIZE / 2);
-
- int currentPixel = getValueAt(currentTargetX, currentTargetY); //getValueAt() ist ein Platzhalter! Ersetzen.
-
- sum += M * currentPixel; //Führe die eigentliche Formel durch und addierte den Summen-Berechnungsschritt:
-
- //Bevor wir eine weitere Schleife erlauben, pausieren wir die Programmausführung so lange,
- //wie die Formelausrechnung auf der Hardware ungefähr dauern würde.
-
- //TODO wait-statement
-
- }
- }
- return std::min(std::max(sum, 0), 255); //Auf 0-255 auf / abrunden.
- }*/
 
 uint8_t compute::getMinCacheId()
 {

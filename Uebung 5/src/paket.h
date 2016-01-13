@@ -88,7 +88,6 @@ using namespace std;
 #define K_OP_NXA (0x0E)
 #define K_OP_END (0x0F)
 
-
 //An Tutoriums-Datei dist.ccp angelehnt
 struct paket
 {
@@ -103,10 +102,13 @@ struct paket
 
     // must implement '=' '==' and '<<' (nice would be 'sc_trace')
 
-    paket(uint8_t opcode, uint8_t sender, uint8_t receiver, uint32_t xpos, uint32_t ypos, uint8_t color) :
-      id(0), opcode(opcode), sender(sender), receiver(receiver), xpos(xpos), ypos(ypos), color(color)
+    paket(uint8_t opcode, uint8_t sender, uint8_t receiver, uint32_t xpos,
+        uint32_t ypos, uint8_t color) :
+      id(0), opcode(opcode), sender(sender), receiver(receiver), xpos(xpos),
+          ypos(ypos), color(color)
     {
-      id |= (uint32_t)opcode | ((uint32_t)sender << 8u) | ((uint32_t)receiver << 16u);
+      id |= (uint32_t)opcode | ((uint32_t)sender << 8u) | ((uint32_t)receiver
+          << 16u);
     }
 
     paket() :
@@ -116,7 +118,8 @@ struct paket
 
     inline bool operator==(const paket &rhs) const
     {
-      return (rhs.id == id && rhs.xpos == xpos && rhs.ypos == ypos && rhs.color == color);
+      return (rhs.id == id && rhs.xpos == xpos && rhs.ypos == ypos && rhs.color
+          == color);
     }
 
     inline paket &operator=(const paket &rhs)
@@ -145,10 +148,11 @@ struct paket
 
     inline friend ostream &operator<<(ostream &os, paket const &v)
     {
-      os << "(" << v.id << "," << v.opcode << "," << v.sender << "," << v.receiver << "," << v.xpos << "," << v.ypos << "," << v.color << ")";
+      os << "(" << v.id << "," << v.opcode << "," << v.sender << ","
+          << v.receiver << "," << v.xpos << "," << v.ypos << "," << v.color
+          << ")";
       return os;
     }
 };
-
 
 #endif /* PAKET_H_ */

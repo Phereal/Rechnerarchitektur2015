@@ -49,25 +49,32 @@
 #include <systemc.h>
 #include "module.h"
 
-
-
-enum class ComputeList { UP, DOWN, LEFT, RIGTH };
+enum class ComputeList
+{
+  UP, DOWN, LEFT, RIGTH
+};
 
 class gateway : public module
 {
   public:
     sc_in<bool> startIn;
 
-    gateway(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId, uint8_t computeList[], uint32_t computeCount, uint32_t pixelBufferSize);
+    gateway(sc_module_name name, uint8_t id, uint32_t bufferSize,
+        uint8_t ramId, uint8_t computeList[], uint32_t computeCount,
+        uint32_t pixelBufferSize);
     void checkStart();
 
   private:
-    enum class Zustaende { IDLE, WAIT_RAM_RRF, PROCESSING, WAIT_RAM_WFF };
+    enum class Zustaende
+    {
+      IDLE, WAIT_RAM_RRF, PROCESSING, WAIT_RAM_WFF
+    };
 
-    typedef struct ComputeList_T {
-      uint8_t id;
-      bool busy;
-    }ComputeList_T;
+    typedef struct ComputeList_T
+    {
+        uint8_t id;
+        bool busy;
+    } ComputeList_T;
 
     uint8_t ramId;
     Zustaende state;

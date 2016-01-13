@@ -17,50 +17,53 @@
 class ram : public module
 {
   public:
-  ram(sc_module_name name, uint8_t id, uint32_t bufferSize, const std::string &inFile, const std::string &outFile);
+    ram(sc_module_name name, uint8_t id, uint32_t bufferSize,
+        const std::string &inFile, const std::string &outFile);
 
-  private: //Methoden
-  unsigned char readPixel();
-  void writePixel();
-  void pakethandler();
-  void readPGM();
-  void writePGM();
-  bool nxtPixel();
-  void init();
+  private:
+    //Methoden
+    unsigned char readPixel();
+    void writePixel();
+    void pakethandler();
+    void readPGM();
+    void writePGM();
+    bool nxtPixel();
+    void init();
 
-  private: //Variablen
-  bool enable = false;
-  bool initialize = false;
-  int width = 0;
-  int height = 0;
-  int depth = 0;
-  std::string infile;
-  std::string outfile;
-  std::vector<std::vector<unsigned char> > in_image;
-  std::vector<std::vector<unsigned char> > out_image;
-  std::vector<std::vector<bool> > nxt_map;
+  private:
+    //Variablen
+    bool enable = false;
+    bool initialize = false;
+    int width = 0;
+    int height = 0;
+    int depth = 0;
+    std::string infile;
+    std::string outfile;
+    std::vector<std::vector<unsigned char> > in_image;
+    std::vector<std::vector<unsigned char> > out_image;
+    std::vector<std::vector<bool> > nxt_map;
 
-  //lokale Speicherung des eingehenden Paketes
-  uint32_t i_id;
-  uint8_t i_opcode;
-  uint8_t i_sender;
-  uint8_t i_receiver;
+    //lokale Speicherung des eingehenden Paketes
+    uint32_t i_id;
+    uint8_t i_opcode;
+    uint8_t i_sender;
+    uint8_t i_receiver;
 
-  uint32_t i_xpos;
-  uint32_t i_ypos;
-  uint8_t i_color;
+    uint32_t i_xpos;
+    uint32_t i_ypos;
+    uint8_t i_color;
 
-  //lokale Speicherung des ausgehenden Paketes
-  uint32_t o_id;
-  uint8_t o_opcode;
-  uint8_t o_sender;
-  uint8_t o_receiver;
+    //lokale Speicherung des ausgehenden Paketes
+    uint32_t o_id;
+    uint8_t o_opcode;
+    uint8_t o_sender;
+    uint8_t o_receiver;
 
-  uint32_t o_xpos;
-  uint32_t o_ypos;
-  uint8_t o_color;
+    uint32_t o_xpos;
+    uint32_t o_ypos;
+    uint8_t o_color;
 
-  virtual bool process(paket &pkg);
+    virtual bool process(paket &pkg);
 
 };
 

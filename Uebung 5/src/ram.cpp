@@ -25,15 +25,15 @@
 
 using namespace std;
 
-ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize, const std::string &inFile, const std::string &outFile) :
-    module(name, id, bufferSize), infile(inFile), outfile(outFile)
+ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize,
+    const std::string &inFile, const std::string &outFile) :
+  module(name, id, bufferSize), infile(inFile), outfile(outFile)
 {
   if(initialize == false)
   {
     init();
     initialize = true;
   }
-
 
   if(infile.empty())
   {
@@ -56,7 +56,6 @@ bool ram::process(paket &pkg)
   {
     PRINT_DEBUG("ram - process von [" + to_string((uint8_t)(pkg.sender & 0x0F)) + "," + to_string((uint8_t)((pkg.sender >> 4) & 0x0F)) + "] mit opcode = " + to_string(pkg.opcode));
   }
-
 
   enable = false;
   ////cout << "[RAM] Beginne einlesen des Paketes!" << endl;
@@ -96,16 +95,16 @@ void ram::pakethandler()
   switch(i_opcode)
   {
     case 0x00:
-      break;  //[emp]
+      break; //[emp]
 
     case 0x01:
-      break;  //[exe]
+      break; //[exe]
 
     case 0x02:
-      break;  //[fin]
+      break; //[fin]
 
     case 0x03:
-      break;  //[c_req]
+      break; //[c_req]
 
     case 0x04: //[r_req]
       //cout << "[RAM] Starte Paketbehandlung eines RAM Requests" << endl;
@@ -122,13 +121,13 @@ void ram::pakethandler()
       break;
 
     case 0x05:
-      break;      //[ack]
+      break; //[ack]
 
     case 0x06:
-      break;      //[ic_pay]
+      break; //[ic_pay]
 
     case 0x07:
-      break;      //[ir_pay]
+      break; //[ir_pay]
 
     case 0x08: //[o_pay]
       //cout << "[RAM] Starte Paketbehandlung einer Schreiboperation in den RAM" << endl;
@@ -137,11 +136,13 @@ void ram::pakethandler()
       break;
 
     case 0x09: //[rfi]
-      PRINT_DEBUG("ram - empfange opcode = RFI");
+      PRINT_DEBUG("ram - empfange opcode = RFI")
+      ;
 
       //cout << "[RAM] Starte Paketbehandlung einlesen des Bildes in den RAM" << endl;
       readPGM();
-      PRINT_DEBUG("ram - empfange opcode = RFI 2");
+      PRINT_DEBUG("ram - empfange opcode = RFI 2")
+      ;
       //cout << "[RAM] Beende Paketbehandlung einlesen des Bildes in den RAM" << endl;
       o_id = 0;
       o_opcode = 0x0A; //[rff]

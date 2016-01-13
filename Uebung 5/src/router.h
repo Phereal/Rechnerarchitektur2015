@@ -62,7 +62,10 @@
 #include "paket.h"
 #include "PaketBuffer.h"
 
-enum class RoutingRichtung { UP, DOWN, LEFT, RIGTH };
+enum class RoutingRichtung
+{
+  UP, DOWN, LEFT, RIGTH
+};
 
 SC_MODULE(router)
 {
@@ -76,7 +79,8 @@ SC_MODULE(router)
     sc_in<paket> *routeIn;
     sc_out<paket> *routeOut;
     // Constructor
-    router(sc_module_name name, uint8_t id, uint8_t routen, RoutingRichtung routeRichtungen[], uint32_t bufferSize);
+    router(sc_module_name name, uint8_t id, uint8_t routen,
+        RoutingRichtung routeRichtungen[], uint32_t bufferSize);
 
     void receive();
     void send();
@@ -92,7 +96,6 @@ SC_MODULE(router)
     PaketBuffer **sendeBuffer;
     PaketBuffer *modulBuffer;
     RoutingRichtung *routingTable;
-
 
     bool route(const paket &pkg, uint8_t quelleId);
 };

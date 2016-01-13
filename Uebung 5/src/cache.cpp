@@ -28,9 +28,12 @@
 
 using namespace std;
 
-cache::cache(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId) : module(name, id, bufferSize), ramId(ramId)
+cache::cache(sc_module_name name, uint8_t id, uint32_t bufferSize,
+    uint8_t ramId) :
+  module(name, id, bufferSize), ramId(ramId)
 {
-  if(initialize == false) {
+  if(initialize == false)
+  {
     init();
     initialize = true;
   }
@@ -40,7 +43,8 @@ cache::cache(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId
   sensitive << clk.pos();
 }
 //Überschreiben der process-Methode der Elternklasse Module
-bool cache::process(paket &pkg){
+bool cache::process(paket &pkg)
+{
   enable = false;
   //Paket einlesen
   i_id = pkg.id;
@@ -60,49 +64,69 @@ bool cache::process(paket &pkg){
   pkg.ypos = o_ypos;
   pkg.color = o_color;
 
-        return enable;
+  return enable;
 }
 
-void cache::pakethandler() {
+void cache::pakethandler()
+{
   //zurücksetzen der Sendesynchronisation (bei jedem Takt kann nur ein Paket gesendet werden)
   sendSync = false;
   //Es werden nur OPCodes behandelt, die auch durch das Cache-Modul verarbeitet werden können.
-  switch(i_opcode){
-    case 0x00: break;//[emp] -- leeres Paket (/)
-    case 0x01: break;//[exe] -- Berechnungsauftrag (Gateway|Compute)
-    case 0x02: break;//[fin] -- Berechnung abgeschlossen (Compute|Gateway)
+  switch(i_opcode)
+  {
+    case 0x00:
+      break;//[emp] -- leeres Paket (/)
+    case 0x01:
+      break;//[exe] -- Berechnungsauftrag (Gateway|Compute)
+    case 0x02:
+      break;//[fin] -- Berechnung abgeschlossen (Compute|Gateway)
     case 0x03: //[c_req] -- Pixel Anfrage an den Cache (Compute|Cache)
       //Überprüfe ob der Pixel sich im Cache befindet
       //Wenn ja, füge die Anfrage direkt in die Request Queue ein.
       //Wenn nein, füge  die Anfrage direkt in die Request Queue ein und sende eine Anfrage an den RAM
-      if(checkPixelIsInCache(i_xpos, i_ypos)){
+      if(checkPixelIsInCache(i_xpos, i_ypos))
+      {
         addRequestToQueue(i_id, i_sender, i_receiver, i_xpos, i_ypos);
       }
-      else{
+      else
+      {
         getPixelFromRAM(i_xpos, i_ypos);
         addRequestToQueue(i_id, i_sender, i_receiver, i_xpos, i_ypos);
       }
       break;
-    case 0x04: break;//[r_req] -- Pixel Anfrage an den RAM (Cache|RAM)
-    case 0x05: break;//[ack] -- Empfangsbestätigung (/)
-    case 0x06: break;//[ic_pay] -- Pixel vom Cache an Compute (Cache|Compute)
+    case 0x04:
+      break;//[r_req] -- Pixel Anfrage an den RAM (Cache|RAM)
+    case 0x05:
+      break;//[ack] -- Empfangsbestätigung (/)
+    case 0x06:
+      break;//[ic_pay] -- Pixel vom Cache an Compute (Cache|Compute)
     case 0x07: //[ir_pay] -- Pixel vom RAM an Cache (RAM|Cache)
       //Füge den erhaltenen Pixel der FIFO-Queue hinzu
       writePixelToCache(i_xpos, i_ypos, i_color);
       break;
-    case 0x08: break;//[o_pay] -- Berechneter Pixel an den RAM (Compute|RAM)
-    case 0x09: break;//[rfi] -- Bild einzulesen (Gateway|RAM)
-    case 0x0A: break;//[rff] -- Bild fertig eingelesen (RAM|Gateway)
-    case 0x0B: break;//[wfi] -- Zielbild schreiben (Gateway|RAM)
-    case 0x0C: break;//[wff] -- Zielbild schreiben abgeschlossen (RAM|Gateway)
-    case 0x0D: break;//[nxt] -- Sende nächsten zu berechnenden Pixel (Gateway|RAM)
-    case 0x0E: break;//[nxa] -- Nächster zu berechnender Pixel (RAM|Gateway)
-    default: break;
+    case 0x08:
+      break;//[o_pay] -- Berechneter Pixel an den RAM (Compute|RAM)
+    case 0x09:
+      break;//[rfi] -- Bild einzulesen (Gateway|RAM)
+    case 0x0A:
+      break;//[rff] -- Bild fertig eingelesen (RAM|Gateway)
+    case 0x0B:
+      break;//[wfi] -- Zielbild schreiben (Gateway|RAM)
+    case 0x0C:
+      break;//[wff] -- Zielbild schreiben abgeschlossen (RAM|Gateway)
+    case 0x0D:
+      break;//[nxt] -- Sende nächsten zu berechnenden Pixel (Gateway|RAM)
+    case 0x0E:
+      break;//[nxa] -- Nächster zu berechnender Pixel (RAM|Gateway)
+    default:
+      break;
   }
 }
 
-void cache::requesthandler(){
-  if(!sendSync && request_list.size() < 0){
+void cache::requesthandler()
+{
+  if(!sendSync && request_list.size() < 0)
+  {
     request actRequest = request_list.front();
     o_id = 0;
     o_opcode = 0x06; //[ic_pay]
@@ -114,36 +138,49 @@ void cache::requesthandler(){
     enable = true;
     request_list.pop();
   }
-  else{
+  else
+  {
     //nichtstun weil die sendeleitung bereits belegt ist!
   }
 }
 
 // Initialisierung der FIFO-Queues
-void cache::init(){
-  while(cache_list.size() != 0){
+void cache::init()
+{
+  while(cache_list.size() != 0)
+  {
     cache_list.pop();
   }
-  while(request_list.size() != 0){
+  while(request_list.size() != 0)
+  {
     request_list.pop();
   }
 }
 
-void cache::addRequestToQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos){
-  request tmp = {id,sender,receiver,xpos,ypos};
+void cache::addRequestToQueue(unsigned int id, unsigned int sender,
+    unsigned int receiver, unsigned int xpos, unsigned int ypos)
+{
+  request tmp = {id, sender, receiver, xpos, ypos};
   request_list.push(tmp);
 }
 
-void cache::deleteRequestFromQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos){
+void cache::deleteRequestFromQueue(unsigned int id, unsigned int sender,
+    unsigned int receiver, unsigned int xpos, unsigned int ypos)
+{
   std::queue<request> tmp_request_list;
   //Durchlaufe die Request List und suche nach dem zu löschenden Element
-  while(request_list.size() != 0){
+  while(request_list.size() != 0)
+  {
     request tmpRequest = request_list.front();
-    if(tmpRequest.id == id && tmpRequest.sender == sender && tmpRequest.receiver == receiver && tmpRequest.xpos == xpos && tmpRequest.ypos == ypos){
+    if(tmpRequest.id == id && tmpRequest.sender == sender
+        && tmpRequest.receiver == receiver && tmpRequest.xpos == xpos
+        && tmpRequest.ypos == ypos)
+    {
       //Tue nichts, also schreibe füge den Request nicht der tmp_request_list wieder hinzu!
       request_list.pop();
     }
-    else {
+    else
+    {
       tmp_request_list.push(tmpRequest);
       request_list.pop();
     }
@@ -151,13 +188,16 @@ void cache::deleteRequestFromQueue(unsigned int id, unsigned int sender, unsigne
   request_list = tmp_request_list;
 }
 
-bool cache::checkPixelIsInCache(unsigned int xpos, unsigned int ypos){
+bool cache::checkPixelIsInCache(unsigned int xpos, unsigned int ypos)
+{
   bool isInCache = false;
   std::queue<pixel> tmp_cache_list;
   //Durchlaufe den Cache und durchsuche nach dem richtigen Pixel
-  while(cache_list.size() != 0){
+  while(cache_list.size() != 0)
+  {
     pixel tmpPixel = cache_list.front();
-    if(tmpPixel.xpos == xpos && tmpPixel.ypos == ypos){
+    if(tmpPixel.xpos == xpos && tmpPixel.ypos == ypos)
+    {
       isInCache = true;
     }
     tmp_cache_list.push(tmpPixel);
@@ -167,7 +207,8 @@ bool cache::checkPixelIsInCache(unsigned int xpos, unsigned int ypos){
   return isInCache;
 }
 
-void cache::getPixelFromRAM(unsigned int xpos, unsigned int ypos){
+void cache::getPixelFromRAM(unsigned int xpos, unsigned int ypos)
+{
   sendSync = true;
   o_id = 0;
   o_opcode = 0x04; //[r_req]
@@ -179,21 +220,27 @@ void cache::getPixelFromRAM(unsigned int xpos, unsigned int ypos){
   enable = true;
 }
 
-void cache::writePixelToCache(unsigned int xpos, unsigned int ypos, unsigned char color){
-  if(cache_list.size() == CACHESIZE) {
+void cache::writePixelToCache(unsigned int xpos, unsigned int ypos,
+    unsigned char color)
+{
+  if(cache_list.size() == CACHESIZE)
+  {
     cache_list.pop();
   }
   pixel tmp = {ypos, ypos, color};
   cache_list.push(tmp);
 }
 
-unsigned char cache::readPixelFromCache(unsigned int xpos, unsigned int ypos){
+unsigned char cache::readPixelFromCache(unsigned int xpos, unsigned int ypos)
+{
   unsigned char color = 0;
   std::queue<pixel> tmp_cache_list;
   //Durchlaufe den Cache und durchsuche nach dem richtigen Pixel
-  while(cache_list.size() != 0){
+  while(cache_list.size() != 0)
+  {
     pixel tmpPixel = cache_list.front();
-    if(tmpPixel.xpos == xpos && tmpPixel.ypos == ypos){
+    if(tmpPixel.xpos == xpos && tmpPixel.ypos == ypos)
+    {
       color = tmpPixel.color;
     }
     tmp_cache_list.push(tmpPixel);
