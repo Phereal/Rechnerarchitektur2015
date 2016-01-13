@@ -89,7 +89,7 @@ SC_MODULE(waiter)
 {
     void waiting()
     {
-      wait(1000, SC_MS);
+      wait(1000, SC_NS);
       sc_stop();
       cout << "Simulation wurde durch \"waiter\" gestoppt!" << endl;
     }
@@ -305,6 +305,7 @@ int sc_main(int, char *[])
         name.append(to_string(x));
         name.append("]");
         moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE);
+        PRINT_DEBUG("main - ram erzeugt");
       }
       else if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
       {
@@ -380,16 +381,17 @@ int sc_main(int, char *[])
       routerList[y][x]->moduleIn(moduleRouteList[y][x][1]);
       moduleList[y][x]->routerOut(moduleRouteList[y][x][1]);
 
-      // todo ggf. in ram selbst regeln
-      if( (y == 0) && (x == 0) )
-      {
-        // ram hat langsameren clock
-        moduleList[y][x]->clk(clkSlow);
-      }
-      else
-      {
-        moduleList[y][x]->clk(clk);
-      }
+//      // todo ggf. in ram selbst regeln
+//      if( (y == 0) && (x == 0) )
+//      {
+//        // ram hat langsameren clock
+//        moduleList[y][x]->clk(clkSlow);
+//      }
+//      else
+//      {
+//        moduleList[y][x]->clk(clk);
+//      }
+      moduleList[y][x]->clk(clk);
 
       // start signal fuer gateway
       if( (y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)) )
@@ -501,9 +503,20 @@ int sc_main(int, char *[])
   // Starte Simulation
   // ------------------------------
 
+  // Erstellen eine Impulsdiagrammes, dass mit dem Plugion GTK_wave betrachtet werden kann.
+  sc_trace_file* Tf;
+  Tf = sc_create_vcd_trace_file("waves");
+  Tf->set_time_unit(1, SC_NS);
+  sc_trace(Tf, clk, "clk");
+  sc_trace(Tf, moduleRouteList[0][0][0].read().opcode, "ram - routerIn ");
+  sc_trace(Tf, moduleRouteList[0][0][1].read().opcode, "ram - routerOut ");
+
   PRINT_DEBUG("main - simulation starten");
   sc_start();
   PRINT_DEBUG("main - simulation beendet");
+
+
+  sc_close_vcd_trace_file(Tf);
 
   return 0;
 }
