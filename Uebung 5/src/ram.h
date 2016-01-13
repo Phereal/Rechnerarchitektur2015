@@ -19,11 +19,11 @@ class ram : public module
   ram(sc_module_name name, uint8_t id, uint32_t bufferSize);
 
   private: //Methoden
-  unsigned char readPixel(int width, int height);
-  void writePixel(int width, int height, unsigned char data);
+  unsigned char readPixel();
+  void writePixel();
   void readPGM();
   void writePGM();
-  void nxtPixel(uint32_t *width, uint32_t *height);
+  bool nxtPixel();
   void pakethandler();
   void init();
 
@@ -33,8 +33,8 @@ class ram : public module
   int width = 0;
   int height = 0;
   int depth = 0;
-  std::string infile = "/home/stefan/Rechnerarchitektur2015/Uebung 5/src/dfki.pgm";
-  std::string outfile = "/home/stefan/Rechnerarchitektur2015/Uebung 5/src/refoo.pgm";
+  std::string infile = "dfki.pgm";
+  std::string outfile = "refoo.pgm";
   std::vector<std::vector<unsigned char> > in_image;
   std::vector<std::vector<unsigned char> > out_image;
   std::vector<std::vector<bool> > nxt_map;
