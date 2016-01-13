@@ -19,7 +19,7 @@
 class compute : public module
 {
   public:
-    compute(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId, unint8_t gwId);
+    compute(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId, uint8_t gwId, uint8_t cacheList[], uint32_t cacheCount);
 
   private: //Methoden
     void pakethandler();
@@ -33,8 +33,10 @@ class compute : public module
 
 
   private: //Variablen
-    unint8_t ramId;
-    unint8_t gwId;
+    uint8_t ramId;
+    uint8_t gwId;
+    uint32_t cacheCount;
+    uint8_t *cacheList;
 
     bool initialize = false;
     bool enable = false;

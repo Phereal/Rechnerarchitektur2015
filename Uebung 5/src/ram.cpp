@@ -34,8 +34,6 @@ ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize, const std::string
     initialize = true;
   }
 
-  readPGM();
-
 
   if(infile.empty())
   {

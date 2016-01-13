@@ -11,9 +11,23 @@
 #include <systemc.h>
 
 compute::compute(sc_module_name name, uint8_t id, uint32_t bufferSize,
-    uint8_t ramId, uint8_t gwId) :
-  module(name, id, bufferSize), ramId(ramId), gwId(gwId)
+    uint8_t ramId, uint8_t gwId, uint8_t cacheList[], uint32_t cacheCount) :
+    module(name, id, bufferSize), ramId(ramId), gwId(gwId), cacheCount(
+        cacheCount)
 {
+
+  if(cacheCount == 0)
+  {
+    // todo error handling
+    throw "compute::compute(): cacheCount == 0";
+  }
+
+  this->cacheList = new uint8_t[this->cacheCount];
+  for(size_t i = 0; i < (size_t)this->cacheCount; ++i)
+  {
+    this->cacheList[i] = cacheList[i];
+  }
+
   if(initialize == false)
   {
     init();
@@ -54,39 +68,38 @@ void compute::pakethandler()
   switch(i_opcode)
   {
     case 0x00:
-      break;//[emp] -- leeres Paket (/)
+      break; //[emp] -- leeres Paket (/)
     case 0x01: //[exe] -- Berechnungsauftrag (Gateway|Compute)
-
 
       break;
     case 0x02:
-      break;//[fin] -- Berechnung abgeschlossen (Compute|Gateway)
+      break; //[fin] -- Berechnung abgeschlossen (Compute|Gateway)
     case 0x03:
-      break;//[c_req] -- Pixel Anfrage an den Cache (Compute|Cache)
+      break; //[c_req] -- Pixel Anfrage an den Cache (Compute|Cache)
     case 0x04:
-      break;//[r_req] -- Pixel Anfrage an den RAM (Cache|RAM)
+      break; //[r_req] -- Pixel Anfrage an den RAM (Cache|RAM)
     case 0x05:
-      break;//[ack] -- Empfangsbestätigung (/)
+      break; //[ack] -- Empfangsbestätigung (/)
     case 0x06: //[ic_pay] -- Pixel vom Cache an Compute (Cache|Compute)
       break;
     case 0x07:
-      break;//[ir_pay] -- Pixel vom RAM an Cache (RAM|Cache)
+      break; //[ir_pay] -- Pixel vom RAM an Cache (RAM|Cache)
     case 0x08:
-      break;//[o_pay] -- Berechneter Pixel an den RAM (Compute|RAM)
+      break; //[o_pay] -- Berechneter Pixel an den RAM (Compute|RAM)
     case 0x09:
-      break;//[rfi] -- Bild einzulesen (Gateway|RAM)
+      break; //[rfi] -- Bild einzulesen (Gateway|RAM)
     case 0x0A:
-      break;//[rff] -- Bild fertig eingelesen (RAM|Gateway)
+      break; //[rff] -- Bild fertig eingelesen (RAM|Gateway)
     case 0x0B:
-      break;//[wfi] -- Zielbild schreiben (Gateway|RAM)
+      break; //[wfi] -- Zielbild schreiben (Gateway|RAM)
     case 0x0C:
-      break;//[wff] -- Zielbild schreiben abgeschlossen (RAM|Gateway)
+      break; //[wff] -- Zielbild schreiben abgeschlossen (RAM|Gateway)
     case 0x0D:
-      break;//[nxt] -- Sende nächsten zu berechnenden Pixel (Gateway|RAM)
+      break; //[nxt] -- Sende nächsten zu berechnenden Pixel (Gateway|RAM)
     case 0x0E:
-      break;//[nxa] -- Nächster zu berechnender Pixel (RAM|Gateway)
+      break; //[nxa] -- Nächster zu berechnender Pixel (RAM|Gateway)
     case 0x10:
-      break;//[brd] -- Sende Bildgrenzen (Compute|RAM)
+      break; //[brd] -- Sende Bildgrenzen (Compute|RAM)
     case 0x11: //[brr] -- Empfange Bildgrenzen (RAM|Compute)
       receiveBorders();
       break;
@@ -110,53 +123,67 @@ void compute::init()
   pixelRequested = false;
 }
 
-void calcNeighbours(){
+void calcNeighbours()
+{
   // Berechne die X-Nachbarn
   xpos[1] = xpos[4] = xpos[7] = i_xpos;
-  if(i_xpos-1 >=0){
-    xpos[0] = xpos[3] = xpos[6] = i_xpos-1;
+  if(i_xpos - 1 >= 0)
+  {
+    xpos[0] = xpos[3] = xpos[6] = i_xpos - 1;
   }
-  else{
+  else
+  {
     xpos[0] = xpos[3] = xpos[6] = 0;
   }
-  if(i_xpos+1 <= width){
-    xpos[2] = xpos[5] = xpos[8] = i_xpos+1;
+  if(i_xpos + 1 <= width)
+  {
+    xpos[2] = xpos[5] = xpos[8] = i_xpos + 1;
   }
-  else{
+  else
+  {
     xpos[2] = xpos[5] = xpos[8] = width;
   }
 
   // Berechne die Y-Nachbarn
   ypos[3] = ypos[4] = ypos[5] = i_ypos;
-  if(i_ypos-1 >=0){
-    ypos[0] = ypos[1] = ypos[2] = i_ypos-1;
+  if(i_ypos - 1 >= 0)
+  {
+    ypos[0] = ypos[1] = ypos[2] = i_ypos - 1;
   }
-  else{
+  else
+  {
     ypos[0] = ypos[1] = ypos[2] = 0;
   }
-  if(i_ypos+1 <= height){
-    ypos[6] = ypos[7] = ypos[8] = i_ypos+1;
+  if(i_ypos + 1 <= height)
+  {
+    ypos[6] = ypos[7] = ypos[8] = i_ypos + 1;
   }
-  else{
+  else
+  {
     ypos[6] = ypos[7] = ypos[8] = height;
   }
 }
 
 void compute::taskhandler()
 {
-  if(!bordersRequested){
+  if(!bordersRequested)
+  {
     getBorders();
   }
-  if(!bordersReceived){
+  if(!bordersReceived)
+  {
     //tue nichts, denn solange die Bildgrenzen nicht erhalten sind können nie Nachbarpixel nicht berechnet werden!
   }
-  else{
+  else
+  {
     //Bildgrenzen erhalten, Nachbarpixel können berechnet werden!
-    if(!neighboursCalculated){
+    if(!neighboursCalculated)
+    {
       calcNeighbours();
     }
     //Wenn die Nachbarpixel berechnet wurden, können die umliegenden Pixel aus dem Cache angefragt werden!
-    if(!pixelRequested){
+    if(!pixelRequested)
+    {
       requestPixel();
     }
   }
@@ -218,7 +245,8 @@ void compute::getBorders()
   bordersRequested = true;
 }
 
-void compute::receiveBorders(){
+void compute::receiveBorders()
+{
   width = i_xpos;
   height = i_ypos;
   bordersReceived = true;
