@@ -130,6 +130,7 @@ void ram::pakethandler()
 
       //cout << "[RAM] Starte Paketbehandlung einlesen des Bildes in den RAM" << endl;
       readPGM();
+      PRINT_DEBUG("ram - empfange opcode = RFI 2");
       //cout << "[RAM] Beende Paketbehandlung einlesen des Bildes in den RAM" << endl;
       o_id = 0;
       o_opcode = 0x0A; //[rff]

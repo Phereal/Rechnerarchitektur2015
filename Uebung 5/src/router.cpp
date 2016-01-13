@@ -84,13 +84,13 @@ void router::send()
     // Paket aus dem Buffer in tmpPaket gespeichert, sende es
     moduleOut.write(tmpPaket);
     PRINT_DEBUG("router - sende modulpaket [" + to_string((uint8_t)(id & 0x0F)) + "," + to_string((uint8_t)((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(tmpPaket.opcode));
-    PRINT_DEBUG("  id = " + to_string(tmpPaket.id));
-    PRINT_DEBUG("  op = " + to_string(tmpPaket.opcode));
-    PRINT_DEBUG("  se = " + to_string(tmpPaket.sender));
-    PRINT_DEBUG("  re = " + to_string(tmpPaket.receiver));
-    PRINT_DEBUG("  xp = " + to_string(tmpPaket.xpos));
-    PRINT_DEBUG("  yp = " + to_string(tmpPaket.ypos));
-    PRINT_DEBUG("  cl = " + to_string(tmpPaket.color));
+//    PRINT_DEBUG("  id = " + to_string(tmpPaket.id));
+//    PRINT_DEBUG("  op = " + to_string(tmpPaket.opcode));
+//    PRINT_DEBUG("  se = " + to_string(tmpPaket.sender));
+//    PRINT_DEBUG("  re = " + to_string(tmpPaket.receiver));
+//    PRINT_DEBUG("  xp = " + to_string(tmpPaket.xpos));
+//    PRINT_DEBUG("  yp = " + to_string(tmpPaket.ypos));
+//    PRINT_DEBUG("  cl = " + to_string(tmpPaket.color));
   }
   else
   {

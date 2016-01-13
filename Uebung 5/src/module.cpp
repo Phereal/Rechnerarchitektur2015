@@ -50,10 +50,6 @@ void module::receive()
   {
     // Normales Paket, verarbeite es in process und sende empfangsbestaetigung
     paket tmpPkg = routerIn.read();
-    if(routerIn.read().opcode != (uint8_t)K_OP_LEER)
-    {
-      PRINT_DEBUG("module - empfange [" + to_string((uint8_t )(id & 0x0F)) + "," + to_string((uint8_t )((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(routerIn.read().opcode));
-    }
 
     // todo: erstmal kein ack
     //createAck(routerIn.read());
