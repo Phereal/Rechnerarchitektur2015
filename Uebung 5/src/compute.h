@@ -10,11 +10,11 @@
 
 #define MATRIX_SIZE 3
 
-//Wir simulieren Rechenzeit durch wait-statements, die einige Clock-Zyklen warten:
+//Wir simulieren Rechenzeit durch wait-statements, die bestimmt viele Clock-Zyklen warten:
 #define WAIT_CLOCKS_ADD 1
 #define WAIT_CLOCKS_SUB 1
-#define WAIT_CLOCKS_IMUL 3 //Integer-Multiplikation
-#define WAIT_CLOCKS_DIV 26
+#define WAIT_CLOCKS_MUL 3
+#define WAIT_CLOCKS_DIV 25
 
 #include <systemc.h>
 #include "module.h"

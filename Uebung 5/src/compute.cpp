@@ -91,11 +91,10 @@ int recalcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord, int yCoord)
     {
         for (int j = 1; j <= MATRIX_SIZE; j++)
         {
-            int M = matrix[i - 1][j - 1]; //-1, da Array ab 0 zählen.
+            int M = matrix[i - 1][j - 1]; //-1, da Arrays ab 0 zählen.
 
-
-                                          //Da wir Integer teilen erhalten wir bei der folgenden Rechnung immer die
-                                          //Werte der 9 Pixel, die den Quellpixel und die ihn umgebenden Pixel beschreiben.
+            //Da wir Integer teilen erhalten wir bei der folgenden Rechnung immer die
+            //Werte der 9 Pixel, die den Quellpixel und die ihn umgebenden Pixel beschreiben.
 
             int currentTargetX = (xCoord + i - MATRIX_SIZE / 2);
             int currentTargetY = (yCoord + j - MATRIX_SIZE / 2);
@@ -103,6 +102,12 @@ int recalcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord, int yCoord)
             int currentPixel = getValueAt(currentTargetX, currentTargetY); //getValueAt() ist ein Platzhalter! Ersetzen.
 
             sum += M * currentPixel;                                    //Führe die eigentliche Formel durch und addierte den Summen-Berechnungsschritt:
+
+            //Bevor wir eine weitere Schleife erlauben, pausieren wir die Programmausführung so lange,
+            //wie die Formelausrechnung auf der Hardware ungefähr dauern würde.
+
+            //TODO wait-statement
+
         }
     }
     return std::min(std::max(sum, 0), 255);
