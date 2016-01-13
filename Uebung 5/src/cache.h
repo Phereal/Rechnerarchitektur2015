@@ -15,9 +15,13 @@
 
 class cache : public module
 {
-  cache(sc_module_name name, uint8_t id, uint32_t bufferSize);
+  public:
+  cache(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId);
+
+  private: //Methoden
 
   void pakethandler();
+  void requesthandler();
   void init();
 
   void addRequestToQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos);
@@ -27,12 +31,15 @@ class cache : public module
   void writePixelToCache(unsigned int xpos, unsigned int ypos, unsigned char color);
   unsigned char readPixelFromCache(unsigned int xpos, unsigned int ypos);
 
-  private:
+  private: //Variablen
+  uint8_t ramId;
+
   unsigned int CACHESIZE = 100;
 
   bool sendSync = false;
   bool enable = false;
   bool initialize = false;
+
   struct pixel {unsigned int xpos; unsigned int ypos; unsigned char color;};
   std::queue<pixel> cache_list;
   struct request {unsigned int id; unsigned int sender; unsigned int receiver;

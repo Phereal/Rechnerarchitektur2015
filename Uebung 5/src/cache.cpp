@@ -28,13 +28,15 @@
 
 using namespace std;
 
-cache::cache(sc_module_name name, uint8_t id, uint32_t bufferSize) : module(name, id, bufferSize)
+cache::cache(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId) : module(name, id, bufferSize), ramId(ramId)
 {
   if(initialize == false) {
     init();
     initialize = true;
   }
   pakethandler();
+  sensitive << clk.pos();
+  requesthandler();
   sensitive << clk.pos();
 }
 //Überschreiben der process-Methode der Elternklasse Module
@@ -52,15 +54,18 @@ bool cache::process(paket &pkg){
   //Paket senden
   pkg.id = o_id;
   pkg.opcode = o_opcode;
-  pkg.sender = o_sender;
+  pkg.sender = id;
   pkg.receiver = o_receiver;
   pkg.xpos = o_xpos;
   pkg.ypos = o_ypos;
   pkg.color = o_color;
+
         return enable;
 }
 
 void cache::pakethandler() {
+  //zurücksetzen der Sendesynchronisation (bei jedem Takt kann nur ein Paket gesendet werden)
+  sendSync = false;
   //Es werden nur OPCodes behandelt, die auch durch das Cache-Modul verarbeitet werden können.
   switch(i_opcode){
     case 0x00: break;//[emp] -- leeres Paket (/)
@@ -93,6 +98,24 @@ void cache::pakethandler() {
     case 0x0D: break;//[nxt] -- Sende nächsten zu berechnenden Pixel (Gateway|RAM)
     case 0x0E: break;//[nxa] -- Nächster zu berechnender Pixel (RAM|Gateway)
     default: break;
+  }
+}
+
+void cache::requesthandler(){
+  if(!sendSync && request_list.size() < 0){
+    request actRequest = request_list.front();
+    o_id = 0;
+    o_opcode = 0x06; //[ic_pay]
+    o_sender = actRequest.receiver;
+    o_receiver = actRequest.sender;
+    o_xpos = actRequest.xpos;
+    o_ypos = actRequest.ypos;
+    o_color = readPixelFromCache(actRequest.xpos, actRequest.ypos);
+    enable = true;
+    request_list.pop();
+  }
+  else{
+    //nichtstun weil die sendeleitung bereits belegt ist!
   }
 }
 
@@ -145,7 +168,15 @@ bool cache::checkPixelIsInCache(unsigned int xpos, unsigned int ypos){
 }
 
 void cache::getPixelFromRAM(unsigned int xpos, unsigned int ypos){
-
+  sendSync = true;
+  o_id = 0;
+  o_opcode = 0x04; //[r_req]
+  o_sender = id;
+  o_receiver = ramId;
+  o_xpos = xpos;
+  o_ypos = ypos;
+  o_color = 0;
+  enable = true;
 }
 
 void cache::writePixelToCache(unsigned int xpos, unsigned int ypos, unsigned char color){
