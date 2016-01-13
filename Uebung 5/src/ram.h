@@ -12,6 +12,7 @@
 #include "pgm.h"
 #include <vector>
 #include "module.h"
+#include "paket.h"
 
 class ram : public module
 {
@@ -33,8 +34,8 @@ class ram : public module
   int width = 0;
   int height = 0;
   int depth = 0;
-  std::string infile = "dfki.pgm";
-  std::string outfile = "refoo.pgm";
+  std::string infile = "/home/steffen/Dokumente/Git/Rechnerarchitektur2015/Uebung 5/src/dfki.pgm";
+  std::string outfile = "/home/steffen/Dokumente/Git/Rechnerarchitektur2015/Uebung 5/src/refoo.pgm";
   std::vector<std::vector<unsigned char> > in_image;
   std::vector<std::vector<unsigned char> > out_image;
   std::vector<std::vector<bool> > nxt_map;

@@ -32,7 +32,7 @@ void module::receive()
 {
   if(routerIn.read().opcode != (uint8_t)K_OP_LEER)
   {
-    PRINT_DEBUG("module - empfange [" + to_string((uint8_t)(id & 0x0F)) + "," + to_string((uint8_t)((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(routerIn.read().opcode));
+    PRINT_DEBUG("module - empfange [" + to_string((uint8_t )(id & 0x0F)) + "," + to_string((uint8_t )((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(routerIn.read().opcode));
   }
 
   // Pruefe ob ein Paket am Eingang anliegt (opcode 0x00 == leeres Paket)
@@ -50,6 +50,11 @@ void module::receive()
   {
     // Normales Paket, verarbeite es in process und sende empfangsbestaetigung
     paket tmpPkg = routerIn.read();
+    if(routerIn.read().opcode != (uint8_t)K_OP_LEER)
+    {
+      PRINT_DEBUG("module - empfange [" + to_string((uint8_t )(id & 0x0F)) + "," + to_string((uint8_t )((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(routerIn.read().opcode));
+    }
+
     // todo: erstmal kein ack
     //createAck(routerIn.read());
     if(process(tmpPkg))
@@ -70,7 +75,10 @@ void module::send()
   {
     // Paket aus dem Buffer in tmpPaket gespeichert, sende es
     routerOut.write(tmpPaket);
-    PRINT_DEBUG("module - sende [" + to_string((uint8_t)(id & 0x0F)) + "," + to_string((uint8_t)((id >> 4) & 0x0F)) + "] mit opcode = " + to_string(tmpPaket.opcode));
+    PRINT_DEBUG(
+        "module - sende [" + to_string((uint8_t )(id & 0x0F)) + ","
+            + to_string((uint8_t )((id >> 4) & 0x0F)) + "] mit opcode = "
+            + to_string(tmpPaket.opcode));
   }
   else
   {

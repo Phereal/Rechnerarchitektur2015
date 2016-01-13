@@ -41,6 +41,12 @@ ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize) :
 //TODO Wird immer nur aufgerufen, wenn ein Paket auch eigeht, somit kann momentan nur bei eingehenden Paketen gesendet werden!
 bool ram::process(paket &pkg)
 {
+  if(pkg.opcode != (uint8_t)K_OP_LEER)
+  {
+    PRINT_DEBUG("ram - process von [" + to_string((uint8_t)(pkg.sender & 0x0F)) + "," + to_string((uint8_t)((pkg.sender >> 4) & 0x0F)) + "] mit opcode = " + to_string(pkg.opcode));
+  }
+
+
   enable = false;
   ////cout << "[RAM] Beginne einlesen des Paketes!" << endl;
   //Paket einlesen
