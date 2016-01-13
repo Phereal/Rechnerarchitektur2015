@@ -72,8 +72,70 @@
 #include "ram.h"
 #include "gateway.h"
 #include "cache.h"
+#include "compute.h"
 
 using namespace std;
+
+#define K_DEBUG
+
+/*
+ * Das Klasse waiter dient dazu, die Simulation nach 1000ms zu stoppen. Damit,
+ * falls z.B. irgend ein unvorhersehbarer Fehler auftritt, die Anwendung nicht
+ * unendlich laueft, werden diese Klasse verwendet.
+ */
+#ifdef K_DEBUG
+SC_MODULE(waiter)
+{
+    void waiting()
+    {
+      wait(1000, SC_MS);
+      sc_stop();
+    }
+
+    SC_CTOR(waiter)
+    {
+      SC_THREAD(waiting);
+    }
+};
+#endif
+
+
+
+#ifdef K_DEBUG
+SC_MODULE(starter)
+{
+  // Startsignal fuer gateway
+  sc_out<bool> start;
+
+  sc_in<bool> clk;
+
+  void starting()
+  {
+    // halte start 10 takte lang auf 1
+    if( waitCnt < 10 )
+    {
+      start.write(true);
+      waitCnt++;
+    }
+    else
+    {
+      start.write(false);
+    }
+  }
+
+  // Konstruktor der Klasse starter die die Methode starting() aufruft.
+  SC_CTOR(starter)
+  {
+    SC_METHOD(starting);
+    sensitive << clk.pos();
+  }
+
+  private:
+  uint32_t waitCnt = 0;
+};
+#endif
+
+
 
 int sc_main(int, char *[])
 {
@@ -83,30 +145,42 @@ int sc_main(int, char *[])
   // Die langsamere Taktung des RAM-Modules wird dabei innerhalb der RAM-Klasse umgesetzt.
   // ------------------------------
   sc_clock clk("clk", 10, SC_NS, 0.5);
+  sc_clock clkSlow("clkSlow", 20, SC_NS, 0.5);
+
+
 
   // ------------------------------
   // NOC-Array
   // Dieses Array stellt das NOC dar. Wie aus der Aufgabenstellung werden hierbei
   // 8x8 Router-Objekt erzeugt, die jeweils über ein verbundenes Modul verfügen.
   const size_t K_NOC_SIZE = 8;
-  // K_ROUTEN_CNT = 4 Ecken a 2 Routen + 4 Kanten a 3 Routen je Router + Mitte a 4 Routen je Router
-  //const size_t K_ROUTEN_CNT = (4 * 2) + (4 * (K_NOC_SIZE - 2) * 3)
-  //    + ((K_NOC_SIZE - 2) * (K_NOC_SIZE - 2) * 4);
   const uint32_t K_ROUTER_BUFFER_SIZE = 10;
   const uint32_t K_RAM_BUFFER_SIZE = 10;
   const uint32_t K_GATEWAY_BUFFER_SIZE = 10;
+  const uint32_t K_GATEWAY_PIXEL_BUFFER_SIZE = 10;
   const uint32_t K_COMPUTE_BUFFER_SIZE = 10;
   const uint32_t K_CACHE_BUFFER_SIZE = 10;
+
+
 
   // Signale
   sc_signal<paket> routeList[K_NOC_SIZE][K_NOC_SIZE][4];
   sc_signal<paket> moduleRouteList[K_NOC_SIZE][K_NOC_SIZE][2];
-//  sc_signal<paket> routeList[K_ROUTEN_CNT];
-//  sc_signal<paket> outList[numOut];
+  sc_signal<bool> start;
 
+
+
+  // ------------------------------
+  // Erstellen der Objekte der Klassen
+  // ------------------------------
+  #ifdef K_DEBUG
+  waiter w("Waiter");
+  starter s("Starter");
+  #endif
   router *routerList[K_NOC_SIZE][K_NOC_SIZE];
   module *moduleList[K_NOC_SIZE][K_NOC_SIZE];
 
+  // router erzeugen
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
   {
     for(size_t x = 0; x < K_NOC_SIZE; ++x)
@@ -201,10 +275,14 @@ int sc_main(int, char *[])
       }
 
       // Komponente erzeugen
-      routerList[y][x] = new router(name.c_str(), id, routen, routeRichtungen, K_ROUTER_BUFFER_SIZE);
+      routerList[y][x] = new router(name.c_str(), id, routen, routeRichtungen,
+          K_ROUTER_BUFFER_SIZE);
     }
   }
 
+  // module erzeugen
+  size_t computeCnt = 0;
+  uint8_t computeIdList[K_NOC_SIZE * K_NOC_SIZE] = {0}; // array mit max moeglicher groesse um das speichermanagement zu vereinfachen
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
   {
     for(size_t x = 0; x < K_NOC_SIZE; ++x)
@@ -212,7 +290,6 @@ int sc_main(int, char *[])
       string name;
       uint8_t id = (uint8_t)y;
       id |= (uint8_t)((x << 4) & 0xF0);
-      RoutingRichtung routeRichtungen[4]; // Verdrahtung imm im UZS, beginnend bei UP wenn moeglich
 
       if((y == 0) && (x == 0))
       {
@@ -227,17 +304,12 @@ int sc_main(int, char *[])
       else if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
       {
         // Gateway at bottom right
-        name = "Gateway[";
-        name.append(to_string(y));
-        name.append(",");
-        name.append(to_string(x));
-        name.append("]");
-        moduleList[y][x] = new gateway(name.c_str(), id, K_GATEWAY_BUFFER_SIZE, 0, 0, 0, 0); // 0 = ramId
+        // wird spaeter erzeugt, da es mit einer liste aller compute-module ids erzeugt wird
       }
       else
       {
-        if( ((x == 2) || (x == 5)) &&
-            ((y == 1) || (y == 3) || (y == 5) || (y == 7)) )
+        if(((x == 2) || (x == 5))
+            && ((y == 1) || (y == 3) || (y == 5) || (y == 7)))
         {
           // Cache at specific positions (see router.h)
           name = "Cache[";
@@ -245,7 +317,7 @@ int sc_main(int, char *[])
           name.append(",");
           name.append(to_string(x));
           name.append("]");
-//          moduleList[y][x] = new cache(name.c_str(), id, K_CACHE_BUFFER_SIZE);
+          moduleList[y][x] = new cache(name.c_str(), id, K_CACHE_BUFFER_SIZE);
         }
         else
         {
@@ -255,25 +327,64 @@ int sc_main(int, char *[])
           name.append(",");
           name.append(to_string(x));
           name.append("]");
+          // todo
           //moduleList[y][x] = new compute(name.c_str(), id, K_COMPUTE_BUFFER_SIZE);
+          computeIdList[computeCnt++] = id; // id liste fuer gateway
         }
 
       }
     }
   }
 
+  // Gateway at bottom right
+  {
+    string name = "Gateway[";
+    name.append(to_string(K_NOC_SIZE - 1));
+    name.append(",");
+    name.append(to_string(K_NOC_SIZE - 1));
+    name.append("]");
+    uint8_t id = (uint8_t)(K_NOC_SIZE - 1);
+    id |= (uint8_t)(((K_NOC_SIZE - 1) << 4) & 0xF0);
+    moduleList[K_NOC_SIZE - 1][K_NOC_SIZE - 1] = new gateway(name.c_str(), id, K_GATEWAY_BUFFER_SIZE, 0, computeIdList, computeCnt, K_GATEWAY_PIXEL_BUFFER_SIZE); // 0 = ramId
+  }
+
   // ------------------------------
   // Connect Signals
   // ------------------------------
+  // Übergeben der Signale an die Klasse starter
+  #ifdef K_DEBUG
+  s.clk(clk);
+  s.start(start);
+  #endif
+
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
   {
     for(size_t x = 0; x < K_NOC_SIZE; ++x)
     {
       routerList[y][x]->clk(clk);
-      routerList[y][x]->moduleOut(moduleRouteList[y][x][0]);
-      routerList[y][x]->moduleIn(moduleRouteList[y][x][1]);
 
-      // todo module-Gegenseite
+      routerList[y][x]->moduleOut(moduleRouteList[y][x][0]);
+      moduleList[y][x]->routerIn(moduleRouteList[y][x][0]);
+
+      routerList[y][x]->moduleIn(moduleRouteList[y][x][1]);
+      moduleList[y][x]->routerOut(moduleRouteList[y][x][1]);
+
+      // todo ggf. in ram selbst regeln
+      if( (y == 0) && (x == 0) )
+      {
+        // ram hat langsameren clock
+        moduleList[y][x]->clk(clkSlow);
+      }
+      else
+      {
+        moduleList[y][x]->clk(clk);
+      }
+
+      // start signal fuer gateway
+      if( (y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)) )
+      {
+        ((gateway*)(moduleList[y][x]))->startIn(start);
+      }
 
       if(y == 0)
       {

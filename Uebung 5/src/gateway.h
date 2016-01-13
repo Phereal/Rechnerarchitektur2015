@@ -55,10 +55,9 @@ enum class ComputeList { UP, DOWN, LEFT, RIGTH };
 
 class gateway : public module
 {
+  public:
     sc_in<bool> startIn;
 
-
-  public:
     gateway(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId, uint8_t computeList[], uint32_t computeCount, uint32_t pixelBufferSize);
     void checkStart();
 
