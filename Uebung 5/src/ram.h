@@ -15,8 +15,10 @@
 
 class ram : public module
 {
+  public:
   ram(sc_module_name name, uint8_t id, uint32_t bufferSize);
 
+  private: //Methoden
   unsigned char readPixel(int width, int height);
   void writePixel(int width, int height, unsigned char data);
   void readPGM();
@@ -25,7 +27,7 @@ class ram : public module
   void pakethandler();
   void init();
 
-  private:
+  private: //Variablen
   bool enable = false;
   bool initialize = false;
   int width = 0;

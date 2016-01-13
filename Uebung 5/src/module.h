@@ -46,8 +46,11 @@ SC_MODULE(module)
     virtual void receive() final;
     virtual void send() final;
 
+  public:
+
+
     // private Hilfsvariablen
-  private:
+  protected:
     uint8_t id;
     uint32_t bufferSize;
     PaketBuffer *sendeBuffer;

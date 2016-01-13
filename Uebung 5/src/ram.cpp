@@ -30,11 +30,13 @@ ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize) : module(name, id
     initialize = true;
   }
   pakethandler();
+  //TODO Die Clock des RAM soll 2 mal langsamer sein, als die anderen Clocks, diese andere Clock muss aus der Main übergeben werden!
   sensitive << clk.pos();
 
   //SC_HAS_PROCESS(ram);
 }
 //Überschreiben der process-Methode der Elternklasse Module
+//TODO Wird immer nur aufgerufen, wenn ein Paket auch eigeht, somit kann momentan nur bei eingehenden Paketen gesendet werden!
 bool ram::process(paket &pkg){
   enable = false;
   //Paket einlesen
@@ -59,6 +61,9 @@ bool ram::process(paket &pkg){
 
 void ram::pakethandler() {
   //Es werden nur OPCodes behandelt, die auch durch das RAM-Modul verarbeitet werden können.
+  //Die Behandlung der gesendeten Module in den SendeBuffer wird in der Oberklasse durchgeführt.
+  //Hier werden die Pakete direkt verarbeitet und dann über den SendeBuffer der Elternklasse
+  //weiterverarbeitet.
   switch(i_opcode){
     case 0x00: break;//[emp]
     case 0x01: break;//[exe]
@@ -73,11 +78,13 @@ void ram::pakethandler() {
       o_ypos = i_ypos;
       o_color = readPixel(i_xpos,i_ypos);
       enable = true;
+      break;
     case 0x05: break;//[ack]
     case 0x06: break;//[ic_pay]
     case 0x07: break;//[ir_pay]
     case 0x08: //[o_pay]
       writePixel(i_xpos,i_ypos,i_color);
+      break;
     case 0x09: //[rfi]
       readPGM();
       o_id = 0;
@@ -88,6 +95,7 @@ void ram::pakethandler() {
       o_ypos = 0;
       o_color = 0;
       enable = true;
+      break;
     case 0x0A: break;//[rff]
     case 0x0B: //[wfi]
       writePGM();
@@ -99,6 +107,7 @@ void ram::pakethandler() {
       o_ypos = 0;
       o_color = 0;
       enable = true;
+      break;
     case 0x0C: break;//[wff]
     case 0x0D: //[nxt]
       o_id = 0;
@@ -108,7 +117,20 @@ void ram::pakethandler() {
       nxtPixel(&o_xpos,&o_ypos);
       o_color = 0;
       enable = true;
+      break;
     case 0x0E: break;//[nxa]
+    case 0x0F: break;//[end]
+    case 0x10: //[brd]
+      o_id = 0;
+      o_opcode = 0x11; //[brr]
+      o_sender = i_receiver;
+      o_receiver = i_sender;
+      o_xpos = width;
+      o_ypos = height;
+      o_color = 0;
+      enable = true;
+      break;
+    case 0x11: break; //[brr]
     default: break;
   }
 }

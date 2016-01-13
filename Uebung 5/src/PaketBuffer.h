@@ -16,6 +16,8 @@ class PaketBuffer
     PaketBuffer(uint32_t bufferSize);
     bool push(const paket& p);
     bool pop(paket& p);
+    bool full();
+    bool empty();
 
   private:
     uint32_t bufferSize;

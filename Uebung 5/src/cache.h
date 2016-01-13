@@ -15,18 +15,36 @@
 
 class cache : public module
 {
-  cache(sc_module_name name, uint8_t id, uint32_t bufferSize);
+  public:
+  cache(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId);
 
-  unsigned char readPixel(int width, int height);
-  void getPixel(int width, int height);
+  private: //Methoden
+
   void pakethandler();
+  void requesthandler();
   void init();
 
-  private:
+  void addRequestToQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos);
+  void deleteRequestFromQueue(unsigned int id, unsigned int sender, unsigned int receiver, unsigned int xpos, unsigned int ypos);
+  bool checkPixelIsInCache(unsigned int xpos, unsigned int ypos);
+  void getPixelFromRAM(unsigned int xpos, unsigned int ypos);
+  void writePixelToCache(unsigned int xpos, unsigned int ypos, unsigned char color);
+  unsigned char readPixelFromCache(unsigned int xpos, unsigned int ypos);
+
+  private: //Variablen
+  uint8_t ramId;
+
+  unsigned int CACHESIZE = 100;
+
+  bool sendSync = false;
   bool enable = false;
   bool initialize = false;
-  struct pixel {int width; int heigth; unsigned char color;};
+
+  struct pixel {unsigned int xpos; unsigned int ypos; unsigned char color;};
   std::queue<pixel> cache_list;
+  struct request {unsigned int id; unsigned int sender; unsigned int receiver;
+                  unsigned int xpos; unsigned int ypos;};
+  std::queue<request> request_list;
 
   //lokale Speicherung des eingehenden Paketes
   uint32_t i_id;

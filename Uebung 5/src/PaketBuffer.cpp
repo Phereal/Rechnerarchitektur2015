@@ -54,3 +54,31 @@ bool PaketBuffer::pop(paket &p)
   return allesOk;
 }
 
+
+
+bool PaketBuffer::full()
+{
+  bool isFull = false;
+
+  if( freeCnt == 0 )
+  {
+    isFull = true;
+  }
+
+  return isFull;
+}
+
+
+
+bool PaketBuffer::empty()
+{
+  bool isEmpty = false;
+
+  if( freeCnt == bufferSize )
+  {
+    isEmpty = true;
+  }
+
+  return isEmpty;
+}
+
