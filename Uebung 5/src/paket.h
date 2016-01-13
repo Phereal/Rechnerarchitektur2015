@@ -55,6 +55,8 @@
  *
  * 14. Als Paket des RAM-Moduls an das Gateway Modul mit dem Inhalt des nächsten zu bearbeitenden Pixels. [nxa] 0x0E
  *
+ * 15. [end] 0x0F
+ *
  * Da nicht sichergestellt werden kann, dass das Paket empfangen wird [Buffer des Empfängers ist voll],
  * müssen wir hier mit einer Empfangsbestätigung arbeiten. Die Empfangsbestätigung muss über eine eindeutige
  * Identifikation verfügen, da sonst nicht zugeordnet werden kann, welches Acknowledge welchem Paket zugeordnet
@@ -75,7 +77,17 @@
 using namespace std;
 
 #define K_OP_LEER (0x00)
+#define K_OP_EXE (0x01)
+#define K_OP_FIN (0x02)
 #define K_OP_ACK (0x05)
+#define K_OP_RFI (0x09)
+#define K_OP_RFF (0x0A)
+#define K_OP_WFI (0x0B)
+#define K_OP_WFF (0x0C)
+#define K_OP_NXT (0x0D)
+#define K_OP_NXA (0x0E)
+#define K_OP_END (0x0F)
+
 
 //An Tutoriums-Datei dist.ccp angelehnt
 struct paket

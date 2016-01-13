@@ -1,59 +1,232 @@
 /*
  * gateway.cpp
  *
- * erbt von module.cpp
  *
- * Das Gateway-Modul steuert die Compute-Module und verteilt die Berechnungen auf sie.
- * Außerdem startet es die Berechnung und beendert das Programm, wenn die Berechnung abgeschlossen ist.
- *
- * Das Gateway Modul sendet beim Programmstart ein Paket mit dem Inhalt OPCODE = [rfi] an das RAM Modul, woraufhin
- * das RAM das externe Bild einliest und lokal speichert. Anschließend [neben den Empfangsbestätigungen]
- * erhält der Gateway eine Benachrichtigung vom RAM-Modul OPCODE = [rff], dass der einleseprozess beendet ist.
- *
- * Um die Berechnungen zu starten, muss der Gateway wissen, welche Berechnungen durchgeführt werden müssen und
- * erhält diese Information ebenfalls vom RAM. Er sendet ein Paket mit dem Inhalt OPCODE = [nxt] am das RAM-Modul.
- *
- * Das RAM untersucht daraufhin im Bildspeicher, welche Pixel bereits bearbeitet wurden und sendet die
- * Koordinaten des nächsten nicht bearbeiteteten Pixels an das Gateway mit dem Inhalt OPCODE = [nxa].
- * sollten in diesem Fall alle Pixel bereits berechnet sein, sende das RAM-Modul ein Paket mit dem
- * Inhalt OPCODE = [end]. Daraufhin werden keine neuen Berechnungsanfragen mehr an das RAM-Modul gestellt.
- *
- * In einem internen Speicher hält das Gateway immer eine definierte Anzahl an zu berechnenden Pixeln vor, damit
- * bei Abschluss einer Berechnung Zeit eingespart werden kann und das Compute-Modul direkt mit dem nächsten
- * Auftrag beginnen kann. Wenn ein Berechnungsauftrag erteilt wird, wird dies in diesem Speicher markiert und
- * der Auftrag wird erst nach Abschluss der Berechnung gelöscht. Der Speicher sollte also mindestens doppelt
- * so grpß sein, wie die Anzahl der Compute-Module.
- *
- * Das Gateway-Modul hat eine Liste der Compute-Module mit Adresse und Zustand der einzelnen Compute-Module.
- * Initial sind alle Compute-Module im Zustand "free". Wenn der Gateway ihnen einen Berechnungsauftrag erteilt,
- * mit dem Inahlt OPCODE = [exe] wechseln sie in den Zustand "busy".
- * Wenn der Gateway das fertig berechnete Paket erhält mit dem Inhalt OPCODE = [fin], wird wieder in den Zustand
- * "free" gewechselt. Somit kann der Gateway dem compute-Modul den nächsten Berechnungsauftrag zuweisen.
- *
- * Wenn die Liste der zu berechnenden Pixel leer ist und ein Flag gesetzt ist, das signalisiert, dass mindestens eine
- * Berechnung durchgeführt wurde (ein berechneter Pixel wurde erhalten) sind alle Pixel berechnet und
- * das Gateway-Modul kann das Rückschreiben des Bildes auf die Festplatte anstoßen.
- *
- * Dazu sendet es ein Paket mit dem Inhalt OPCODE = [wfi] an das RAM-Modul, welches dann beginnt, den Inhalt
- * der zweiten Speicherbank auf die Festplatte zu schreiben. Im weiteren Verlauf, wartet das Gateway-Modul auf
- * eine Bestätigung des RAM-Moduls, dass das schrieben abgeschlossen ist, mit dem Inhalt OPCODE = [wff].
- *
- * Wenn der Schreibvorgang abgeschlossen ist, werden alle internen Speicherelemente neu initialisiert und
- * das Programm wird beendet.
- *
-*/
+ */
 
 #include "gateway.h"
 
-#include <systemc.h>
+#include "paket.h"
 
-gateway::gateway()
+gateway::gateway(sc_module_name name, uint8_t id, uint32_t bufferSize, uint8_t ramId, uint8_t computeList[], uint32_t computeCount, uint32_t pixelBufferSize) :
+    module(name, id, bufferSize), ramId(ramId), state(Zustaende::IDLE), computeCount(computeCount), computeBusyCnt(0), pixelBufferSize(pixelBufferSize)
 {
-  // TODO Auto-generated constructor stub
+  if(computeCount == 0)
+  {
+    // todo error handling
+  }
 
+  if(pixelBufferSize == 0)
+  {
+    // todo error handling
+    this->pixelBufferSize = 10;
+  }
+
+  this->computeList = new ComputeList_T[this->computeCount];
+  for(size_t i = 0; i < (size_t)this->computeCount; ++i)
+  {
+    this->computeList[i].id = computeList[i];
+    this->computeList[i].busy = false;
+  }
+
+  this->pixelBuffer = new PaketBuffer(this->pixelBufferSize);
+
+  SC_HAS_PROCESS(gateway);
+
+  SC_METHOD(checkStart);
+  sensitive << clk.pos();
 }
 
-gateway::~gateway()
+void gateway::checkStart()
 {
-  // TODO Auto-generated destructor stub
+  // nur starten wenn es nicht bereits gestartet ist
+  if( state == Zustaende::IDLE )
+  {
+    // Pruefe ob das startsignal aktiviert ist
+    if( startIn.read() )
+    {
+      // starte Berechnung
+      paket pkg(K_OP_RFI, id, ramId, 0, 0, 0);
+      sendeBuffer->push(pkg);
+      state = Zustaende::WAIT_RAM_RRF;
+    }
+  }
+}
+
+
+bool gateway::process(paket &pkg)
+{
+  bool processOk = false;
+
+
+  switch( state )
+  {
+    case Zustaende::IDLE:
+      // sollte nicht passieren
+      break;
+
+    case Zustaende::WAIT_RAM_RRF:
+      if( (pkg.opcode == K_OP_RFF) && (pkg.sender == ramId) )
+      {
+        pkg = paket(K_OP_NXT, id, ramId, 0, 0, 0);
+        state = Zustaende::PROCESSING;
+        processOk = true;
+      }
+      else
+      {
+        // sollte nicht passieren
+      }
+      break;
+
+    case Zustaende::PROCESSING:
+      if( (pkg.opcode == K_OP_NXA) && (pkg.sender == ramId) )
+      {
+        if( !pixelBuffer->full() )
+        {
+          pixelBuffer->push(pkg);
+          // kein setzen von processOk, sendeBuffer wird intern verwaltet
+        }
+        else
+        {
+          // todo errorhandling
+        }
+
+        // sende weitere pixelanfragen an den ram (sofern noch platz im buffer ist)
+        if( !pixelBuffer->full() )
+        {
+          pkg = paket(K_OP_NXT, id, ramId, 0, 0, 0);
+          if( !sendeBuffer->push(pkg) )
+          {
+            // todo error
+          }
+        }
+
+        // sende alle verfuegbaren pixel an idle compute-module
+        while( (!pixelBuffer->empty()) && (!computeListAllBusy()) )
+        {
+          pixelBuffer->pop(pkg);
+          pkg = paket(K_OP_EXE, id, getAndSetNextIdleCompute(), pkg.xpos, pkg.ypos, pkg.color); // neues paket, damit id automatisch angelegt wird
+          if( !sendeBuffer->push(pkg) )
+          {
+            // todo error (z.B. throw, oder pkg zurueckschreiben und break
+          }
+        }
+      }
+      else if( pkg.opcode == K_OP_FIN )
+      {
+        setComputeIdle(pkg.sender);
+
+        // sende weitere pixelanfragen an den ram (sofern noch platz im buffer ist)
+        if( !pixelBuffer->full() )
+        {
+          pkg = paket(K_OP_NXT, id, ramId, 0, 0, 0);
+          if( !sendeBuffer->push(pkg) )
+          {
+            // todo error
+          }
+        }
+
+        // sende alle verfuegbaren pixel an idle compute-module
+        while( (!pixelBuffer->empty()) && (!computeListAllBusy()) )
+        {
+          pixelBuffer->pop(pkg);
+          pkg = paket(K_OP_EXE, id, getAndSetNextIdleCompute(), pkg.xpos, pkg.ypos, pkg.color); // neues paket, damit id automatisch angelegt wird
+          if( !sendeBuffer->push(pkg) )
+          {
+            // todo error (z.B. throw, oder pkg zurueckschreiben und break
+          }
+        }
+      }
+      else if( (pkg.opcode == K_OP_END) && (pkg.sender == ramId) )
+      {
+        //ggf. entfernen, da ram die info zuerst bekommen haben kann
+        if( pixelBuffer->empty() && computeListAllIdle() )
+        {
+          pkg = paket(K_OP_WFI, id, ramId, 0, 0, 0);
+          state = Zustaende::WAIT_RAM_WFF;
+          processOk = true;
+        }
+        else
+        {
+          // todo error handling
+        }
+      }
+      else
+      {
+        // sollte nicht passieren
+      }
+      break;
+
+    case Zustaende::WAIT_RAM_WFF:
+      if( (pkg.opcode == K_OP_WFF) && (pkg.sender == ramId) )
+      {
+        state = Zustaende::IDLE;
+        // kein setzen von processOk, da kein paketsenden noetig
+      }
+      else
+      {
+        // sollte nicht passieren
+      }
+      break;
+
+    default:
+      // sollte nicht passieren
+      break;
+  }
+
+  return processOk;
+}
+
+
+bool gateway::computeListAllBusy()
+{
+  bool allBusy = false;
+
+  if( computeBusyCnt == computeCount)
+  {
+    allBusy = true;
+  }
+
+  return allBusy;
+}
+
+bool gateway::computeListAllIdle()
+{
+  bool allIdle = false;
+
+  if( computeBusyCnt == 0 )
+  {
+    allIdle = true;
+  }
+
+  return allIdle;
+}
+
+uint8_t gateway::getAndSetNextIdleCompute()
+{
+  uint8_t id = 0;
+
+  for(size_t i = 0; i < computeCount; ++i)
+  {
+    if( !computeList[i].busy )
+    {
+      id = computeList[i].id;
+      computeList[i].busy = true;
+      computeBusyCnt++;
+    }
+  }
+
+  return id;
+}
+
+void gateway::setComputeIdle(uint8_t id)
+{
+  for(size_t i = 0; i < computeCount; ++i)
+  {
+    if( computeList[i].id == id )
+    {
+      computeList[i].busy = false;
+      computeBusyCnt--;
+    }
+  }
 }
