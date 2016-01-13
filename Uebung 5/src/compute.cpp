@@ -110,5 +110,5 @@ int recalcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord, int yCoord)
 
         }
     }
-    return std::min(std::max(sum, 0), 255);
+    return std::min(std::max(sum, 0), 255); //Auf 0-255 auf / abrunden.
 }
