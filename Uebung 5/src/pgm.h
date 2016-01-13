@@ -1,22 +1,15 @@
 
-
 #ifndef RAUES_PGM_HPP
 #define RAUES_PGM_HPP
 
 #include <vector>
 #include <string>
 
-
-
-
-
-
 /**
  * @brief Typedef for a pgm image entry
  */
 
 using pgm_entry = unsigned char;
-
 
 /**
  * @brief Typedef for a line in a pgm image
@@ -36,7 +29,6 @@ using pgm_line = std::vector<pgm_entry>;
  */
 using pgm_image = std::vector<pgm_line>;
 
-
 /**
  * @brief Writes PGM image to file
  *
@@ -46,8 +38,8 @@ using pgm_image = std::vector<pgm_line>;
  * @param image The actual image data
  * @param color_depth The color depth of the image. If not specified, 255 is assumed
  */
-void write_pgm(std::string filename, int width, int height, const pgm_image& image,int color_depth=255);
-
+void write_pgm(std::string filename, int width, int height,
+    const pgm_image& image, int color_depth = 255);
 
 /**
  * @brief Reads a PGM image from a file
@@ -61,5 +53,6 @@ void write_pgm(std::string filename, int width, int height, const pgm_image& ima
  * @param color_depth The color depth of the image
  * @param image The actual imagae data
  */
-void read_pgm(std::string filename, int& width, int& height, int& color_depth, pgm_image& image);
+void read_pgm(std::string filename, int& width, int& height, int& color_depth,
+    pgm_image& image);
 #endif //RAUES_PGM_HPP

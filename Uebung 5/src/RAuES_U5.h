@@ -10,9 +10,9 @@
 
 #define K_DEBUG
 #ifdef K_DEBUG
-  #define PRINT_DEBUG(a) { cout << "DEBUG: " << (a) << endl; }
+#define PRINT_DEBUG(a) { cout << "DEBUG: " << (a) << endl; }
 #else
-  #define PRINT_DEBUG(a) {}
+#define PRINT_DEBUG(a) {}
 #endif
 
 #endif /* RAUES_U5_H_ */

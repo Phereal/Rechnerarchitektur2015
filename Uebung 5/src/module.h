@@ -43,20 +43,20 @@ SC_MODULE(module)
     // Constructor
     module(sc_module_name name, uint8_t id, uint32_t bufferSize);
 
-    virtual void receive() final;
+    virtual void receive()
+final    ;
     virtual void send() final;
 
-  public:
-
+    public:
 
     // private Hilfsvariablen
-  protected:
+    protected:
     uint8_t id;
     uint32_t bufferSize;
     PaketBuffer *sendeBuffer;
 
     virtual void createAck(paket pkg) final; // erzeugt ack paket und legt es in den sendebuffer
     virtual bool process(paket &pkg) = 0;
-};
+  };
 
 #endif /* MODULE_H_ */
