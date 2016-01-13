@@ -317,7 +317,7 @@ int sc_main(int, char *[])
           name.append(",");
           name.append(to_string(x));
           name.append("]");
-          moduleList[y][x] = new cache(name.c_str(), id, K_CACHE_BUFFER_SIZE);
+          moduleList[y][x] = new cache(name.c_str(), id, K_CACHE_BUFFER_SIZE, 0); // 0 = ramId
         }
         else
         {
