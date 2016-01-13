@@ -25,14 +25,25 @@
 
 using namespace std;
 
-ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize) :
-    module(name, id, bufferSize)
+ram::ram(sc_module_name name, uint8_t id, uint32_t bufferSize, const std::string &inFile, const std::string &outFile) :
+    module(name, id, bufferSize), infile(inFile), outfile(outFile)
 {
   if(initialize == false)
   {
     init();
     initialize = true;
   }
+
+
+  if(infile.empty())
+  {
+    std::string infile = "./dfki.pgm";
+  }
+  if(outfile.empty())
+  {
+    std::string outfile = "./refoo.pgm";
+  }
+
   //Die Clock des RAM soll 2 mal langsamer sein, als die anderen Clocks!
 
   //SC_HAS_PROCESS(ram);

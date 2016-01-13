@@ -17,7 +17,7 @@
 class ram : public module
 {
   public:
-  ram(sc_module_name name, uint8_t id, uint32_t bufferSize);
+  ram(sc_module_name name, uint8_t id, uint32_t bufferSize, const std::string &inFile, const std::string &outFile);
 
   private: //Methoden
   unsigned char readPixel();
@@ -34,8 +34,8 @@ class ram : public module
   int width = 0;
   int height = 0;
   int depth = 0;
-  std::string infile = "/home/steffen/Dokumente/dfki.pgm";
-  std::string outfile = "/home/steffen/Dokumente/refoo.pgm";
+  std::string infile;
+  std::string outfile;
   std::vector<std::vector<unsigned char> > in_image;
   std::vector<std::vector<unsigned char> > out_image;
   std::vector<std::vector<bool> > nxt_map;

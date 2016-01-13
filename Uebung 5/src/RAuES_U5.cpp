@@ -62,6 +62,7 @@
  */
 
 #include <iostream>
+#include <string>
 
 #include <systemc.h>
 
@@ -139,8 +140,24 @@ SC_MODULE(starter)
 
 
 
-int sc_main(int, char *[])
+int sc_main(int argc, char *argv[])
 {
+  std::string inFile;
+  std::string outFile;
+
+  // ------------------------------
+  // Check main parameters
+  // ------------------------------
+  if(argc > 1)
+  {
+    inFile = argv[1];
+  }
+  if(argc > 2)
+  {
+    outFile = argv[2];
+  }
+
+
   // ------------------------------
   // Clock
   // Die Clock setzt den synchronen Systemtakt um, den die Aufgabenstellung verlangt.
@@ -286,8 +303,8 @@ int sc_main(int, char *[])
 
   // module erzeugen
   PRINT_DEBUG("main - module erzeugen");
-  size_t computeCnt = 0;
-  uint8_t computeIdList[K_NOC_SIZE * K_NOC_SIZE] = {0}; // array mit max moeglicher groesse um das speichermanagement zu vereinfachen
+  size_t cacheCnt = 0;
+  uint8_t cacheIdList[K_NOC_SIZE * K_NOC_SIZE] = {0}; // array mit max moeglicher groesse um das speichermanagement zu vereinfachen
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
   {
     for(size_t x = 0; x < K_NOC_SIZE; ++x)
@@ -304,7 +321,7 @@ int sc_main(int, char *[])
         name.append(",");
         name.append(to_string(x));
         name.append("]");
-        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE);
+        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE, inFile, outFile);
         PRINT_DEBUG("main - ram erzeugt");
       }
       else if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
@@ -324,6 +341,54 @@ int sc_main(int, char *[])
           name.append(to_string(x));
           name.append("]");
           moduleList[y][x] = new cache(name.c_str(), id, K_CACHE_BUFFER_SIZE, 0); // 0 = ramId
+          cacheIdList[cacheCnt++] = id; // id liste fuer compute
+        }
+        else
+        {
+          // Compute everywhere else
+          // wird spaeter erzeugt, da es mit einer liste aller cache-module ids erzeugt wird
+        }
+
+      }
+    }
+  }
+  PRINT_DEBUG("main - module erzeugt");
+
+  // module erzeugen
+  PRINT_DEBUG("main - compute erzeugen");
+  size_t computeCnt = 0;
+  uint8_t computeIdList[K_NOC_SIZE * K_NOC_SIZE] = {0}; // array mit max moeglicher groesse um das speichermanagement zu vereinfachen
+  for(size_t y = 0; y < K_NOC_SIZE; ++y)
+  {
+    for(size_t x = 0; x < K_NOC_SIZE; ++x)
+    {
+      string name;
+      uint8_t id = (uint8_t)y;
+      id |= (uint8_t)((x << 4) & 0xF0);
+
+      if((y == 0) && (x == 0))
+      {
+        // Ram at top left
+        name = "Ram[";
+        name.append(to_string(y));
+        name.append(",");
+        name.append(to_string(x));
+        name.append("]");
+        moduleList[y][x] = new ram(name.c_str(), id, K_RAM_BUFFER_SIZE, inFile, outFile);
+        PRINT_DEBUG("main - ram erzeugt");
+      }
+      else if((y == (K_NOC_SIZE - 1)) && (x == (K_NOC_SIZE - 1)))
+      {
+        // Gateway at bottom right
+        // wird spaeter erzeugt, da es mit einer liste aller compute-module ids erzeugt wird
+      }
+      else
+      {
+        if(((x == 2) || (x == 5))
+            && ((y == 1) || (y == 3) || (y == 5) || (y == 7)))
+        {
+          // Cache at specific positions (see router.h)
+          // wurde zuvor erzeugt
         }
         else
         {
@@ -333,16 +398,16 @@ int sc_main(int, char *[])
           name.append(",");
           name.append(to_string(x));
           name.append("]");
-          // todo
-          //moduleList[y][x] = new compute(name.c_str(), id, K_COMPUTE_BUFFER_SIZE);
-          moduleList[y][x] = new cache(name.c_str(), id, K_COMPUTE_BUFFER_SIZE, 0);
+          uint8_t gwId = (uint8_t)7;
+          gwId |= (uint8_t)((7 << 4) & 0xF0);
+          moduleList[y][x] = new compute(name.c_str(), id, K_COMPUTE_BUFFER_SIZE, 0, gwId, cacheIdList, cacheCnt);
           computeIdList[computeCnt++] = id; // id liste fuer gateway
         }
 
       }
     }
   }
-  PRINT_DEBUG("main - module erzeugt");
+  PRINT_DEBUG("main - compute erzeugt");
 
   // Gateway at bottom right
   PRINT_DEBUG("main - gateway erzeugen");
