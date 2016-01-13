@@ -13,13 +13,15 @@ router::router(sc_module_name name, uint8_t id, uint8_t routen, RoutingRichtung 
   if(routen == 0)
   {
     // todo: ggf. andere Fehlerbehandlung oder Error throw
-    this->routen = 1;
+    throw "router::router(): routen == 0";
+    //this->routen = 1;
   }
 
   if(bufferSize == 0)
   {
     // todo: ggf. andere Fehlerbehandlung oder Error throw
-    this->bufferSize = this->routen;
+    throw "router::router(): bufferSize == 0";
+    //this->bufferSize = this->routen;
   }
 
   this->routeIn = new sc_in<paket> [this->routen];

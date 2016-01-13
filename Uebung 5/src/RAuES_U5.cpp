@@ -65,6 +65,8 @@
 
 #include <systemc.h>
 
+#include "RAuES_U5.h"
+
 #include "pgm.h"
 #include "paket.h"
 #include "router.h"
@@ -76,7 +78,6 @@
 
 using namespace std;
 
-#define K_DEBUG
 
 /*
  * Das Klasse waiter dient dazu, die Simulation nach 1000ms zu stoppen. Damit,
@@ -90,6 +91,7 @@ SC_MODULE(waiter)
     {
       wait(1000, SC_MS);
       sc_stop();
+      cout << "Simulation wurde durch \"waiter\" gestoppt!" << endl;
     }
 
     SC_CTOR(waiter)
@@ -181,6 +183,7 @@ int sc_main(int, char *[])
   module *moduleList[K_NOC_SIZE][K_NOC_SIZE];
 
   // router erzeugen
+  PRINT_DEBUG("main - router erzeugen");
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
   {
     for(size_t x = 0; x < K_NOC_SIZE; ++x)
@@ -279,8 +282,10 @@ int sc_main(int, char *[])
           K_ROUTER_BUFFER_SIZE);
     }
   }
+  PRINT_DEBUG("main - router erzeugt");
 
   // module erzeugen
+  PRINT_DEBUG("main - module erzeugen");
   size_t computeCnt = 0;
   uint8_t computeIdList[K_NOC_SIZE * K_NOC_SIZE] = {0}; // array mit max moeglicher groesse um das speichermanagement zu vereinfachen
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
@@ -329,14 +334,17 @@ int sc_main(int, char *[])
           name.append("]");
           // todo
           //moduleList[y][x] = new compute(name.c_str(), id, K_COMPUTE_BUFFER_SIZE);
+          moduleList[y][x] = new cache(name.c_str(), id, K_COMPUTE_BUFFER_SIZE, 0);
           computeIdList[computeCnt++] = id; // id liste fuer gateway
         }
 
       }
     }
   }
+  PRINT_DEBUG("main - module erzeugt");
 
   // Gateway at bottom right
+  PRINT_DEBUG("main - gateway erzeugen");
   {
     string name = "Gateway[";
     name.append(to_string(K_NOC_SIZE - 1));
@@ -347,6 +355,7 @@ int sc_main(int, char *[])
     id |= (uint8_t)(((K_NOC_SIZE - 1) << 4) & 0xF0);
     moduleList[K_NOC_SIZE - 1][K_NOC_SIZE - 1] = new gateway(name.c_str(), id, K_GATEWAY_BUFFER_SIZE, 0, computeIdList, computeCnt, K_GATEWAY_PIXEL_BUFFER_SIZE); // 0 = ramId
   }
+  PRINT_DEBUG("main - gateway erzeugt");
 
   // ------------------------------
   // Connect Signals
@@ -357,10 +366,12 @@ int sc_main(int, char *[])
   s.start(start);
   #endif
 
+  PRINT_DEBUG("main - signale verbinden");
   for(size_t y = 0; y < K_NOC_SIZE; ++y)
   {
     for(size_t x = 0; x < K_NOC_SIZE; ++x)
     {
+      PRINT_DEBUG("  main - [" + to_string(y) + "," + to_string(x) + "] verbinden");
       routerList[y][x]->clk(clk);
 
       routerList[y][x]->moduleOut(moduleRouteList[y][x][0]);
@@ -479,15 +490,20 @@ int sc_main(int, char *[])
           routerList[y][x]->routeIn[3](routeList[y][x - 1][1]); // left
         }
       }
+      PRINT_DEBUG("  main - [" + to_string(y) + "," + to_string(x) + "] verbunden");
     }
   }
+  PRINT_DEBUG("main - signale verbunden");
 
   // ------------------------------
 
   // ------------------------------
   // Starte Simulation
   // ------------------------------
+
+  PRINT_DEBUG("main - simulation starten");
   sc_start();
+  PRINT_DEBUG("main - simulation beendet");
 
   return 0;
 }

@@ -11,7 +11,8 @@ module::module(sc_module_name name, uint8_t id, uint32_t bufferSize) :
   if(bufferSize == 0)
   {
     // todo: ggf. andere Fehlerbehandlung oder Error throw
-    this->bufferSize = 5;
+    throw "module::module(): bufferSize == 0";
+//    this->bufferSize = 5;
   }
 
   sendeBuffer = new PaketBuffer(this->bufferSize);
@@ -28,13 +29,15 @@ module::module(sc_module_name name, uint8_t id, uint32_t bufferSize) :
 void module::receive()
 {
   // Pruefe ob ein Paket am Eingang anliegt (opcode 0x00 == leeres Paket)
-  if(routerIn.read().opcode != (uint8_t)K_OP_LEER)
-  {
+//  abfrage ob leer wird der process implementierung ueberlassen
+//  if(routerIn.read().opcode != (uint8_t)K_OP_LEER)
+//  {
     // Paket liegt an, pruefe ob Empfangsbestaetigung
     if(routerIn.read().opcode == (uint8_t)K_OP_ACK)
     {
       // Empfangsbestaetigung
       // todo erstmal nicht implementiert
+      throw "module::receive(): opcode == K_OP_ACK";
     }
     else
     {
@@ -47,7 +50,7 @@ void module::receive()
         sendeBuffer->push( tmpPkg );
       }
     }
-  }
+//  }
 }
 
 void module::send()

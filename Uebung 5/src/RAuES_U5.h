@@ -8,11 +8,11 @@
 #ifndef RAUES_U5_H_
 #define RAUES_U5_H_
 
-class RAuES_U5
-{
-  public:
-    RAuES_U5();
-    virtual ~RAuES_U5();
-};
+#define K_DEBUG
+#ifdef K_DEBUG
+  #define PRINT_DEBUG(a) { cout << "DEBUG: " << (a) << endl; }
+#else
+  #define PRINT_DEBUG(a) {}
+#endif
 
 #endif /* RAUES_U5_H_ */
