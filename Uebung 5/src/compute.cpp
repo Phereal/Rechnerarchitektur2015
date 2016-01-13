@@ -282,3 +282,51 @@ int compute::calcPixel(int matrix[MATRIX_SIZE][MATRIX_SIZE], int xCoord,
   }
   return std::min(std::max(sum, 0), 255); //Auf 0-255 auf / abrunden.
 }
+
+
+uint8_t compute::getMinCacheId()
+{
+  uint8_t myId[2];
+  uint8_t zielId[2];
+  int16_t minEntfernung = 32767; // max wert
+  uint8_t minCache = 0;
+
+  myId[0] = (id & (uint8_t)0x0F); // y zeile
+  myId[1] = ((id >> 4) & (uint8_t)0x0F); // x spalte
+
+  for(size_t i = 0; i < cacheCount; ++i)
+  {
+    int16_t tmpEntfernung[2]; // max wert
+    zielId[0] = (cacheList[i] & (uint8_t)0x0F); // y zeile
+    zielId[1] = ((cacheList[i] >> 4) & (uint8_t)0x0F); // x spalte
+
+    // entfernung bestimmen
+    tmpEntfernung[0] = zielId[0] - myId[0];
+    tmpEntfernung[1] = zielId[1] - myId[1];
+
+    // betrag bestimmen
+    if(tmpEntfernung[0] < 0)
+    {
+      tmpEntfernung[0] = tmpEntfernung[0] * (-1);
+    }
+    if(tmpEntfernung[1] < 0)
+    {
+      tmpEntfernung[1] = tmpEntfernung[1] * (-1);
+    }
+
+    // entfernung kleiner als bisheriger wert? Dann ersete Wert und id
+    if( (tmpEntfernung[0] + tmpEntfernung[1]) < (minEntfernung) )
+    {
+      minEntfernung = tmpEntfernung[0] + tmpEntfernung[1];
+      minCache = cacheList[i];
+    }
+  }
+
+  // fehler wenn kein cache gefunden
+  if(minCache == 0)
+  {
+    throw "compute::getMinCacheId(): minCache == 0";
+  }
+
+  return minCache;
+}
