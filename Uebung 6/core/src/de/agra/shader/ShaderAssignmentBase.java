@@ -12,7 +12,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
 public class ShaderAssignmentBase extends ApplicationAdapter {
     SpriteBatch batch;
@@ -37,6 +39,8 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      * Wird mit der Nummer der aktuellen Meshes multipliziert, um Formen nebeneinander darzustellen.
      */
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
+
+
 
     @Override
     public void create() {
@@ -72,6 +76,8 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      */
     private Mesh getMesh(int typeNumber, int meshNumber) {
         switch (typeNumber) {
+            case 1:
+                return getMeshCylinder(meshNumber);
             default:
                 return getMeshLogo(meshNumber);
         }
@@ -83,14 +89,14 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      * @return Das Logo als Mesh.
      */
     private Mesh getMeshLogo(int meshNumber) {
-        /**
-         * Modifier aller x-Koordinaten.
-         */
+        //Gesamter x-offset
         float xm = meshStartOffX + meshNumber * meshOffX;
 
         Mesh mesh;
 
         mesh = new Mesh(true, 4, 6, VertexAttribute.Position(), VertexAttribute.ColorUnpacked(), VertexAttribute.TexCoords(0));
+
+        //Mesh generieren:
         mesh.setVertices(new float[]
                 // Position XYZ   Color RGBA   Texture Coordinates UV
                 //|------------|  |--------|  |--|
@@ -98,6 +104,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                         0.5f + xm, -0.5f, 0, 1, 1, 1, 1, 1, 1,
                         0.5f + xm, 0.5f, 0, 1, 1, 1, 1, 1, 0,
                         -0.5f + xm, 0.5f, 0, 1, 1, 1, 1, 0, 0});
+
         mesh.setIndices(new short[]{0, 1, 2, 2, 3, 0});
 
         return mesh;
@@ -118,7 +125,84 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      * @return Das Zylindermesh..
      */
     private Mesh getMeshCylinder(int meshNumber) {
-        return getMeshLogo(meshNumber);
+
+        /**
+         * Idee:
+         * Einen Kreis generieren.
+         * Dann einen weiteren Kreis mit höheren y-Koordinaten erstellen und mit vorherigem Kreis verbinden.
+         */
+
+        //Zylinderattribute
+        final int cylinderFaces = 8; //Mindestens 3
+        final float cylinderHeight = 2f;
+        final float cylinderRadius = 0.5f;
+
+
+
+        //Gesamter x-offset
+        float xm = meshStartOffX + meshNumber * meshOffX;
+
+        //Flächen erstellen.
+
+
+        //Größe: (Punkte * Flächen + 2 Mittelpunkte) * 9 Attribute eines Vektors
+        float [] vertices = new float[(cylinderFaces*2+2)*7];
+
+
+        //Beim zweiten Durchlauf wird i zu 1 und bewirkt, dass statt Fläche 1 die Fläche 2 erstellt wird.
+        for (int isTop = 0; isTop<=1; isTop++){
+            for(int j = 0; j<cylinderFaces; j++){ //+1 für den Mittelpunkt!
+
+                //Modifiziertes j.
+                //j*9 Werte pro Punkt + i * Anzahl der Vertices-Einträge der ersten Fläche.
+                int jMod = j*7+(isTop*cylinderFaces*7);
+
+                vertices[jMod] = ShapeGen.getCirclePointX(cylinderRadius, ((float)j/(float)cylinderFaces)*360) + xm; //x
+                vertices[jMod+1] = ShapeGen.getCirclePointY(cylinderRadius, ((float)j/(float)cylinderFaces)*360);  //y
+
+
+                vertices[jMod+2] = cylinderHeight/2 - (isTop * cylinderHeight); //z
+                vertices[jMod+3] = 1;    //r
+                vertices[jMod+4] = 1;    //b
+                vertices[jMod+5] = 1;    //g
+                vertices[jMod+6] = 1;    //a
+
+            }
+        }
+
+        System.out.println(Arrays.toString(vertices));
+        Mesh mesh;
+
+        int maxVertices = cylinderFaces*2+2;
+        int maxIndices = cylinderFaces * 2 * 3 + cylinderFaces * 3;
+
+        mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
+
+        //Vertices festlegen:
+        mesh.setVertices(vertices);
+
+
+
+
+
+        //Nun müssen die Indices festgelegt werden!
+
+        short [] indices = new short[cylinderFaces*2*3]; //TODO beachtet noch nicht mittelpunkte
+
+        for (int i = 0; i<cylinderFaces; i++){
+            indices[i] = (short)i;
+            indices[i+1] = (short)(i+1);
+            indices[i+2] = (short)(i+cylinderFaces);
+
+            indices[i+3] = indices[i+1];
+            indices[i+4] = indices[i+2];
+            indices[i+5] = (short)(i+cylinderFaces+1);
+        }
+
+
+        mesh.setIndices(indices);
+
+        return mesh;
     }
 
     /**
