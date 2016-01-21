@@ -79,8 +79,12 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      */
     private Mesh getMesh(int typeNumber, int meshNumber) {
         switch (typeNumber) {
+            case 0:
+                return getMeshPyramid(meshNumber);
             case 1:
                 return getMeshCylinder(meshNumber);
+            case 2:
+                return getMeshSphere(meshNumber);
             default:
                 return getMeshLogo(meshNumber);
         }
