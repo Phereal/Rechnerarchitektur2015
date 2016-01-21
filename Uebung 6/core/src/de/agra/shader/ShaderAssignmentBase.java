@@ -133,7 +133,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
          */
 
         //Zylinderattribute
-        final int cylinderFaces = 8; //Mindestens 3
+        final int cylinderFaces = 3; //Mindestens 3
         final float cylinderHeight = 2f;
         final float cylinderRadius = 0.5f;
 
@@ -166,11 +166,11 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                 vertices[jMod+4] = 1;    //b
                 vertices[jMod+5] = 1;    //g
                 vertices[jMod+6] = 1;    //a
-
             }
         }
 
-        System.out.println(Arrays.toString(vertices));
+        //TODO Deckel generieren
+
         Mesh mesh;
 
         int maxVertices = cylinderFaces*2+2;
@@ -186,19 +186,21 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         short [] indices = new short[cylinderFaces*2*3]; //TODO beachtet noch nicht mittelpunkte
 
         for (int i = 0; i<cylinderFaces; i++){
-            int im = i*6; //da wir 6 array-Werte festlegen, müssen jeweils 6 Werte übersprungen werden.
 
-            indices[im] = (short)i;
-            indices[im+1] = (short)(i+1);
-            indices[im+2] = (short)(i+cylinderFaces);
+            //TODO korrigieren
+            //TODO Deckel verbinden
+            indices[i*6] = (short)((i)%(cylinderFaces/2));
+            indices[i*6+1] = (short)((i+1)%cylinderFaces/2);
+            indices[i*6+2] = (short)(i*2+cylinderFaces);
 
-            indices[im+3] = indices[i+1];
-            indices[im+4] = indices[i+2];
-            indices[im+5] = (short)(i+cylinderFaces+1);
+            indices[i*6+3] = indices[i+1];
+            indices[i*6+4] = indices[i+2];
+            indices[i*6+5] = (short)(i+cylinderFaces+1);
         }
 
-
-        mesh.setIndices(indices);
+        System.out.println(Arrays.toString(indices));
+        //Platzhalter-Indizes:
+        mesh.setIndices(new short[]{0,1,3,1,3,4,1,2,4,2,4,5,2,0,5,0,5,3});
 
         return mesh;
     }
@@ -215,7 +217,8 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     @Override
     public void render() {
         Gdx.gl.glClearColor(0.25f, 0.25f, 0.5f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
         cam.position.set(
                 (Gdx.input.getX() - Gdx.graphics.getWidth() / 2f) / 100f,
