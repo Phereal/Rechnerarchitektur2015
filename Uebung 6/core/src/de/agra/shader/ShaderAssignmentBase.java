@@ -133,7 +133,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
          */
 
         //Zylinderattribute
-        final int cylinderFaces = 3; //Mindestens 3
+        final int cylinderFaces = 20; //Mindestens 3
         final float cylinderHeight = 2f;
         final float cylinderRadius = 0.5f;
 
@@ -189,18 +189,19 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
             //TODO korrigieren
             //TODO Deckel verbinden
-            indices[i*6] = (short)((i)%(cylinderFaces/2));
-            indices[i*6+1] = (short)((i+1)%cylinderFaces/2);
-            indices[i*6+2] = (short)(i*2+cylinderFaces);
+            indices[i*6] = (short)i;
+            indices[i*6+1] = (short)((i+1)%cylinderFaces);
+            indices[i*6+2] = (short)(i+cylinderFaces);
 
-            indices[i*6+3] = indices[i+1];
-            indices[i*6+4] = indices[i+2];
-            indices[i*6+5] = (short)(i+cylinderFaces+1);
+            indices[i*6+3] = indices[i*6+1];
+            indices[i*6+4] = indices[i*6+2];
+            indices[i*6+5] = (short)((i+1)%cylinderFaces + cylinderFaces);
         }
 
         System.out.println(Arrays.toString(indices));
+
         //Platzhalter-Indizes:
-        mesh.setIndices(new short[]{0,1,3,1,3,4,1,2,4,2,4,5,2,0,5,0,5,3});
+        mesh.setIndices(indices);
 
         return mesh;
     }
