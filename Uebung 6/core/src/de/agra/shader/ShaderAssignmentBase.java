@@ -26,33 +26,36 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     public float time = 0; //Zeit-Variable für Aufgabe 2-Wabern
     private float timeIncrementPerStep = 0.01f;
 
-    /**
+    /*
      * Wir nutzen statt einzelnen Variablen für jedes Mesh ein Mesh-Array, das bequem durchiteriert werden kann.
      * Die Variable war zuvor public- war das nötig?
      */
     public Mesh[] meshList = new Mesh[3];
 
-    /**
+    /*
      * X-Offset aller Meshes.
      * Wird genutzt, um die Meshes zu zentrieren und auf der X-Achse beliebig verschiebbar zu machen.
      */
     private final float meshStartOffX = -1.2f;
 
-    /**
+    /*
      * X-Offset zwischen einzelnen Meshes.
      * Wird mit der Nummer der aktuellen Meshes multipliziert, um Formen nebeneinander darzustellen.
      */
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
     //Zylinderattribute
-    final int cylinderFaces = 20; //Mindestens 3
+    final int cylinderFaces = 3;
     final float cylinderHeight = 1.6f;
     final float cylinderRadius = 0.5f;
     final int cylinderRings = 10;
 
 
+
     @Override
     public void create() {
+        System.out.println(Arrays.asList("Los geht's."));
+
         batch = new SpriteBatch();
         img = new Texture("agra.png");
         FileHandle vertexShaderH = new FileHandle("vertexShader.prg");
@@ -169,6 +172,11 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      */
     private Mesh getMeshCylinder(int meshNumber) {
 
+        //Bei blöden Parametern Warnung aussprucken.
+        if(cylinderFaces <3 || cylinderHeight<=0 || cylinderRadius <= 0 || cylinderRings <2){
+            System.out.println("Komische Zylinder-Paramter. Wahrscheinlich schmiert des Programm jetzt ab!");
+        }
+
         //Gesamter x-offset
         float totalOffsetX = meshStartOffX + meshNumber * meshOffX;
 
@@ -217,11 +225,35 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
             }
         }
 
+
+        //Boden-Mittelpunkt
+        vertices[vertices.length-14]    = 0 + xm;
+        vertices[vertices.length-13]    = vertices[1]; //Wird immer die richtige Höhe beinhalten!
+        vertices[vertices.length-12]    = 0;
+        vertices[vertices.length-11]    = 0; //Schwarz.
+        vertices[vertices.length-10]    = 0;
+        vertices[vertices.length-9]     = 0;
+        vertices[vertices.length-8]     = 1;
+
+        //Decken-Mittelpunkt
+        vertices[vertices.length-7] = 0 + xm;
+        vertices[vertices.length-6] = vertices[vertices.length-20];
+        vertices[vertices.length-5] = 0;
+        vertices[vertices.length-4] = 1; //Weiß.
+        vertices[vertices.length-3] = 1;
+        vertices[vertices.length-2] = 1;
+        vertices[vertices.length-1] = 1;
+
+
+
+
         return vertices;
     }
 
     private short[] getMeshCylinderIndices(){
-        short [] indices = new short[3*cylinderFaces*2*(cylinderRings-1)]; //TODO beachtet noch nicht mittelpunkte
+        //Randflächen + Deckel & Boden
+        //3 (Dreieck) * Flächen * 2 (Viereck) * Ringe bis auf obersten + Flächen * 3 (Dreieck) * 2 (Deckel & Boden)
+        short [] indices = new short[3*cylinderFaces*2*(cylinderRings-1) + cylinderFaces * 3 * 2];
 
         //Röhre verbinden
         for(int i = 0; i<cylinderRings-1;i++){ //-1 da die oberste Schicht folgenden Code nicht ausführen darf
@@ -231,7 +263,6 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
             for (int j = 0; j<cylinderFaces; j++){
                 //TODO Deckel verbinden
 
-                System.out.println(Integer.toString(i));
 
                 //Dreieck 1
                 indices[(j+iOff)*6   ] = (short)(j+iOff);
@@ -244,6 +275,32 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                 indices[(j+iOff)*6 +5] = (short)(((j+1)%cylinderFaces + cylinderFaces)+iOff);
             }
         }
+
+
+
+        int mStartIdx;//Mittelpunkt-Start-Index
+        int to = cylinderFaces * (cylinderRings-1) ;//Indexspeicher des Offset für obersten Ring
+
+        //Untersten Ring mit unterem Mittelpunkt verbinden.
+        for(int i = 0; i<cylinderFaces; i++){
+
+            mStartIdx = 3*cylinderFaces*2*(cylinderRings-1);
+
+            indices[mStartIdx + i*3]      = (short)(i);
+            indices[mStartIdx + i*3+1]    = (short)((i+1)%cylinderFaces);
+            indices[mStartIdx + i*3+2]    = (short)(cylinderFaces*(cylinderRings-1)+3);
+
+            mStartIdx += cylinderFaces * 3;
+
+            indices[mStartIdx + i*3]      = (short)((i)+to);
+            indices[mStartIdx + i*3+1]    = (short)(((i+1)%cylinderFaces)+to);
+            indices[mStartIdx + i*3+2]    = (short)((cylinderFaces*(cylinderRings-1)+4));
+        }
+
+
+        System.out.println(Arrays.toString(indices));
+        System.out.println(Integer.toString(to));
+
         return indices;
     }
 
