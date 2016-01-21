@@ -181,22 +181,20 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         //Vertices festlegen:
         mesh.setVertices(vertices);
 
-
-
-
-
         //Nun müssen die Indices festgelegt werden!
 
         short [] indices = new short[cylinderFaces*2*3]; //TODO beachtet noch nicht mittelpunkte
 
         for (int i = 0; i<cylinderFaces; i++){
-            indices[i] = (short)i;
-            indices[i+1] = (short)(i+1);
-            indices[i+2] = (short)(i+cylinderFaces);
+            int im = i*6; //da wir 6 array-Werte festlegen, müssen jeweils 6 Werte übersprungen werden.
 
-            indices[i+3] = indices[i+1];
-            indices[i+4] = indices[i+2];
-            indices[i+5] = (short)(i+cylinderFaces+1);
+            indices[im] = (short)i;
+            indices[im+1] = (short)(i+1);
+            indices[im+2] = (short)(i+cylinderFaces);
+
+            indices[im+3] = indices[i+1];
+            indices[im+4] = indices[i+2];
+            indices[im+5] = (short)(i+cylinderFaces+1);
         }
 
 
