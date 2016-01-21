@@ -3,6 +3,7 @@ package de.agra.shader;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -123,7 +124,37 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      * @return Das Pyramidenmesh.
      */
     private Mesh getMeshPyramid(int meshNumber) {
-        return getMeshLogo(meshNumber);
+
+    	float xm = meshStartOffX + meshNumber * meshOffX;
+
+    	float pos = 0.5f;
+    	float neg = -0.5f;
+    	float zer = 0f;
+
+    	float[] vertices = {
+    			neg + xm, neg, neg, 1, 1, 1, 1,	//0
+                pos + xm, neg, neg, 1, 1, 1, 1,	//1
+                pos + xm, neg, pos, 1, 1, 1, 1,	//2
+                neg + xm, neg, pos, 1, 1, 1, 1,	//3
+                zer + xm, pos, zer, 1, 1, 1, 1	//4
+    	};
+
+    	short[] indices = {
+    			0, 1, 2,		//Grundplatte Teil 1
+    			2, 3, 0,		//Grundplatte Teil 2
+    			0, 4, 1,		//vordere Seite
+    			1, 4, 2,		//rechte Seite
+    			2, 4, 3,		//hintere Seite
+    			3, 4, 0			//linke Seite
+    	};
+
+    	Mesh mesh;
+
+    	mesh = new Mesh(true, vertices.length/7, indices.length, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
+    	mesh.setVertices(vertices);
+    	mesh.setIndices(indices);
+
+        return mesh;
     }
 
     /**
@@ -232,7 +263,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0.25f, 0.25f, 0.5f, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
