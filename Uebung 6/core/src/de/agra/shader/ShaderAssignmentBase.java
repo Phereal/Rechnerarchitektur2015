@@ -22,6 +22,9 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     public PerspectiveCamera cam;
     public ShaderProgram shader;
 
+    public float time = 0; //Zeit-Variable für Aufgabe 2-Wabern
+    private float timeIncrementPerStep = 0.01f;
+
     /**
      * Wir nutzen statt einzelnen Variablen für jedes Mesh ein Mesh-Array, das bequem durchiteriert werden kann.
      * Die Variable war zuvor public- war das nötig?
@@ -138,7 +141,6 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         final float cylinderRadius = 0.5f;
 
 
-
         //Gesamter x-offset
         float xm = meshStartOffX + meshNumber * meshOffX;
 
@@ -233,9 +235,9 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         shader.begin();
         shader.setUniformMatrix("u_worldView", cam.combined);
         shader.setUniformi("u_texture", 0);
-        for (int i = 0; i < meshList.length; i++) {
-            meshList[i].render(shader, GL20.GL_TRIANGLES);
-        }
+
+
+        for (Mesh aMeshList : meshList) aMeshList.render(shader, GL20.GL_TRIANGLES);
         //mesh.
         shader.end();
     }
@@ -244,5 +246,16 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     public void resize(int width, int height) {
         cam.viewportHeight = Gdx.graphics.getHeight();
         cam.viewportWidth = Gdx.graphics.getWidth();
+    }
+
+    private float increaseTime(){
+        time+=timeIncrementPerStep;
+        //Da wir Sinusfunktionen nutzen, muss Time nie über 1 hinausgehen.
+        if(time>=1){
+            time=0;
+        }
+        System.out.println(Float.toString(time));
+        //Wir sparen uns den späteren Abruf der Variable, wenn wir ihn einfach direkt zurückgeben.
+        return time;
     }
 }
