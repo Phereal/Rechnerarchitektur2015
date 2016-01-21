@@ -198,10 +198,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                 vertices[jMod+1] = -((float)(cylinderHeight/2)) + ((((float)i)/(cylinderRings-1)) * cylinderHeight);  //y
                 vertices[jMod+2] = ShapeGen.getCirclePointZ(cylinderRadius, ((float)j/(float)cylinderFaces)*360); //z
 
-                vertices[jMod+3] = 0;    //r
-                vertices[jMod+4] = ((i/(float)cylinderRings))%cylinderRings;    //b
-                vertices[jMod+5] = ((i/(float)cylinderRings)+1)%cylinderRings;    //g
-                vertices[jMod+6] = ((i/(float)cylinderRings)+2)%cylinderRings;    //a
+                vertices[jMod+3] = (((float)i  )%3)/2;    //r
+                vertices[jMod+4] = (((float)i+1)%3)/2;    //b
+                vertices[jMod+5] = (((float)i+2)%3)/2;    //g
+                vertices[jMod+6] = 1;    //a
             }
         }
 
