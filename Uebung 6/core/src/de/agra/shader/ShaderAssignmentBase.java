@@ -44,6 +44,11 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      */
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
+    //Zylinderattribute
+    final int cylinderFaces = 20; //Mindestens 3
+    final float cylinderHeight = 1.6f;
+    final float cylinderRadius = 0.5f;
+    final int cylinderRings = 10;
 
 
     @Override
@@ -164,29 +169,36 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      */
     private Mesh getMeshCylinder(int meshNumber) {
 
-        /**
-         * Idee:
-         * Einen Kreis generieren.
-         * Dann einen weiteren Kreis mit höheren y-Koordinaten erstellen und mit vorherigem Kreis verbinden.
-         */
-
-        //Zylinderattribute
-        final int cylinderFaces = 20; //Mindestens 3
-        final float cylinderHeight = 1.6f;
-        final float cylinderRadius = 0.5f;
-        final int cylinderRings = 10;
-
-
         //Gesamter x-offset
-        float xm = meshStartOffX + meshNumber * meshOffX;
+        float totalOffsetX = meshStartOffX + meshNumber * meshOffX;
 
-        //Flächen erstellen.
+        Mesh mesh;
+        int maxVertices = (cylinderFaces*cylinderRings)+2;
+        //Flächen * Ringe * 3 (Dreieck) * 2 (Viereck) + Flächen * 3 (Dreieck) * 2 (je Deckel & Boden))
+        int maxIndices = cylinderFaces * cylinderRings * 3 *2 + cylinderFaces * 3 * 2;
+        mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
 
 
+        float [] vertices = getMeshCylinderVertices(totalOffsetX);
+        mesh.setVertices(vertices);
+
+        short [] indices = getMeshCylinderIndices();
+        mesh.setIndices(indices);
+
+        return mesh;
+    }
+
+    /**
+     * Generiert die Zylinders-Vertices.
+     * @param totalOffsetX - Gesamtverschiebung / Position des Zylinders
+     * @return Alle Vertices als float-Array.
+     */
+    private float[] getMeshCylinderVertices(float totalOffsetX){
+        //Gesamter x-offset
+        float xm = totalOffsetX;
         //Größe: (Punkte * Flächen + 2 Mittelpunkte) * 9 Attribute eines Vektors
         float [] vertices = new float[(cylinderFaces*cylinderRings+2)*7];
-
-         //Röhrenpunkte generieren
+        //Röhrenpunkte generieren
         for (int i = 0; i<cylinderRings; i++){
             for(int j = 0; j<cylinderFaces; j++){ //+1 für den Mittelpunkt!
 
@@ -201,26 +213,14 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                 vertices[jMod+3] = (((float)i  )%3)/2;    //r
                 vertices[jMod+4] = (((float)i+1)%3)/2;    //b
                 vertices[jMod+5] = (((float)i+2)%3)/2;    //g
-                vertices[jMod+6] = 1;    //a
+                vertices[jMod+6] = 1;                     //a
             }
         }
 
+        return vertices;
+    }
 
-
-        Mesh mesh;
-
-        int maxVertices = (cylinderFaces*cylinderRings)+2;
-
-        //Flächen * Ringe * 3 (Dreieck) * 2 (Viereck) + Flächen * 3 (Dreieck) * 2 (je Deckel & Boden))
-        int maxIndices = cylinderFaces * cylinderRings * 3 *2 + cylinderFaces * 3 * 2;
-
-        mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
-
-        //Vertices festlegen:
-        mesh.setVertices(vertices);
-
-        //Nun müssen die Indices festgelegt werden!
-
+    private short[] getMeshCylinderIndices(){
         short [] indices = new short[3*cylinderFaces*2*(cylinderRings-1)]; //TODO beachtet noch nicht mittelpunkte
 
         //Röhre verbinden
@@ -244,13 +244,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                 indices[(j+iOff)*6 +5] = (short)(((j+1)%cylinderFaces + cylinderFaces)+iOff);
             }
         }
-
-        System.out.println(Arrays.toString(indices));
-
-        //Platzhalter-Indizes:
-        mesh.setIndices(indices);
-
-        return mesh;
+        return indices;
     }
 
     /**
