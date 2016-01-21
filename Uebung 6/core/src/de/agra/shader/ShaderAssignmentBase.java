@@ -140,9 +140,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
          */
 
         //Zylinderattribute
-        final int cylinderFaces = 20; //Mindestens 3
-        final float cylinderHeight = 2f;
+        final int cylinderFaces = 3; //Mindestens 3
+        final float cylinderHeight = 1.6f;
         final float cylinderRadius = 0.5f;
+        final int cylinderRings = 3;
 
 
         //Gesamter x-offset
@@ -152,35 +153,34 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
 
         //Größe: (Punkte * Flächen + 2 Mittelpunkte) * 9 Attribute eines Vektors
-        float [] vertices = new float[(cylinderFaces*2+2)*7];
+        float [] vertices = new float[(cylinderFaces*cylinderRings+2)*7];
 
-
-        //Beim zweiten Durchlauf wird i zu 1 und bewirkt, dass statt Fläche 1 die Fläche 2 erstellt wird.
-        for (int isTop = 0; isTop<=1; isTop++){
+         //Röhrenpunkte generieren
+        for (int i = 0; i<cylinderRings; i++){
             for(int j = 0; j<cylinderFaces; j++){ //+1 für den Mittelpunkt!
 
                 //Modifiziertes j.
                 //j*9 Werte pro Punkt + i * Anzahl der Vertices-Einträge der ersten Fläche.
-                int jMod = j*7+(isTop*cylinderFaces*7);
+                int jMod = j*7+(i*cylinderFaces*7);
 
                 vertices[jMod] = ShapeGen.getCirclePointX(cylinderRadius, ((float)j/(float)cylinderFaces)*360) + xm; //x
-                vertices[jMod+1] = cylinderHeight/2 - (isTop * cylinderHeight);  //y
-
-
+                vertices[jMod+1] = -((float)(cylinderHeight/2)) + ((((float)i)/(cylinderRings-1)) * cylinderHeight);  //y
                 vertices[jMod+2] = ShapeGen.getCirclePointZ(cylinderRadius, ((float)j/(float)cylinderFaces)*360); //z
-                vertices[jMod+3] = 1;    //r
-                vertices[jMod+4] = 1;    //b
-                vertices[jMod+5] = 1;    //g
-                vertices[jMod+6] = 1;    //a
+
+                vertices[jMod+3] = 0;    //r
+                vertices[jMod+4] = ((i/(float)cylinderRings))%cylinderRings;    //b
+                vertices[jMod+5] = ((i/(float)cylinderRings)+1)%cylinderRings;    //g
+                vertices[jMod+6] = ((i/(float)cylinderRings)+2)%cylinderRings;    //a
             }
         }
 
-        //TODO Deckel generieren
+
 
         Mesh mesh;
 
-        int maxVertices = cylinderFaces*2+2;
-        int maxIndices = cylinderFaces * 2 * 3 + cylinderFaces * 3;
+        int maxVertices = (cylinderFaces*cylinderRings)+2;
+        //Flächen * 3 (Dreieck) * 2 (Viereck) + Flächen * 3 (Dreieck) * 2 (je Deckel & Boden)
+        int maxIndices = cylinderFaces * 3 * 2 + cylinderFaces * 3 * 2;
 
         mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
 
@@ -189,19 +189,28 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
         //Nun müssen die Indices festgelegt werden!
 
-        short [] indices = new short[cylinderFaces*2*3]; //TODO beachtet noch nicht mittelpunkte
+        short [] indices = new short[3*cylinderFaces*2*(cylinderRings-1)]; //TODO beachtet noch nicht mittelpunkte
 
-        for (int i = 0; i<cylinderFaces; i++){
+        //Röhre verbinden
+        for(int i = 0; i<cylinderRings-1;i++){ //-1 da die oberste Schicht folgenden Code nicht ausführen darf
 
-            //TODO korrigieren
-            //TODO Deckel verbinden
-            indices[i*6] = (short)i;
-            indices[i*6+1] = (short)((i+1)%cylinderFaces);
-            indices[i*6+2] = (short)(i+cylinderFaces);
+            int iOff = i * cylinderFaces; //Layer-Offset
 
-            indices[i*6+3] = indices[i*6+1];
-            indices[i*6+4] = indices[i*6+2];
-            indices[i*6+5] = (short)((i+1)%cylinderFaces + cylinderFaces);
+            for (int j = 0; j<cylinderFaces; j++){
+                //TODO Deckel verbinden
+
+                System.out.println(Integer.toString(i));
+
+                //Dreieck 1
+                indices[(j+iOff)*6   ] = (short)(j+iOff*2);
+                indices[(j+iOff)*6 +1] = (short)(((j+1)%cylinderFaces)+iOff*2);
+                indices[(j+iOff)*6 +2] = (short)(j+cylinderFaces+iOff*2);
+
+                //Dreieck 2
+                indices[(j+iOff)*6 +3] = indices[(j+iOff)*6 +1];
+                indices[(j+iOff)*6 +4] = indices[(j+iOff)*6 +2];
+                indices[(j+iOff)*6 +5] = (short)(((j+1)%cylinderFaces + cylinderFaces)+iOff*2);
+            }
         }
 
         System.out.println(Arrays.toString(indices));
@@ -228,8 +237,8 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
         cam.position.set(
-                (Gdx.input.getX() - Gdx.graphics.getWidth() / 2f) / 100f,
-                (Gdx.input.getY() - Gdx.graphics.getHeight() / 2f) / 100f,
+                (Gdx.input.getX()*6 - (Gdx.graphics.getWidth() / 2f)*6) / 100f,
+                (Gdx.input.getY()*6 - (Gdx.graphics.getHeight() / 2f)*6) / 100f,
                 10f);
         cam.up.set(0, 1, 0);
         cam.lookAt(0, 0, 0);
