@@ -18,8 +18,8 @@ public class ShapeGen {
         return (float) x;
     }
 
-    public static float getCirclePointY (float radius, float degrees){
-        double y = (radius * Math.sin(Math.toRadians(degrees)));
-        return (float) y;
+    public static float getCirclePointZ (float radius, float degrees){
+        double Z = (radius * Math.sin(Math.toRadians(degrees)));
+        return (float) Z;
     }
 }
