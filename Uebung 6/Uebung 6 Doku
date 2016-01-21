@@ -1,0 +1,39 @@
+#RAuES Übungszettel 6
+
+##Vorbereitungen#
+1. Den Inhalt des in Stud.IP zu findenden Ordners "zettel6.zip" in einen Ordner entpacken. Bei uns in /Rechnerarchitektur2015/Uebung 6
+2. Die Dateirechte per "chmod -R 755 /Uebung 6" setzen, da eine Ausführung sonst nicht möglich ist.
+3. Im Terminal mit dem Befehl "./gradlew desktop:run" gradle kompilieren und ausführen! [Wenn AGRA Bild erscheint hat soweit alles geklappt]
+4. Eclipse installieren "sudo apt-get install eclipse*
+5. Eclipse starten
+6. Eclipse >> Help >> Install New Software
+7. Paste a Gradle update site link into the "Work with" text box.
+8. Click the Add button at the top of the screen. [Name it Gradle or anything else]
+9. Ensure that the option "Group Items by Category" is enabled.
+10. Select the top-level node 'Extensions / Gradle Integration'.
+11. Click "Next". This may take a while.
+12. Review the list of software that will be installed. Click "Next" again.
+13. Review and accept licence agreements and Click "Finish".
+14. Eclipse >> File >> Import >> Gradle Project
+15. Click in Build Model so that you can import Gradle Projects
+16. Browse to the folder /Rechnerarchitektur2015/Uebung 6/
+17. Select "Uebung 6/RAuES_Shader-core" and "Uebung 6/RAuES_Shader-desktop" in File tree [not Uebung 6 itself]
+18. Add Gradle Task View Eclipse >> Window >> Show View >> other >> Gradle >> Gradle Tasks
+19. Click Ok
+20. In the taskbar on at the bottom of eclipse besides "console" is a new element named "Gradle Tasks"
+21. Select "Gradle Tasks" from taskbar
+22. Select "RAuES_Shader-desktop" as Project
+23. In the textfield type clean an select clean, this cleans the project
+24. In the textfield type build and select build, this builds the project
+25. In the textfield type run and select run, this runs the project
+26. [Wenn AGRA Bild erscheint hat soweit alles geklappt].! :) 
+
+##Aufgabe 1#
+## Aufgabe ist es, mit 3 verschiedenen Meshes 3 Objekte nebeneinander darzustellen.
+## Dies sind Pyramide, Zylinder und Kugel. Dabei sollen keine vorgegebenen Routinen [com.badlogic.gdx.Sphere*] benutzt werden
+## sondern die Vertex- und Index-Buffer [Vertice-Buffer = float-Array & Index-Buffer = short-Array] mit Informationen gefüllt
+## werden.
+
+## Wir fangen damit an, einfache Meshes [Netze] aus wenigen Vertices [Punkten] zu erzeugen um so bspw. einen Würfel zu generieren. 
+1. 
+
