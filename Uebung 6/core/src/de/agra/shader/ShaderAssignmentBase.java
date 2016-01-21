@@ -143,7 +143,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         final int cylinderFaces = 3; //Mindestens 3
         final float cylinderHeight = 1.6f;
         final float cylinderRadius = 0.5f;
-        final int cylinderRings = 3;
+        final int cylinderRings = 4;
 
 
         //Gesamter x-offset
@@ -180,7 +180,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
         int maxVertices = (cylinderFaces*cylinderRings)+2;
         //Flächen * 3 (Dreieck) * 2 (Viereck) + Flächen * 3 (Dreieck) * 2 (je Deckel & Boden)
-        int maxIndices = cylinderFaces * 3 * 2 + cylinderFaces * 3 * 2;
+        int maxIndices = (cylinderFaces*cylinderRings+2)*7;
 
         mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
 
