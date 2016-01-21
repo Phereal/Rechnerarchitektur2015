@@ -140,10 +140,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
          */
 
         //Zylinderattribute
-        final int cylinderFaces = 3; //Mindestens 3
+        final int cylinderFaces = 20; //Mindestens 3
         final float cylinderHeight = 1.6f;
         final float cylinderRadius = 0.5f;
-        final int cylinderRings = 4;
+        final int cylinderRings = 10;
 
 
         //Gesamter x-offset
@@ -179,8 +179,9 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         Mesh mesh;
 
         int maxVertices = (cylinderFaces*cylinderRings)+2;
-        //Flächen * 3 (Dreieck) * 2 (Viereck) + Flächen * 3 (Dreieck) * 2 (je Deckel & Boden)
-        int maxIndices = (cylinderFaces*cylinderRings+2)*7;
+
+        //Flächen * Ringe * 3 (Dreieck) * 2 (Viereck) + Flächen * 3 (Dreieck) * 2 (je Deckel & Boden))
+        int maxIndices = cylinderFaces * cylinderRings * 3 *2 + cylinderFaces * 3 * 2;
 
         mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
 
@@ -202,14 +203,14 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                 System.out.println(Integer.toString(i));
 
                 //Dreieck 1
-                indices[(j+iOff)*6   ] = (short)(j+iOff*2);
-                indices[(j+iOff)*6 +1] = (short)(((j+1)%cylinderFaces)+iOff*2);
-                indices[(j+iOff)*6 +2] = (short)(j+cylinderFaces+iOff*2);
+                indices[(j+iOff)*6   ] = (short)(j+iOff);
+                indices[(j+iOff)*6 +1] = (short)(((j+1)%cylinderFaces)+iOff);
+                indices[(j+iOff)*6 +2] = (short)(j+cylinderFaces+iOff);
 
                 //Dreieck 2
                 indices[(j+iOff)*6 +3] = indices[(j+iOff)*6 +1];
                 indices[(j+iOff)*6 +4] = indices[(j+iOff)*6 +2];
-                indices[(j+iOff)*6 +5] = (short)(((j+1)%cylinderFaces + cylinderFaces)+iOff*2);
+                indices[(j+iOff)*6 +5] = (short)(((j+1)%cylinderFaces + cylinderFaces)+iOff);
             }
         }
 
