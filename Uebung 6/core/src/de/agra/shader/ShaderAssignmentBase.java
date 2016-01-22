@@ -24,7 +24,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     public ShaderProgram shader;
 
     public float time = 0; //Zeit-Variable für Aufgabe 2-Wabern
-    private float timeIncrementPerStep = 0.01f;
+    private float timeIncrementPerStep = 0.025f;
 
     /*
      * Wir nutzen statt einzelnen Variablen für jedes Mesh ein Mesh-Array, das bequem durchiteriert werden kann.
@@ -329,8 +329,9 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
         img.bind();
         shader.begin();
-        shader.setUniformMatrix("u_worldView", cam.combined);
         shader.setUniformi("u_texture", 0);
+        shader.setUniformMatrix("u_worldView", cam.combined);
+        shader.setUniformf("time", increaseTime());
 
 
         for (Mesh aMeshList : meshList) aMeshList.render(shader, GL20.GL_TRIANGLES);
@@ -347,7 +348,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     private float increaseTime(){
         time+=timeIncrementPerStep;
         //Da wir Sinusfunktionen nutzen, muss Time nie über 1 hinausgehen.
-        if(time>=1){
+        if(time>= Math.PI*2){
             time=0;
         }
         System.out.println(Float.toString(time));
