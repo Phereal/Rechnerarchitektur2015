@@ -45,10 +45,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
     //Zylinderattribute
-    final int cylinderFaces = 4;
+    final int cylinderFaces = 20;
     final float cylinderHeight = 1.6f;
     final float cylinderRadius = 0.5f;
-    final int cylinderRings = 2;
+    final int cylinderRings = 20;
 
 
 
@@ -218,9 +218,9 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                 vertices[jMod+1] = -((float)(cylinderHeight/2)) + ((((float)i)/(cylinderRings-1)) * cylinderHeight);  //y
                 vertices[jMod+2] = ShapeGen.getCirclePointZ(cylinderRadius, ((float)j/(float)cylinderFaces)*360); //z
 
-                vertices[jMod+3] = (((float)i  )%3)/2;    //r
-                vertices[jMod+4] = (((float)i+1)%3)/2;    //b
-                vertices[jMod+5] = (((float)i+2)%3)/2;    //g
+                vertices[jMod+3] = (((float)i/cylinderRings*3)%3)/2;    //r
+                vertices[jMod+4] = (((float)i/cylinderRings*3+1)%3)/2;    //b
+                vertices[jMod+5] = (((float)i/cylinderRings*3+2)%3)/2;    //g
                 vertices[jMod+6] = 1;                     //a
             }
         }
@@ -261,8 +261,6 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
             int iOff = i * cylinderFaces; //Layer-Offset
 
             for (int j = 0; j<cylinderFaces; j++){
-                //TODO Deckel verbinden
-
 
                 //Dreieck 1
                 indices[(j+iOff)*6   ] = (short)(j+iOff);
@@ -276,30 +274,35 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
             }
         }
 
+        //Da wir nicht auf die Länge Zugriff haben, errechnen wir diese.
 
-
-        int mStartIdx;//Mittelpunkt-Start-Index
-        int to = cylinderFaces * (cylinderRings-1) ;//Indexspeicher des Offset für obersten Ring
-
-        //Untersten Ring mit unterem Mittelpunkt verbinden.
+        //--
+        //Boden:
+        int verticesLength = (cylinderFaces*cylinderRings+2);
+        //Index, ab dem die Kappen beschrieben werden
+        int capStartIndex = 3*2*cylinderFaces*(cylinderRings-1);
         for(int i = 0; i<cylinderFaces; i++){
+            indices[i*3+capStartIndex] = (short)i;
+            indices[i*3+capStartIndex+1] = (short)((i+1)%cylinderFaces);
+            indices[i*3+capStartIndex+2] = (short)(verticesLength-2);
+        }
 
-            mStartIdx = 3*cylinderFaces*2*(cylinderRings-1);
-
-            indices[mStartIdx + i*3]      = (short)(i);
-            indices[mStartIdx + i*3+1]    = (short)((i+1)%cylinderFaces);
-            indices[mStartIdx + i*3+2]    = (short)(cylinderFaces*(cylinderRings-1)+3);
-
-            mStartIdx += cylinderFaces * 3;
-
-            indices[mStartIdx + i*3]      = (short)((i)+to);
-            indices[mStartIdx + i*3+1]    = (short)(((i+1)%cylinderFaces)+to);
-            indices[mStartIdx + i*3+2]    = (short)((cylinderFaces*(cylinderRings-1)+4));
+        //--
+        //Deckel:
+        int topRingStartIndex = cylinderFaces*(cylinderRings-1);
+        capStartIndex = 3*2*cylinderFaces*(cylinderRings-1)+cylinderFaces*3;
+        for(int i = 0; i<cylinderFaces; i++){
+            indices[i*3+capStartIndex] = (short)(i+topRingStartIndex);
+            indices[i*3+capStartIndex+1] = (short)((i+1)%cylinderFaces+topRingStartIndex);
+            indices[i*3+capStartIndex+2] = (short)(verticesLength-1);
         }
 
 
+
+
+
+
         System.out.println(Arrays.toString(indices));
-        System.out.println(Integer.toString(to));
 
         return indices;
     }
