@@ -235,19 +235,19 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         //Boden-Mittelpunkt
         vertices[vertices.length-cylinderMeshComponents*2]    = 0 + xm;
         vertices[vertices.length-cylinderMeshComponents*2+1]    = vertices[1]; //Wird immer die richtige Höhe beinhalten!
-        vertices[vertices.length-cylinderMeshComponents*2+2]    = 0;
-        vertices[vertices.length-cylinderMeshComponents*2+3]    = 0; //Schwarz.
-        vertices[vertices.length-cylinderMeshComponents*2+4]    = 0;
-        vertices[vertices.length-cylinderMeshComponents*2+5]     = 0;
+        vertices[vertices.length-cylinderMeshComponents*2+2]    = 0; //Nun: Farbe von unterstem Ring klauen
+        vertices[vertices.length-cylinderMeshComponents*2+3]    = vertices[3];
+        vertices[vertices.length-cylinderMeshComponents*2+4]    = vertices[4];
+        vertices[vertices.length-cylinderMeshComponents*2+5]     = vertices[5];
         vertices[vertices.length-cylinderMeshComponents*2+6]     = 1;
 
         //Decken-Mittelpunkt
         vertices[vertices.length-cylinderMeshComponents] = 0 + xm;
         vertices[vertices.length-cylinderMeshComponents+1] = vertices[vertices.length-cylinderMeshComponents*3+1];
-        vertices[vertices.length-cylinderMeshComponents+2] = 0;
-        vertices[vertices.length-cylinderMeshComponents+3] = 1; //Weiß.
-        vertices[vertices.length-cylinderMeshComponents+4] = 1;
-        vertices[vertices.length-cylinderMeshComponents+5] = 1;
+        vertices[vertices.length-cylinderMeshComponents+2] = 0; //nun: Farbe von obersten Ring klauen
+        vertices[vertices.length-cylinderMeshComponents+3] = vertices[vertices.length-cylinderMeshComponents*3+3];
+        vertices[vertices.length-cylinderMeshComponents+4] = vertices[vertices.length-cylinderMeshComponents*3+4];
+        vertices[vertices.length-cylinderMeshComponents+5] = vertices[vertices.length-cylinderMeshComponents*3+5];
         vertices[vertices.length-cylinderMeshComponents+6] = 1;
 
 

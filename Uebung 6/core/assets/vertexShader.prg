@@ -13,7 +13,7 @@ void main()
    v_color = a_color;
    v_texCoords = a_texCoord0;
 
-   float distort = sin ( time + a_position.y * 8)*0.1;
+   float distort = sin ( time*4 + a_position.y * 4)*0.1;
 
    float xDistort = distort * a_normal.x;
    float yDistort = distort * a_normal.y;
