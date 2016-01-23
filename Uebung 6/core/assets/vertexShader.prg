@@ -23,6 +23,8 @@ void main()
    gl_Position =  u_worldView * ( vec4(xDistort + a_position.x, yDistort +a_position.y, zDistort+a_position.z,1));
 
 
-    vec4 u_lightCoords = vec4 (5,1,1,3);
+    //Das Licht schwebt in einer Höhe von Y=0.5 im Kreis im Abstand von 4 um die Objekte herum.
+    vec4 u_lightCoords = vec4 (sin(time)*4,0.5,cos(time)*4,1);
+
     cosThetaDiffuse = dot(a_normal, u_lightCoords);
 }

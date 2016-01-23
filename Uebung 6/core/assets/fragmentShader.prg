@@ -13,13 +13,12 @@ void main()
 {
     vec4 lightPosition = vec4 (1,1,1,1);
 
-    vec4 ambientLightPower = 0.1;
+    vec4 ambientLightPower = 0.65;
 
-    vec4 diffuseLightColor = vec4 ( 1,1,1,1);
-    float diffuseLightPower = 0.2;
+    float diffuseLightPower = 0.1;
 
 
 
     gl_FragColor = v_color * texture2D(u_texture, v_texCoords) * ambientLightPower
-                + v_color * diffuseLightColor * diffuseLightPower * cosThetaDiffuse;
+                + v_color * diffuseLightPower * cosThetaDiffuse;
 }

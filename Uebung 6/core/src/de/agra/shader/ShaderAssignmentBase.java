@@ -241,6 +241,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         vertices[vertices.length-cylinderMeshComponents*2+5]     = vertices[5];
         vertices[vertices.length-cylinderMeshComponents*2+6]     = 1;
 
+        vertices[vertices.length-cylinderMeshComponents*2+7]     = 0;
+        vertices[vertices.length-cylinderMeshComponents*2+8]     = -1;
+        vertices[vertices.length-cylinderMeshComponents*2+9]     = 0;
+
         //Decken-Mittelpunkt
         vertices[vertices.length-cylinderMeshComponents] = 0 + xm;
         vertices[vertices.length-cylinderMeshComponents+1] = vertices[vertices.length-cylinderMeshComponents*3+1];
@@ -249,6 +253,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         vertices[vertices.length-cylinderMeshComponents+4] = vertices[vertices.length-cylinderMeshComponents*3+4];
         vertices[vertices.length-cylinderMeshComponents+5] = vertices[vertices.length-cylinderMeshComponents*3+5];
         vertices[vertices.length-cylinderMeshComponents+6] = 1;
+
+        vertices[vertices.length-cylinderMeshComponents+7]     = 0;
+        vertices[vertices.length-cylinderMeshComponents+8]     = 1;
+        vertices[vertices.length-cylinderMeshComponents+9]     = 0;
 
 
         return vertices;
