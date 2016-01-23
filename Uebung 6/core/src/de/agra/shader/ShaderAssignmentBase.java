@@ -3,12 +3,7 @@ package de.agra.shader;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
@@ -49,6 +44,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     final float cylinderHeight = 1.6f;
     final float cylinderRadius = 0.5f;
     final int cylinderRings = 20;
+    final int cylinderMeshComponents = 10;
 
 
 
@@ -159,6 +155,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     	Mesh mesh;
 
     	mesh = new Mesh(true, vertices.length/7, indices.length, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
+
     	mesh.setVertices(vertices);
     	mesh.setIndices(indices);
 
@@ -184,7 +181,8 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         int maxVertices = (cylinderFaces*cylinderRings)+2;
         //Flächen * Ringe * 3 (Dreieck) * 2 (Viereck) + Flächen * 3 (Dreieck) * 2 (je Deckel & Boden))
         int maxIndices = cylinderFaces * cylinderRings * 3 *2 + cylinderFaces * 3 * 2;
-        mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
+        mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked(),
+                new VertexAttribute(VertexAttributes.Usage.Normal, 3, "a_normal"));
 
 
         float [] vertices = getMeshCylinderVertices(totalOffsetX);
@@ -205,14 +203,14 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         //Gesamter x-offset
         float xm = totalOffsetX;
         //Größe: (Punkte * Flächen + 2 Mittelpunkte) * 9 Attribute eines Vektors
-        float [] vertices = new float[(cylinderFaces*cylinderRings+2)*7];
+        float [] vertices = new float[(cylinderFaces*cylinderRings+2)*cylinderMeshComponents];
         //Röhrenpunkte generieren
         for (int i = 0; i<cylinderRings; i++){
             for(int j = 0; j<cylinderFaces; j++){ //+1 für den Mittelpunkt!
 
                 //Modifiziertes j.
                 //j*9 Werte pro Punkt + i * Anzahl der Vertices-Einträge der ersten Fläche.
-                int jMod = j*7+(i*cylinderFaces*7);
+                int jMod = j*cylinderMeshComponents+(i*cylinderFaces*cylinderMeshComponents);
 
                 vertices[jMod] = ShapeGen.getCirclePointX(cylinderRadius, ((float)j/(float)cylinderFaces)*360) + xm; //x
                 vertices[jMod+1] = -((float)(cylinderHeight/2)) + ((((float)i)/(cylinderRings-1)) * cylinderHeight);  //y
@@ -227,22 +225,22 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
 
         //Boden-Mittelpunkt
-        vertices[vertices.length-14]    = 0 + xm;
-        vertices[vertices.length-13]    = vertices[1]; //Wird immer die richtige Höhe beinhalten!
-        vertices[vertices.length-12]    = 0;
-        vertices[vertices.length-11]    = 0; //Schwarz.
-        vertices[vertices.length-10]    = 0;
-        vertices[vertices.length-9]     = 0;
-        vertices[vertices.length-8]     = 1;
+        vertices[vertices.length-cylinderMeshComponents*2]    = 0 + xm;
+        vertices[vertices.length-cylinderMeshComponents*2+1]    = vertices[1]; //Wird immer die richtige Höhe beinhalten!
+        vertices[vertices.length-cylinderMeshComponents*2+2]    = 0;
+        vertices[vertices.length-cylinderMeshComponents*2+3]    = 0; //Schwarz.
+        vertices[vertices.length-cylinderMeshComponents*2+4]    = 0;
+        vertices[vertices.length-cylinderMeshComponents*2+5]     = 0;
+        vertices[vertices.length-cylinderMeshComponents*2+6]     = 1;
 
         //Decken-Mittelpunkt
-        vertices[vertices.length-7] = 0 + xm;
-        vertices[vertices.length-6] = vertices[vertices.length-20];
-        vertices[vertices.length-5] = 0;
-        vertices[vertices.length-4] = 1; //Weiß.
-        vertices[vertices.length-3] = 1;
-        vertices[vertices.length-2] = 1;
-        vertices[vertices.length-1] = 1;
+        vertices[vertices.length-cylinderMeshComponents] = 0 + xm;
+        vertices[vertices.length-cylinderMeshComponents+1] = vertices[vertices.length-cylinderMeshComponents*3+1];
+        vertices[vertices.length-cylinderMeshComponents+2] = 0;
+        vertices[vertices.length-cylinderMeshComponents+3] = 1; //Weiß.
+        vertices[vertices.length-cylinderMeshComponents+4] = 1;
+        vertices[vertices.length-cylinderMeshComponents+5] = 1;
+        vertices[vertices.length-cylinderMeshComponents+6] = 1;
 
 
 
@@ -357,4 +355,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         //Wir sparen uns den späteren Abruf der Variable, wenn wir ihn einfach direkt zurückgeben.
         return time;
     }
+
+
 }
+
