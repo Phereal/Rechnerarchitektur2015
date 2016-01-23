@@ -10,6 +10,8 @@ attribute vec4 a_normal;
 
 varying float cosThetaDiffuse;
 
+varying float cosThetaSpecular;
+
 void main()
 {
    v_color = a_color;
@@ -23,8 +25,9 @@ void main()
    gl_Position =  u_worldView * ( vec4(xDistort + a_position.x, yDistort +a_position.y, zDistort+a_position.z,1));
 
 
-    //Das Licht schwebt in einer Höhe von Y=0.5 im Kreis im Abstand von 4 um die Objekte herum.
-    vec4 u_lightCoords = vec4 (sin(time)*4,0.5,cos(time)*4,1);
+    //Das Licht bewegt sich und beleuchtet die Objekte von verschiedenen Seiten.
+    vec4 u_lightCoords = vec4 (sin(time)*2,cos(time),cos(time)*2,1);
 
-    cosThetaDiffuse = dot(a_normal, u_lightCoords);
+    cosThetaDiffuse = clamp ( dot(a_normal, u_lightCoords),0,1);
+
 }

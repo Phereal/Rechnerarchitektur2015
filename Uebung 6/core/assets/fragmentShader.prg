@@ -13,9 +13,9 @@ void main()
 {
     vec4 lightPosition = vec4 (1,1,1,1);
 
-    vec4 ambientLightPower = 0.65;
+    vec4 ambientLightPower = 0.1;
 
-    float diffuseLightPower = 0.1;
+    float diffuseLightPower = 0.6;
 
 
 

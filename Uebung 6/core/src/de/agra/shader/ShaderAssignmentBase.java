@@ -40,7 +40,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
     //Zylinderattribute
-    final int cylinderFaces = 20;
+    final int cylinderFaces = 80;
     final float cylinderHeight = 1.6f;
     final float cylinderRadius = 0.5f;
     final int cylinderRings = 20;
