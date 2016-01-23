@@ -16,7 +16,7 @@ void main()
     vec4 ambientLightPower = 0.1;
 
     vec4 diffuseLightColor = vec4 ( 1,1,1,1);
-    float diffuseLightPower = 0.5;
+    float diffuseLightPower = 0.2;
 
 
 
