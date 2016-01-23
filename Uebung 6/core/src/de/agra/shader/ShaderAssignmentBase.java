@@ -128,34 +128,125 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      * @return Das Pyramidenmesh.
      */
     private Mesh getMeshPyramid(int meshNumber) {
+    	/**
+    	 * Die Idee bei der Erstellung der Pyramide ist es, sie in Y-Richtung in mehrere Scheiben zu schneiden.
+    	 * Eine Pyramide besteht grundsätzlich immer aus einem Quadrat als Grundplatte.
+    	 * Ein Quadrat lässt sich immer aus 2 gleichgroßen Dreiecken darstellen, die für die Eckpunkte der X- bzw.
+    	 * Z-Achse im Betrag immer die gleiche Entfernung zum Mittelpunkt haben, nur die Vorzeichen ändern sich.
+    	 *
+    	 * Wenn wir nun also pro Scheibe 4 Punkte erstellen und diese als 2 Dreiecke verbinden und in einer
+    	 * FOR-Schleife die Enrfernung zur Mittelpunkt kleiner werden lassen bis wir für die Entfernung null
+    	 * erhalten, haben wir eine Pyramide erstellt!
+    	 */
 
-    	float xm = meshStartOffX + meshNumber * meshOffX;
+    	final float XOFFSET = meshStartOffX + meshNumber * meshOffX;	//X-Offset, damit die Pyramide neben den anderen Objekten dargestellt wird!
 
-    	float pos = 0.5f;
-    	float neg = -0.5f;
-    	float zer = 0f;
+    	//Wertebereich für X-Pos und Z-Pos
+    	final float MAXDISTANCE = 0.75f;
 
-    	float[] vertices = {
-    			neg + xm, neg, neg, 1, 1, 1, 1,	//0
-                pos + xm, neg, neg, 1, 1, 1, 1,	//1
-                pos + xm, neg, pos, 1, 1, 1, 1,	//2
-                neg + xm, neg, pos, 1, 1, 1, 1,	//3
-                zer + xm, pos, zer, 1, 1, 1, 1	//4
-    	};
+    	//Mittelpunkt
+    	final float ZERO = 0f;
 
-    	short[] indices = {
-    			0, 1, 2,		//Grundplatte Teil 1
-    			2, 3, 0,		//Grundplatte Teil 2
-    			0, 4, 1,		//vordere Seite
-    			1, 4, 2,		//rechte Seite
-    			2, 4, 3,		//hintere Seite
-    			3, 4, 0			//linke Seite
-    	};
+    	//Anzahl der zu zeichnenden Scheiben
+    	final int SLIZES = 1000;
+
+    	//Varianz der Entfernung des Mittelpunktes von Scheibe zu Scheibe
+    	final float DEKREMENTOR = MAXDISTANCE / SLIZES;
+
+    	//Anzahl der Punkte pro Scheibe
+    	final int POINTS_PER_SLIZE = 4;
+
+    	//Anzahl der Komponenten pro Punkt [x,y,z,r,g,b,a] = 7
+    	final int COMPONENTES_PER_POINT = 7;
+
+    	//Anzahl der Dreiecke pro Scheibe
+    	final int TRIANGLES_PER_SLICE = 2;
+
+    	//Anzahl der Verbindungen pro Scheibe
+    	final int CONNECTIONS_PER_SLIZE = 3;
+
+    	//Berechnung der Array Grenzen für Vertices anhand der gegeneben Werte [+ einen Offset aufgrund des Inkrementierens bei der Zuweisung!]
+    	final int MAX_VERTICES = SLIZES * POINTS_PER_SLIZE * COMPONENTES_PER_POINT + COMPONENTES_PER_POINT;
+
+    	//Berechnung der Array Grenzen für Indices anhand der gegeneben Werte [+ einen Offset aufgrund des Inkrementierens bei der Zuweisung!]
+    	final int MAX_INDICES = SLIZES * TRIANGLES_PER_SLICE * CONNECTIONS_PER_SLIZE + CONNECTIONS_PER_SLIZE;
+
+    	int verticesCounter = 0;	//Counter um durch den Vertice Array zu wandern!
+    	int indicesCounter = 0;	//Counter um durch den Indices Array zu wandern!
+
+    	//Variable für die Varianz der X- und Z-Position
+    	float posxz = MAXDISTANCE;
+
+    	float[] vertices = new float[MAX_VERTICES];	//Vertices Array
+    	short[] indices = new short[MAX_INDICES];	//Indices Array
+
+    	//DEBUG
+    	System.out.println("MAX VERTICES: " + MAX_VERTICES);
+    	System.out.println("VERTICES BOUNDS: " + vertices.length);
+    	System.out.println("MAX INDICES: " + MAX_INDICES);
+    	System.out.println("INDICES BOUNDS: " + indices.length);
+    	System.out.println("VERTICES COUNTER: " + verticesCounter);
+    	System.out.println("INDICES COUNTER: " + indicesCounter);
+
+    	//Erstellen der Pyramide
+    	//Da die Pyramide doppelt so hoch, wie breit sein soll müssen wir hier den Dekrementor für die Y-Position verdoppeln!
+    	for (float i = -MAXDISTANCE; i <= MAXDISTANCE; i=i+DEKREMENTOR*2){
+    		//Punkte für das erste Dreieck der Grundplatte berechnen
+
+    		//Berechnung der neuen X- bzw. Z-Positionsabweichung
+    		posxz=posxz-(DEKREMENTOR);
+
+    		//Positiver Punkt auf der X-Achse
+        	vertices [verticesCounter++] = posxz + XOFFSET;			//X-Pos des Punktes
+        	vertices [verticesCounter++] = i;						//Y-Pos des Punktes
+        	vertices [verticesCounter++] = ZERO;					//Z-Pos des Punktes
+        	vertices [verticesCounter++] = 1;						//r
+        	vertices [verticesCounter++] = 0;						//g
+        	vertices [verticesCounter++] = 0;						//b
+        	vertices [verticesCounter++] = 1;						//a
+
+    		//Negativer Punkt auf der X-Achse
+        	vertices [verticesCounter++] = -posxz + XOFFSET;		//X-Pos des Punktes
+        	vertices [verticesCounter++] = i;						//Y-Pos des Punktes
+        	vertices [verticesCounter++] = ZERO;					//Z-Pos des Punktes
+        	vertices [verticesCounter++] = 0;						//r
+        	vertices [verticesCounter++] = 1;						//g
+        	vertices [verticesCounter++] = 0;						//b
+        	vertices [verticesCounter++] = 1;						//a
+
+    		//Positiver Punkt auf der Z-Achse
+        	vertices [verticesCounter++] = ZERO + XOFFSET;			//X-Pos des Punktes
+        	vertices [verticesCounter++] = i;						//Y-Pos des Punktes
+        	vertices [verticesCounter++] = +posxz;					//Z-Pos des Punktes
+        	vertices [verticesCounter++] = 0;						//r
+        	vertices [verticesCounter++] = 0;						//g
+        	vertices [verticesCounter++] = 1;						//b
+        	vertices [verticesCounter++] = 1;						//a
+
+    		//Positiver Punkt auf der Z-Achse
+        	vertices [verticesCounter++] = ZERO + XOFFSET;			//X-Pos des Punktes
+        	vertices [verticesCounter++] = i;						//Y-Pos des Punktes
+        	vertices [verticesCounter++] = -posxz;					//Z-Pos des Punktes
+        	vertices [verticesCounter++] = 1;						//r
+        	vertices [verticesCounter++] = 1;						//g
+        	vertices [verticesCounter++] = 1;						//b
+        	vertices [verticesCounter++] = 1;						//a
+
+        	//Zeichnen der Dreiecke für die jeweilige Scheibe
+        	//Grundplatte Teil 1 [Je eine Array Position Versatz durch das verticesCounter++]
+        	indices [indicesCounter++] = (short)((verticesCounter/7)-1);
+        	indices [indicesCounter++] = (short)((verticesCounter/7)-2);
+        	indices [indicesCounter++] = (short)((verticesCounter/7)-4);
+
+        	//Grundplatte Teil 2 [Je eine Array Position Versatz durch das verticesCounter++]
+        	indices [indicesCounter++] = (short)((verticesCounter/7)-1);
+        	indices [indicesCounter++] = (short)((verticesCounter/7)-2);
+        	indices [indicesCounter++] = (short)((verticesCounter/7)-3);
+    	}
 
     	Mesh mesh;
 
-    	mesh = new Mesh(true, vertices.length/7, indices.length, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
-
+    	mesh = new Mesh(true, MAX_VERTICES, MAX_INDICES, VertexAttribute.Position(), VertexAttribute.ColorUnpacked());
     	mesh.setVertices(vertices);
     	mesh.setIndices(indices);
 
