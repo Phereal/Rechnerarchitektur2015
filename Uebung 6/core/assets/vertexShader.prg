@@ -13,10 +13,10 @@ void main()
    v_color = a_color;
    v_texCoords = a_texCoord0;
 
-   float distort = sin ( time + a_position.y * 8)*0.5;
+   float distort = sin ( time + a_position.y * 8)*0.1;
 
    float xDistort = distort * a_normal.x;
    float yDistort = distort * a_normal.y;
    float zDistort = distort * a_normal.z;
-   gl_Position =  u_worldView * a_position + vec4(xDistort, yDistort, zDistort,1);
+   gl_Position =  u_worldView * ( vec4(xDistort + a_position.x, yDistort +a_position.y, zDistort+a_position.z,1));
 }

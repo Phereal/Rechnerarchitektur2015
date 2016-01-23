@@ -223,7 +223,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
                 float vectorLength = (float) Math.sqrt(((vertices[jMod]-xm)*(vertices[jMod]-xm)
                         +(vertices[jMod+1])*(vertices[jMod+1])
-                        +(vertices[jMod+1])*(vertices[jMod+2])));
+                        +(vertices[jMod+2])*(vertices[jMod+2])));
 
                 vertices[jMod+7] = (1/vectorLength) * (vertices[jMod]-xm);
                 vertices[jMod+8] = 0;
