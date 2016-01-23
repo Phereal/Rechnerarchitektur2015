@@ -24,17 +24,32 @@ public class ShapeGen {
     }
     
     public static float getSphereKarthX (float r, float theta, float phi){
-        double x = r * Math.cos(Math.toRadians(theta)) * Math.cos(Math.toRadians(phi));
+        double x = r * Math.sin(Math.toRadians(theta)) * Math.cos(Math.toRadians(phi));
         return (float) x;
     }
     
     public static float getSphereKarthY (float r, float theta, float phi){
-        double y = r * Math.cos(Math.toRadians(theta)) * Math.sin(Math.toRadians(phi));
+        double y = r * Math.sin(Math.toRadians(theta)) * Math.sin(Math.toRadians(phi));
         return (float) y;
     }
     
     public static float getSphereKarthZ (float r, float theta, float phi){
-        double z = r * Math.sin(Math.toRadians(theta));
+        double z = r * Math.cos(Math.toRadians(theta));
         return (float) z;
     }
+    
+//    public static float getSphereKarthX (float r, float theta, float phi){
+//        double x = r * Math.cos(Math.toRadians(theta)) * Math.cos(Math.toRadians(phi));
+//        return (float) x;
+//    }
+//    
+//    public static float getSphereKarthY (float r, float theta, float phi){
+//        double y = r * Math.cos(Math.toRadians(theta)) * Math.sin(Math.toRadians(phi));
+//        return (float) y;
+//    }
+//    
+//    public static float getSphereKarthZ (float r, float theta, float phi){
+//        double z = r * Math.sin(Math.toRadians(theta));
+//        return (float) z;
+//    }
 }
