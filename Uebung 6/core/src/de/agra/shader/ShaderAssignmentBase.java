@@ -36,7 +36,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
      * X-Offset aller Meshes.
      * Wird genutzt, um die Meshes zu zentrieren und auf der X-Achse beliebig verschiebbar zu machen.
      */
-    private final float meshStartOffX = -1.2f;
+    private final float meshStartOffX = -2f;
 
     /*
      * X-Offset zwischen einzelnen Meshes.
@@ -45,10 +45,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
     //Zylinderattribute
-    final int cylinderFaces = 20;
+    final int cylinderFaces = 4;
     final float cylinderHeight = 1.6f;
     final float cylinderRadius = 0.5f;
-    final int cylinderRings = 10;
+    final int cylinderRings = 2;
 
 
 
@@ -174,7 +174,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
         //Bei blöden Parametern Warnung aussprucken.
         if(cylinderFaces <3 || cylinderHeight<=0 || cylinderRadius <= 0 || cylinderRings <2){
-            System.out.println("Komische Zylinder-Paramter. Wahrscheinlich schmiert des Programm jetzt ab!");
+            System.out.println("Komische Zylinder-Paramter. Wahrscheinlich passiert jetzt etwas seltsames.");
         }
 
         //Gesamter x-offset
@@ -351,7 +351,6 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         if(time>= Math.PI*2){
             time=0;
         }
-        System.out.println(Float.toString(time));
         //Wir sparen uns den späteren Abruf der Variable, wenn wir ihn einfach direkt zurückgeben.
         return time;
     }
