@@ -182,7 +182,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         //Flächen * Ringe * 3 (Dreieck) * 2 (Viereck) + Flächen * 3 (Dreieck) * 2 (je Deckel & Boden))
         int maxIndices = cylinderFaces * cylinderRings * 3 *2 + cylinderFaces * 3 * 2;
         mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked(),
-                new VertexAttribute(VertexAttributes.Usage.Normal, 3, "a_normal"));
+                VertexAttribute.Normal());
 
 
         float [] vertices = getMeshCylinderVertices(totalOffsetX);
@@ -220,6 +220,14 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                 vertices[jMod+4] = (((float)i/cylinderRings*3+1)%3)/2;    //b
                 vertices[jMod+5] = (((float)i/cylinderRings*3+2)%3)/2;    //g
                 vertices[jMod+6] = 1;                     //a
+
+                float vectorLength = (float) Math.sqrt(((vertices[jMod]-xm)*(vertices[jMod]-xm)
+                        +(vertices[jMod+1])*(vertices[jMod+1])
+                        +(vertices[jMod+1])*(vertices[jMod+2])));
+
+                vertices[jMod+7] = (1/vectorLength) * (vertices[jMod]-xm);
+                vertices[jMod+8] = 0;
+                vertices[jMod+9] = (1/vectorLength) * (vertices[jMod+2]);
             }
         }
 
