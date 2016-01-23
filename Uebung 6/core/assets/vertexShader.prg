@@ -8,6 +8,8 @@ varying vec2 v_texCoords;
 uniform float time;
 attribute vec4 a_normal;
 
+varying float cosThetaDiffuse;
+
 void main()
 {
    v_color = a_color;
@@ -19,4 +21,8 @@ void main()
    float yDistort = distort * a_normal.y;
    float zDistort = distort * a_normal.z;
    gl_Position =  u_worldView * ( vec4(xDistort + a_position.x, yDistort +a_position.y, zDistort+a_position.z,1));
+
+
+    vec4 u_lightCoords = vec4 (3,3,3,3);
+    cosThetaDiffuse = dot(a_normal, u_lightCoords);
 }

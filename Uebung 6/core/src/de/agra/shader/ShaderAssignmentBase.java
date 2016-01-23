@@ -251,8 +251,6 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         vertices[vertices.length-cylinderMeshComponents+6] = 1;
 
 
-
-
         return vertices;
     }
 
