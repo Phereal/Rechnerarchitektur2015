@@ -41,10 +41,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
   private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
   //Zylinderattribute
-  final int cylinderFaces = 20;
+  final int cylinderFaces = 50;
   final float cylinderHeight = 1.6f;
   final float cylinderRadius = 0.5f;
-  final int cylinderRings = 20;
+  final int cylinderRings = 100;
   final int cylinderMeshComponents = 10;
 
   //Kugelattribute
@@ -90,9 +90,9 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     switch (typeNumber) {
       case 0:
         return getMeshPyramid(meshNumber);
-      case 1:
-        return getMeshSphere(meshNumber);
       case 2:
+        return getMeshSphere(meshNumber);
+      case 1:
         return getMeshCylinder(meshNumber);
       default:
         return getMeshLogo(meshNumber);
@@ -231,9 +231,11 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
           + (vertices[jMod + 1]) * (vertices[jMod + 1])
           + (vertices[jMod + 2]) * (vertices[jMod + 2])));
 
-        vertices[jMod + 7] = (1 / vectorLength) * (vertices[jMod] - xm);
-        vertices[jMod + 8] = 0;
-        vertices[jMod + 9] = (1 / vectorLength) * (vertices[jMod + 2]);
+
+          vertices[jMod + 7] = (1 / vectorLength) * (vertices[jMod] - xm);
+          vertices[jMod + 8] = 0;
+          vertices[jMod + 9] = (1 / vectorLength) * (vertices[jMod + 2]);
+
       }
     }
 
@@ -616,6 +618,8 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     shader.setUniformi("u_texture", 0);
     shader.setUniformMatrix("u_worldView", cam.combined);
     shader.setUniformf("time", increaseTime());
+    shader.setUniformf("v_camDirection", cam.direction);
+
 
     for (Mesh aMeshList : meshList) {
       aMeshList.render(shader, GL20.GL_TRIANGLES);
