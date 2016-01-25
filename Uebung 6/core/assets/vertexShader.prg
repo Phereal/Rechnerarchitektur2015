@@ -22,12 +22,17 @@ void main()
    float xDistort = distort * a_normal.x;
    float yDistort = distort * a_normal.y;
    float zDistort = distort * a_normal.z;
+
+   vec4 old_gl_Position = gl_Position;
+
    gl_Position =  u_worldView * ( vec4(xDistort + a_position.x, yDistort +a_position.y, zDistort+a_position.z,1));
+
+   vec4 new_a_normal = vec4 (0, distort * 0.1,0,0) - a_normal;
 
 
     //Das Licht bewegt sich und beleuchtet die Objekte von verschiedenen Seiten.
-    vec4 u_lightCoords = vec4 (sin(time)*2,cos(time),cos(time)*2,1);
+    vec4 u_lightCoords = vec4 (1,1,sin(time),1);
 
-    cosThetaDiffuse = clamp ( dot(a_normal, u_lightCoords),0,1);
+    cosThetaDiffuse =  ( dot(a_normal, u_lightCoords));
 
 }

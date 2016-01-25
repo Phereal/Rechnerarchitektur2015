@@ -15,10 +15,10 @@ void main()
 
     vec4 ambientLightPower = 0.1;
 
-    float diffuseLightPower = 0.6;
+    float diffuseLightPower = 0.3;
 
 
 
     gl_FragColor = v_color * texture2D(u_texture, v_texCoords) * ambientLightPower
-                + v_color * diffuseLightPower * cosThetaDiffuse;
+                + clamp((v_color * diffuseLightPower * cosThetaDiffuse),0,1);
 }
