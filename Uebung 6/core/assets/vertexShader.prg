@@ -31,7 +31,7 @@ void main()
 
 
     //Das Licht bewegt sich und beleuchtet die Objekte von verschiedenen Seiten.
-    vec4 u_lightCoords = vec4 (1,1,sin(time),1);
+    vec4 u_lightCoords = vec4 (cos(time)*3,1,sin(time)*2,1);
 
     cosThetaDiffuse =  ( dot(a_normal, u_lightCoords));
 
