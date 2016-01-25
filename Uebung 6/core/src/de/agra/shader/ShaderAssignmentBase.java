@@ -392,15 +392,15 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 //      {
         // Set x,y,z positionen
         vertices[vId++] = ShapeGen.getSphereKarthX(sphereRadius, (float) theta, (float) phi) + xm;
-        System.out.println("");
-        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthX(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
-        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
+//        System.out.println("");
+//        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthX(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
+//        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
         vertices[vId++] = ShapeGen.getSphereKarthY(sphereRadius, (float) theta, (float) phi);
-        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthY(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
-        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
+//        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthY(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
+//        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
         vertices[vId++] = ShapeGen.getSphereKarthZ(sphereRadius, (float) theta, (float) phi);
-        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthZ(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
-        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
+//        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthZ(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
+//        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
 
         // Set RGBA values
         vertices[vId++] = 1.0f;
@@ -409,15 +409,15 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         vertices[vId++] = 1;
 
         // Set norm
-        vertices[vId++] = 0;
-        vertices[vId++] = 0;
-        vertices[vId++] = 0;
+        vertices[vId++] = -1.0f * vertices[vId - 6];
+        vertices[vId++] = -1.0f * vertices[vId - 6];
+        vertices[vId++] = -1.0f * vertices[vId - 6];
 
         // Debug print
-        System.out.print("(" + theta + "," + phi + ") ");
+//        System.out.print("(" + theta + "," + phi + ") ");
       }
       // Debug print
-      System.out.println("");
+//      System.out.println("");
     }
 
     //Top-Mittelpunkt
