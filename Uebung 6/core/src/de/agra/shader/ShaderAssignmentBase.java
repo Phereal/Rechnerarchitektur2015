@@ -389,10 +389,10 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         vertices[vId++] = ShapeGen.getSphereKarthY(sphereRadius, (float) theta, (float) phi);
         vertices[vId++] = ShapeGen.getSphereKarthZ(sphereRadius, (float) theta, (float) phi);
 
-        // Set RGBA values
-        vertices[vId++] = 1.0f;
-        vertices[vId++] = 1.0f;
-        vertices[vId++] = 1.0f;
+        // Set RGBA values (Farbe ist bewusst umgekehrt zum Zylinder gewaehlt)
+        vertices[vId++] = (((float) theta / thetaRange * 3) % 3) / 2;    //r
+        vertices[vId++] = (((float) theta / thetaRange * 3 + 1) % 3) / 2;    //b
+        vertices[vId++] = (((float) theta / thetaRange * 3 + 2) % 3) / 2;    //g
         vertices[vId++] = 1;
 
         // Set norm (-8 because of the vId++, otherwise it would be -7)
