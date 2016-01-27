@@ -39,7 +39,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
     //Pyramidenattribute
-    final int pyramidLayers = 2;
+    final int pyramidLayers = 4;
     final float pyramidWidth = 1;
     final float pyramidHeight = 2;
     final int pyramidMeshComponents = 10;
@@ -54,7 +54,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     //Kugelattribute
     final int thetaIntervalle = 20;
     final int phiIntervalle = 20;
-    final float sphereRadius = 0.5f;
+    final float sphereRadius = 0.75f;
     final int sphereMeshComponents = 10; // 3x Pos, 4x RGBA, 3x Norm
 
     @Override
@@ -186,7 +186,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
             //Ein Wert, der in der unsersten Schicht 1 beträgt, in der Mittleren 0.5 und in der obersten 0.
             //Alle XZ-Koordinaten mit diesem Wert multiplizieren
-            float factorXYZ = 1 - (currentLayer-1 ) / (pyramidLayers-1);
+            float factorXYZ = 1 - (currentLayer+1) / (float)(pyramidLayers);
 
 
             //Jede Außenseite einer Schicht generieren
@@ -226,20 +226,18 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
                             vertices[iOffset + 2] = -(pyramidWidth / 2) * factorXYZ;//z
 
                             vertices[iOffset+7] =0;
-                            vertices[iOffset+8] =-(float)0.707;
-                            vertices[iOffset+9] =(float)0.707;
+                            vertices[iOffset+8] =(float)0.707;
+                            vertices[iOffset+9] =-(float)0.707;
                             break;
 
 
                     }
                     //Andere Attribute
-                    vertices[iOffset + 1] = (float) ((pyramidHeight*1.5) - factorXYZ * pyramidHeight); //y
+                    vertices[iOffset + 1] = (float) -(pyramidHeight/2) + currentLayer * (pyramidHeight/pyramidLayers); //y
                     vertices[iOffset + 3] = (float)0.5;
                     vertices[iOffset + 4] = (float)0.5;
                     vertices[iOffset + 5] = (float)0.5;
                     vertices[iOffset + 6] = (float)0.5;
-
-                    System.out.println(Float.toString(factorXYZ));
 
                     if (pointsPerSide > 0) {
                         iOffset += pyramidMeshComponents; //Nächster Eckpunkt
@@ -576,8 +574,8 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     // Debug Print
     for (int i = 0; i < vertices.length; i += sphereMeshComponents)
     {
-      System.out.print("" + (i / sphereMeshComponents) + ": (" + (Math.round(vertices[i] * 100) / 100.0) + ", " + (Math.round(vertices[i + 1] * 100) / 100.0) + ", " + (Math.round(vertices[i + 2] * 100) / 100.0) + ")");
-      System.out.println(" (" + (Math.round(vertices[i+7] * 100) / 100.0) + ", " + (Math.round(vertices[i+8] * 100) / 100.0) + ", " + (Math.round(vertices[i+9] * 100) / 100.0) + ")");
+      //System.out.print("" + (i / sphereMeshComponents) + ": (" + (Math.round(vertices[i] * 100) / 100.0) + ", " + (Math.round(vertices[i + 1] * 100) / 100.0) + ", " + (Math.round(vertices[i + 2] * 100) / 100.0) + ")");
+      //System.out.println(" (" + (Math.round(vertices[i+7] * 100) / 100.0) + ", " + (Math.round(vertices[i+8] * 100) / 100.0) + ", " + (Math.round(vertices[i+9] * 100) / 100.0) + ")");
     }
 
     return vertices;

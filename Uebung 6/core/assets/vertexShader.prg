@@ -20,7 +20,7 @@ void main()
     v_texCoords = a_texCoord0;
 
 
-    float distort = sin ( time*3 + a_position.y * 3)*0.1;
+    float distort = sin ( time*2 + a_position.y*6)*0.05;
 
     float xDistort = distort * a_normal.x;
     float yDistort = distort * a_normal.y;
