@@ -39,7 +39,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
     //Pyramidenattribute
-    final int pyramidLayers = 4;
+    final int pyramidLayers = 3;
     final float pyramidWidth = 1;
     final float pyramidHeight = 2;
     final int pyramidMeshComponents = 10;
@@ -264,7 +264,6 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         vertices[iOffset + 9] =0;
 
         System.out.println("Pyramiden-Vertices berechnet.");
-        System.out.println(Arrays.toString(vertices));
         return vertices;
     }
 
@@ -280,28 +279,33 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
 
         for (int currentLayer = 0; currentLayer < pyramidLayers - 1; currentLayer++) {
-            int pointsPerLayer = (pyramidLayers - currentLayer) * 4;
-            int pointsNextLayer = (pyramidLayers - currentLayer-1)*4;
+            System.out.println("Layer "+Integer.toString(currentLayer));
+
             int pointsPerSide = (pyramidLayers - currentLayer);
+            int pointsPerLayer = pointsPerSide * 4;
+            int pointsNextLayer = (pyramidLayers - currentLayer -1)*4;
             int iOffset;
 
             if(currentLayer == 0){
                 iOffset = 0;
             }
             else{
-                iOffset= (int) (Math.pow(pyramidLayers,2) + Math.pow(pyramidLayers-1,2))
-                        - (int) (Math.pow(pyramidLayers-currentLayer,2) + Math.pow(pyramidLayers-currentLayer-1,2));
+                iOffset= (int) (Math.pow(pyramidLayers+1,2) + Math.pow(pyramidLayers-1+1,2))
+                        - (int) (Math.pow(pyramidLayers+1-currentLayer,2) + Math.pow(pyramidLayers-currentLayer-1+1,2));
             }
+
+
 
 
             int nextLevelOffset = 0;
             for (int side = 0; side < 4; side++){
-
+                System.out.println("    Side "+Integer.toString(side));
                 for (int i = 0 + side * pointsPerSide; i < (side+1) * pointsPerSide; i++) {
                     indices[iOffset*4 + i*3]    = (short) (i + iOffset);
                     indices[iOffset*4 + i*3 + 1]= (short) (((i + 1)%pointsPerLayer) + iOffset);
-                    indices[iOffset*4 + i*3 + 2]= (short) ((i + nextLevelOffset)% pointsNextLayer + pointsPerLayer + iOffset);
+                    indices[iOffset*4 + i*3 + 2]= (short) ((i+nextLevelOffset)%pointsNextLayer+pointsPerLayer+iOffset);
 
+                    System.out.println("        i  "+Short.toString((short) iOffset));
                 }
                 nextLevelOffset-=1;
             }
