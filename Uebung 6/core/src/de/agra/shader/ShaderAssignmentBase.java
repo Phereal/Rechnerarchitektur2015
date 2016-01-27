@@ -494,114 +494,97 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 //    return getMeshLogo(meshNumber);
     }
 
-    private float[] getMeshSphereVertices(float totalOffsetX) {
-        //Gesamter x-offset (lesebarer)
-        float xm = totalOffsetX;
 
-        int thetaStart = 0;
-        int thetaStop = 180;
-//    int thetaIntervalle = 4;
-        int thetaRange = thetaStop - thetaStart;
-        int thetaIntervallSize = thetaRange / thetaIntervalle;
+  private float[] getMeshSphereVertices(float totalOffsetX)
+  {
+    //Gesamter x-offset (lesebarer)
+    float xm = totalOffsetX;
 
-        int phiStart = -180;
-        int phiStop = 180;
-//    int phiIntervalle = 4;
-        int phiRange = phiStop - phiStart;
-        int phiIntervallSize = phiRange / phiIntervalle;
+    int thetaStart = 0;
+    int thetaStop = 180;
+    int thetaRange = thetaStop - thetaStart;
+    int thetaIntervallSize = thetaRange / thetaIntervalle;
 
-        // anzahl an vertices: je thetaIntervall 20 + ober- und untervertice
-        int verticesCnt = (phiIntervalle * (thetaIntervalle - 1)) + 2;
-        // anzahl an indices: 3 je Dreieck, 2 Dreiecke je innere Flaeche, 1 Dreieck je ober- unterflaeche
-        int indicesCnt = ((phiIntervalle * (thetaIntervalle - 2) * 2) + (phiIntervalle * 2)) * 3;
+    int phiStart = -180;
+    int phiStop = 180;
+    int phiRange = phiStop - phiStart;
+    int phiIntervallSize = phiRange / phiIntervalle;
 
-        // Debug print
-        //System.out.println("\nDebug: getMeshSphereVertices()");
-        //System.out.println("vertices: " + verticesCnt);
-        //System.out.println("indices: " + indicesCnt);
+    // anzahl an vertices: je thetaIntervall 20 + ober- und untervertice
+    int verticesCnt = (phiIntervalle * (thetaIntervalle - 1)) + 2;
+    // anzahl an indices: 3 je Dreieck, 2 Dreiecke je innere Flaeche, 1 Dreieck je ober- unterflaeche
+    int indicesCnt = ((phiIntervalle * (thetaIntervalle - 2) * 2) + (phiIntervalle * 2)) * 3;
 
-        // haelt die vertices
-        float[] vertices = new float[verticesCnt * sphereMeshComponents];
-        // Index zum Zugriff aufs vertices-array
-        int vId = 0;
-        int tId = 0;
+    // Debug print
+    System.out.println("\nDebug: getMeshSphereVertices()");
+    System.out.println("vertices: " + verticesCnt);
+    System.out.println("indices: " + indicesCnt);
 
-        // y-ebene (ohne oberen und unteren punkt)
-        for (int theta = (thetaStart + thetaIntervallSize); theta < thetaStop; theta += thetaIntervallSize) {
-            // xz-ebene
-            for (int phi = phiStart; phi < phiStop; phi += phiIntervallSize) {
-//    // y-ebene (ohne oberen und unteren punkt)
-//    for (int phi = (phiStart + phiIntervallSize); phi < phiStop; phi += phiIntervallSize)
-//    {
-//      // xz-ebene
-//      for (int theta = thetaStart; theta < thetaStop; theta += thetaIntervallSize)
-//      {
-                // Set x,y,z positionen
-                vertices[vId++] = ShapeGen.getSphereKarthX(sphereRadius, (float) theta, (float) phi) + xm;
-//        System.out.println("");
-//        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthX(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
-//        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
-                vertices[vId++] = ShapeGen.getSphereKarthY(sphereRadius, (float) theta, (float) phi);
-//        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthY(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
-//        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
-                vertices[vId++] = ShapeGen.getSphereKarthZ(sphereRadius, (float) theta, (float) phi);
-//        System.out.print("" + tId + "." + (vId - 1) + ": " + (Math.round(ShapeGen.getSphereKarthZ(sphereRadius, (float) theta, (float) phi) * 100) / 100.0));
-//        System.out.println(" == " + (Math.round(vertices[vId - 1] * 100) / 100.0));
+    // haelt die vertices
+    float[] vertices = new float[verticesCnt * sphereMeshComponents];
+    // Index zum Zugriff aufs vertices-array
+    int vId = 0;
 
-                // Set RGBA values
-                vertices[vId++] = 1.0f;
-                vertices[vId++] = 1.0f;
-                vertices[vId++] = 1.0f;
-                vertices[vId++] = 1;
+    // y-ebene (ohne oberen und unteren punkt)
+    for (int theta = (thetaStart + thetaIntervallSize); theta < thetaStop; theta += thetaIntervallSize)
+    {
+      // xz-ebene
+      for (int phi = phiStart; phi < phiStop; phi += phiIntervallSize)
+      {
+        // Set x,y,z positionen
+        vertices[vId++] = ShapeGen.getSphereKarthX(sphereRadius, (float) theta, (float) phi) + xm;
+        vertices[vId++] = ShapeGen.getSphereKarthY(sphereRadius, (float) theta, (float) phi);
+        vertices[vId++] = ShapeGen.getSphereKarthZ(sphereRadius, (float) theta, (float) phi);
 
-                // Set norm
-                vertices[vId++] = -1.0f * vertices[vId - 6];
-                vertices[vId++] = -1.0f * vertices[vId - 6];
-                vertices[vId++] = -1.0f * vertices[vId - 6];
+        // Set RGBA values (Farbe ist bewusst umgekehrt zum Zylinder gewaehlt)
+        vertices[vId++] = (((float) theta / thetaRange * 3) % 3) / 2;    //r
+        vertices[vId++] = (((float) theta / thetaRange * 3 + 1) % 3) / 2;    //b
+        vertices[vId++] = (((float) theta / thetaRange * 3 + 2) % 3) / 2;    //g
+        vertices[vId++] = 1;
 
-                // Debug print
-//        System.out.print("(" + theta + "," + phi + ") ");
-            }
-            // Debug print
-//      System.out.println("");
-        }
-
-        //Top-Mittelpunkt
-        vertices[vertices.length - (sphereMeshComponents * 2)] = 0.0f + xm;
-        vertices[vertices.length - (sphereMeshComponents * 2) + 1] = 0.0f;
-        vertices[vertices.length - (sphereMeshComponents * 2) + 2] = sphereRadius;
-        vertices[vertices.length - (sphereMeshComponents * 2) + 3] = vertices[3];
-        vertices[vertices.length - (sphereMeshComponents * 2) + 4] = vertices[4];
-        vertices[vertices.length - (sphereMeshComponents * 2) + 5] = vertices[5];
-        vertices[vertices.length - (sphereMeshComponents * 2) + 6] = 1;
-        vertices[vertices.length - (sphereMeshComponents * 2) + 7] = 0.0f;
-        vertices[vertices.length - (sphereMeshComponents * 2) + 8] = 0.0f;
-        vertices[vertices.length - (sphereMeshComponents * 2) + 9] = 0.0f;
-
-        //Boden-Mittelpunkt
-        vertices[vertices.length - sphereMeshComponents] = 0.0f + xm;
-        vertices[vertices.length - sphereMeshComponents + 1] = 0.0f;
-        vertices[vertices.length - sphereMeshComponents + 2] = -1.0f * sphereRadius;
-        vertices[vertices.length - sphereMeshComponents + 3] = vertices[vertices.length - sphereMeshComponents * 3 + 3];
-        vertices[vertices.length - sphereMeshComponents + 4] = vertices[vertices.length - sphereMeshComponents * 3 + 4];
-        vertices[vertices.length - sphereMeshComponents + 5] = vertices[vertices.length - sphereMeshComponents * 3 + 5];
-        vertices[vertices.length - sphereMeshComponents + 6] = 1;
-        vertices[vertices.length - sphereMeshComponents + 7] = 0.0f;
-        vertices[vertices.length - sphereMeshComponents + 8] = 0.0f;
-        vertices[vertices.length - sphereMeshComponents + 9] = 0.0f;
-
-        // Debug Print
-        //for (int i = 0; i < vertices.length; i += sphereMeshComponents) {
-        //    System.out.println("" + (i / sphereMeshComponents) + ": (" + (Math.round(vertices[i] * 100) / 100.0) + ", " + (Math.round(vertices[i + 1] * 100) / 100.0) + ", " + (Math.round(vertices[i + 2] * 100) / 100.0) + ")");
-        //}
-
-        return vertices;
+        // Set norm (-8 because of the vId++, otherwise it would be -7)
+        vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8] - xm);
+        vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8]);
+        vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8]);
+      }
     }
 
-    private short[] getMeshSphereIndices() {
+    //Top-Mittelpunkt
+    vertices[vId++] = 0.0f + xm;
+    vertices[vId++] = 0.0f;
+    vertices[vId++] = sphereRadius;
+    vertices[vId++] = vertices[3];
+    vertices[vId++] = vertices[4];
+    vertices[vId++] = vertices[5];
+    vertices[vId++] = 1;
+    vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8] - xm);
+    vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8]);
+    vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8]);
 
-//    int thetaIntervalle = 4;
-//    int phiIntervalle = 4;
+    //Boden-Mittelpunkt
+    vertices[vId++] = 0.0f + xm;
+    vertices[vId++] = 0.0f;
+    vertices[vId++] = -1.0f * sphereRadius;
+    vertices[vId++] = vertices[vertices.length - sphereMeshComponents * 3 + 3];
+    vertices[vId++] = vertices[vertices.length - sphereMeshComponents * 3 + 4];
+    vertices[vId++] = vertices[vertices.length - sphereMeshComponents * 3 + 5];
+    vertices[vId++] = 1;
+    vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8] - xm);
+    vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8]);
+    vertices[vId++] = (1.0f / sphereRadius) * (vertices[vId - 8]);
+
+    // Debug Print
+    for (int i = 0; i < vertices.length; i += sphereMeshComponents)
+    {
+      System.out.print("" + (i / sphereMeshComponents) + ": (" + (Math.round(vertices[i] * 100) / 100.0) + ", " + (Math.round(vertices[i + 1] * 100) / 100.0) + ", " + (Math.round(vertices[i + 2] * 100) / 100.0) + ")");
+      System.out.println(" (" + (Math.round(vertices[i+7] * 100) / 100.0) + ", " + (Math.round(vertices[i+8] * 100) / 100.0) + ", " + (Math.round(vertices[i+9] * 100) / 100.0) + ")");
+    }
+
+    return vertices;
+  }
+
+  private short[] getMeshSphereIndices()
+  {
 
         // anzahl an vertices: je thetaIntervall 20 + ober- und untervertice
         int verticesCnt = (phiIntervalle * (thetaIntervalle - 1)) + 2;
