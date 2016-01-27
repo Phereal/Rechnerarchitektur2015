@@ -39,7 +39,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     private final float meshOffX = java.lang.Math.abs(meshStartOffX);
 
     //Pyramidenattribute
-    final int pyramidLayers = 3;
+    final int pyramidLayers = 5;
     final float pyramidWidth = 1;
     final float pyramidHeight = 2;
     final int pyramidMeshComponents = 10;
@@ -150,7 +150,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
         int maxVertices = (pyramidLayers * pyramidLayers) * 4 + pyramidLayers * 4;
 
         //Zentrierte Quadratzahl plus 1
-        int maxIndices = ((int) (Math.pow(pyramidLayers + 1, 2) + Math.pow(pyramidLayers, 2) + 1))*3;
+        int maxIndices = (pyramidLayers * pyramidLayers) * 4 * pyramidMeshComponents + pyramidMeshComponents;
 
 
         mesh = new Mesh(true, maxVertices, maxIndices, VertexAttribute.Position(), VertexAttribute.ColorUnpacked(),
@@ -167,7 +167,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
     private float[] getMeshPyramidVertices(float totalOffsetX) {
 
-        float[] vertices = new float[(pyramidLayers * pyramidLayers) * 4 * pyramidMeshComponents + pyramidLayers * 4 * pyramidMeshComponents];
+        float[] vertices = new float[(pyramidLayers * pyramidLayers) * 4 * pyramidMeshComponents + pyramidMeshComponents];
 
 
         //Ebenen- und Seitenabhängiger Offset der Vertices-Indexierung
@@ -186,7 +186,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
 
             //Ein Wert, der in der unsersten Schicht 1 beträgt, in der Mittleren 0.5 und in der obersten 0.
             //Alle XZ-Koordinaten mit diesem Wert multiplizieren
-            float factorXYZ = 1 - (currentLayer+1) / (float)(pyramidLayers);
+            float factorXYZ = 1 - (currentLayer) / (float)(pyramidLayers);
 
 
             //Jede Außenseite einer Schicht generieren
@@ -275,7 +275,7 @@ public class ShaderAssignmentBase extends ApplicationAdapter {
     private short[] getMeshPyramidIndices() {
 
         //Zentrierte Quadratzahl plus 1
-        short[] indices = new short[((int) (Math.pow(pyramidLayers + 1, 2) + Math.pow(pyramidLayers, 2) + 1))*3];
+        short[] indices = new short[(pyramidLayers * pyramidLayers) * 4 * pyramidMeshComponents + pyramidMeshComponents];
 
 
         for (int currentLayer = 0; currentLayer < pyramidLayers - 1; currentLayer++) {
